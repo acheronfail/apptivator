@@ -10,11 +10,14 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     @IBOutlet weak var window: NSWindow!
 
-    // The actual menu bar item
+    // The actual menu bar item.
     var menuBarItem: NSStatusItem? = nil
     
-    // The menu
+    // The menu.
     var contextMenu: NSMenu = NSMenu()
+    
+    // Whether or not the shortcuts are enabled.
+    var enabled: Bool = true
     
     func applicationDidFinishLaunching(_ aNotification: Notification) {
         let appName = Bundle.main.infoDictionary![kCFBundleNameKey as String] as! String
@@ -22,9 +25,11 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         
         contextMenu.addItem(NSMenuItem(title: "About", action: #selector(AppDelegate.about), keyEquivalent: ""))
         contextMenu.addItem(NSMenuItem.separator())
+        contextMenu.addItem(NSMenuItem(title: "Shortcuts", action: #selector(AppDelegate.shortcuts), keyEquivalent: ""))
+        contextMenu.addItem(NSMenuItem.separator())
         contextMenu.addItem(NSMenuItem(title: "Quit \(appName)", action: #selector(AppDelegate.quitApplication), keyEquivalent: ""))
         
-        menuBarItem?.title = "ClickMe"
+        menuBarItem?.title = "enabled"
         menuBarItem?.action = #selector(AppDelegate.onClick(sender:))
         menuBarItem?.sendAction(on: [.leftMouseDown, .rightMouseDown])
     }
@@ -34,12 +39,24 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         if event.type == .rightMouseDown {
             menuBarItem?.popUpMenu(contextMenu)
         } else if event.type == .leftMouseDown {
-            print("it works!")
+            if enabled {
+                enabled = false
+                menuBarItem?.title = "disabled"
+            } else {
+                enabled = true
+                menuBarItem?.title = "enabled"
+            }
         }
     }
     
     func about() {
         NSApp.orderFrontStandardAboutPanel()
+    }
+    
+    func shortcuts() {
+        window.center()
+        window.makeKeyAndOrderFront(window)
+        // TODO: map apps -> shortcuts
     }
     
     func quitApplication() {
