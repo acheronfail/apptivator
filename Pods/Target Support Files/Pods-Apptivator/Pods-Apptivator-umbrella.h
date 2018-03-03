@@ -11,6 +11,6 @@
 #endif
 
 
-FOUNDATION_EXPORT double Pods_MenuBarAppVersionNumber;
-FOUNDATION_EXPORT const unsigned char Pods_MenuBarAppVersionString[];
+FOUNDATION_EXPORT double Pods_ApptivatorVersionNumber;
+FOUNDATION_EXPORT const unsigned char Pods_ApptivatorVersionString[];
 

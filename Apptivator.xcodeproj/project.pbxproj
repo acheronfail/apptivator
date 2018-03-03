@@ -7,21 +7,24 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		7CEF31C542FC128DB21A031E /* Pods_Apptivator.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 73ECD1AABBFAADAFE262B827 /* Pods_Apptivator.framework */; };
 		B3B4C2C11E25894B009F8E4E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3B4C2C01E25894B009F8E4E /* AppDelegate.swift */; };
 		B3B4C2C31E25894B009F8E4E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B3B4C2C21E25894B009F8E4E /* Assets.xcassets */; };
 		B3B4C2C61E25894B009F8E4E /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = B3B4C2C41E25894B009F8E4E /* MainMenu.xib */; };
-		DF513C2D8C551F63D4B5BBE5 /* Pods_MenuBarApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 145CD7FB45802E3E719A8923 /* Pods_MenuBarApp.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		145CD7FB45802E3E719A8923 /* Pods_MenuBarApp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MenuBarApp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		15FF0CCC204A231800E04103 /* Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "Bridging-Header.h"; path = "MenuBarApp/Bridging-Header.h"; sourceTree = "<group>"; };
+		15FF0CCC204A231800E04103 /* Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "Bridging-Header.h"; path = "Apptivator/Bridging-Header.h"; sourceTree = "<group>"; };
 		45AE51C7F2B4237841F73226 /* Pods-MenuBarApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MenuBarApp.release.xcconfig"; path = "Pods/Target Support Files/Pods-MenuBarApp/Pods-MenuBarApp.release.xcconfig"; sourceTree = "<group>"; };
-		B3B4C2BD1E25894B009F8E4E /* MenuBarApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MenuBarApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		73ECD1AABBFAADAFE262B827 /* Pods_Apptivator.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Apptivator.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		A58FEA61D8F12C5425277BB0 /* Pods-Apptivator.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Apptivator.release.xcconfig"; path = "Pods/Target Support Files/Pods-Apptivator/Pods-Apptivator.release.xcconfig"; sourceTree = "<group>"; };
+		B3B4C2BD1E25894B009F8E4E /* Apptivator.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Apptivator.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B3B4C2C01E25894B009F8E4E /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		B3B4C2C21E25894B009F8E4E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		B3B4C2C51E25894B009F8E4E /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
 		B3B4C2C71E25894B009F8E4E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		B92238D88D6441A672373553 /* Pods-Apptivator.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Apptivator.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Apptivator/Pods-Apptivator.debug.xcconfig"; sourceTree = "<group>"; };
 		FF660E6768C8785993B326B4 /* Pods-MenuBarApp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MenuBarApp.debug.xcconfig"; path = "Pods/Target Support Files/Pods-MenuBarApp/Pods-MenuBarApp.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -30,7 +33,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DF513C2D8C551F63D4B5BBE5 /* Pods_MenuBarApp.framework in Frameworks */,
+				7CEF31C542FC128DB21A031E /* Pods_Apptivator.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -42,6 +45,8 @@
 			children = (
 				FF660E6768C8785993B326B4 /* Pods-MenuBarApp.debug.xcconfig */,
 				45AE51C7F2B4237841F73226 /* Pods-MenuBarApp.release.xcconfig */,
+				B92238D88D6441A672373553 /* Pods-Apptivator.debug.xcconfig */,
+				A58FEA61D8F12C5425277BB0 /* Pods-Apptivator.release.xcconfig */,
 			);
 			name = Pods;
 			sourceTree = "<group>";
@@ -50,6 +55,7 @@
 			isa = PBXGroup;
 			children = (
 				145CD7FB45802E3E719A8923 /* Pods_MenuBarApp.framework */,
+				73ECD1AABBFAADAFE262B827 /* Pods_Apptivator.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -58,7 +64,7 @@
 			isa = PBXGroup;
 			children = (
 				15FF0CCC204A231800E04103 /* Bridging-Header.h */,
-				B3B4C2BF1E25894B009F8E4E /* MenuBarApp */,
+				B3B4C2BF1E25894B009F8E4E /* Apptivator */,
 				B3B4C2BE1E25894B009F8E4E /* Products */,
 				0DC2BA5439C177A010D948B6 /* Pods */,
 				7308F4468569CB324248EEEA /* Frameworks */,
@@ -68,12 +74,12 @@
 		B3B4C2BE1E25894B009F8E4E /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				B3B4C2BD1E25894B009F8E4E /* MenuBarApp.app */,
+				B3B4C2BD1E25894B009F8E4E /* Apptivator.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		B3B4C2BF1E25894B009F8E4E /* MenuBarApp */ = {
+		B3B4C2BF1E25894B009F8E4E /* Apptivator */ = {
 			isa = PBXGroup;
 			children = (
 				B3B4C2C01E25894B009F8E4E /* AppDelegate.swift */,
@@ -81,15 +87,15 @@
 				B3B4C2C41E25894B009F8E4E /* MainMenu.xib */,
 				B3B4C2C71E25894B009F8E4E /* Info.plist */,
 			);
-			path = MenuBarApp;
+			path = Apptivator;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		B3B4C2BC1E25894B009F8E4E /* MenuBarApp */ = {
+		B3B4C2BC1E25894B009F8E4E /* Apptivator */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = B3B4C2CA1E25894B009F8E4E /* Build configuration list for PBXNativeTarget "MenuBarApp" */;
+			buildConfigurationList = B3B4C2CA1E25894B009F8E4E /* Build configuration list for PBXNativeTarget "Apptivator" */;
 			buildPhases = (
 				E02BCAD4EB56976820658D88 /* [CP] Check Pods Manifest.lock */,
 				B3B4C2B91E25894B009F8E4E /* Sources */,
@@ -102,9 +108,9 @@
 			);
 			dependencies = (
 			);
-			name = MenuBarApp;
+			name = Apptivator;
 			productName = MenuBarApp;
-			productReference = B3B4C2BD1E25894B009F8E4E /* MenuBarApp.app */;
+			productReference = B3B4C2BD1E25894B009F8E4E /* Apptivator.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -124,7 +130,7 @@
 					};
 				};
 			};
-			buildConfigurationList = B3B4C2B81E25894B009F8E4E /* Build configuration list for PBXProject "MenuBarApp" */;
+			buildConfigurationList = B3B4C2B81E25894B009F8E4E /* Build configuration list for PBXProject "Apptivator" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -137,7 +143,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				B3B4C2BC1E25894B009F8E4E /* MenuBarApp */,
+				B3B4C2BC1E25894B009F8E4E /* Apptivator */,
 			);
 		};
 /* End PBXProject section */
@@ -161,7 +167,7 @@
 			files = (
 			);
 			inputPaths = (
-				"${SRCROOT}/Pods/Target Support Files/Pods-MenuBarApp/Pods-MenuBarApp-frameworks.sh",
+				"${SRCROOT}/Pods/Target Support Files/Pods-Apptivator/Pods-Apptivator-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/AXSwift/AXSwift.framework",
 				"${BUILT_PRODUCTS_DIR}/MASShortcut/MASShortcut.framework",
 			);
@@ -172,7 +178,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-MenuBarApp/Pods-MenuBarApp-frameworks.sh\"\n";
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Apptivator/Pods-Apptivator-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		E02BCAD4EB56976820658D88 /* [CP] Check Pods Manifest.lock */ = {
@@ -186,7 +192,7 @@
 			);
 			name = "[CP] Check Pods Manifest.lock";
 			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-MenuBarApp-checkManifestLockResult.txt",
+				"$(DERIVED_FILE_DIR)/Pods-Apptivator-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -205,7 +211,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-MenuBarApp/Pods-MenuBarApp-resources.sh\"\n";
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Apptivator/Pods-Apptivator-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -284,7 +290,7 @@
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
-				SWIFT_OBJC_BRIDGING_HEADER = "MenuBarApp/Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "Apptivator/Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
 				USER_HEADER_SEARCH_PATHS = "Pods/**";
@@ -334,7 +340,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = macosx;
-				SWIFT_OBJC_BRIDGING_HEADER = "MenuBarApp/Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "Apptivator/Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
 				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
 				USER_HEADER_SEARCH_PATHS = "Pods/**";
@@ -343,16 +349,17 @@
 		};
 		B3B4C2CB1E25894B009F8E4E /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = FF660E6768C8785993B326B4 /* Pods-MenuBarApp.debug.xcconfig */;
+			baseConfigurationReference = B92238D88D6441A672373553 /* Pods-Apptivator.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = "";
-				INFOPLIST_FILE = MenuBarApp/Info.plist;
+				INFOPLIST_FILE = Apptivator/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				PRODUCT_BUNDLE_IDENTIFIER = com.acheronfail.menu;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "Apptivator/Bridging-Header.h";
 				SWIFT_SWIFT3_OBJC_INFERENCE = On;
 				SWIFT_VERSION = 4.0;
 			};
@@ -360,16 +367,17 @@
 		};
 		B3B4C2CC1E25894B009F8E4E /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 45AE51C7F2B4237841F73226 /* Pods-MenuBarApp.release.xcconfig */;
+			baseConfigurationReference = A58FEA61D8F12C5425277BB0 /* Pods-Apptivator.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = "";
-				INFOPLIST_FILE = MenuBarApp/Info.plist;
+				INFOPLIST_FILE = Apptivator/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				PRODUCT_BUNDLE_IDENTIFIER = com.acheronfail.menu;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "Apptivator/Bridging-Header.h";
 				SWIFT_SWIFT3_OBJC_INFERENCE = On;
 				SWIFT_VERSION = 4.0;
 			};
@@ -378,7 +386,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		B3B4C2B81E25894B009F8E4E /* Build configuration list for PBXProject "MenuBarApp" */ = {
+		B3B4C2B81E25894B009F8E4E /* Build configuration list for PBXProject "Apptivator" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				B3B4C2C81E25894B009F8E4E /* Debug */,
@@ -387,7 +395,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		B3B4C2CA1E25894B009F8E4E /* Build configuration list for PBXNativeTarget "MenuBarApp" */ = {
+		B3B4C2CA1E25894B009F8E4E /* Build configuration list for PBXNativeTarget "Apptivator" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				B3B4C2CB1E25894B009F8E4E /* Debug */,
