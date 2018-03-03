@@ -1,13 +1,19 @@
-# MenuBarApp
+# Apptivator
 
-## Useful Things
+**This is a WIP.**
 
-* How to create a Bridging Header with cocoapods: https://web.archive.org/web/20160729124101/http://swiftalicio.us/2014/11/using-cocoapods-from-swift/
+This is a small menu bar app that will activate chosen apps with a predefined hotkey.
 
-## TODO:
+I created this because... (explanation coming soon!)
 
-* Add select to choose from running applications
-* Persist shortcuts across restarts
-* Open at login option
-* Icons
-* Separate into separate files
+## Installation
+
+Coming soon!
+
+## Usage
+
+Coming soon!
+
+## License
+
+[MIT](./LICENSE)
