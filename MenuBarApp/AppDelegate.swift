@@ -4,6 +4,7 @@
 //
 
 import Cocoa
+import AXSwift
 import MASShortcut
 
 struct ApplicationEntry: CustomDebugStringConvertible {
@@ -66,10 +67,15 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         
         menuBarItem?.title = "enabled"
         menuBarItem?.action = #selector(onMenuClick)
-        menuBarItem?.sendAction(on: [NSEvent.EventTypeMask.leftMouseDown, NSEvent.EventTypeMask.rightMouseDown])
+        menuBarItem?.sendAction(on: [.leftMouseUp, .rightMouseUp])
         
-        // While developing...
-        shortcuts()
+        // TODO: remove
+//        shortcuts()
+    }
+    
+    // Check for Accessibility API permissions
+    func checkPermissions() -> Bool {
+        return UIElement.isProcessTrusted(withPrompt: true)
     }
     
     func enable(_ flag: Bool) {
@@ -79,9 +85,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     
     @objc func onMenuClick(sender: NSStatusItem) {
         let event = NSApp.currentEvent!
-        if event.type == .rightMouseDown {
+        if event.type == .rightMouseUp {
             menuBarItem?.popUpMenu(contextMenu)
-        } else if event.type == .leftMouseDown {
+        } else if event.type == .leftMouseUp {
             enable(!enabled)
         }
     }
@@ -104,7 +110,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                     icon: properties[.effectiveIconKey] as? NSImage ?? NSImage(),
                     shortcut: MASShortcut()
                 )
-                appEntry.shortcutCell.shortcutValueChange = makeBinder(appEntry.key)
+                appEntry.shortcutCell.shortcutValueChange = makeBinder(forEntry: appEntry)
                 items.append(appEntry)
                 tableView.reloadData()
             } catch {
@@ -113,15 +119,29 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         }
     }
     
-    func makeBinder(_ key: String) -> (MASShortcutView?) -> () {
+    func makeBinder(forEntry entry: ApplicationEntry) -> (MASShortcutView?) -> () {
         return { sender in
-            print("Setting shortcut: \(sender!.shortcutValue) for \(key)")
-            MASShortcutBinder.shared().bindShortcut(withDefaultsKey: key, toAction: {
-                if self.enabled {
-                    print("shortcut fired for \(key)")
+            MASShortcutBinder.shared().bindShortcut(withDefaultsKey: entry.key, toAction: {
+                if self.enabled && self.checkPermissions() {
+                    if let app = self.findApp(withURL: entry.url) {
+                        if app.isActive {
+                            app.hide()
+                        } else {
+                            app.activate(options: .activateIgnoringOtherApps)
+                        }
+                    }
                 }
             })
         }
+    }
+    
+    func findApp(withURL url: URL) -> NSRunningApplication? {
+        let runningApps = NSWorkspace.shared.runningApplications
+        if let i = runningApps.index(where: { $0.bundleURL?.path == url.path || $0.executableURL?.path == url.path }) {
+            return runningApps[i]
+        }
+        
+        return nil
     }
     
     @objc func removeApplication(_ sender: NSButton) {
@@ -140,7 +160,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     @objc func shortcuts() {
         window.center()
         window.makeKeyAndOrderFront(window)
-        // TODO: map apps -> shortcuts
+        NSApplication.shared.activate(ignoringOtherApps: true)
     }
     
     @objc func quitApplication() {

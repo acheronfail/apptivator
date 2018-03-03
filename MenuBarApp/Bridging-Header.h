@@ -11,5 +11,6 @@
 
 #import <Cocoa/Cocoa.h>
 #import <MASShortcut/Shortcut.h>
+#import <AXSwift/AXSwift.h>
 
 #endif /* MenuBarApp_Bridging_Header_h */
