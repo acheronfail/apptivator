@@ -6,6 +6,9 @@
 import SwiftyJSON
 import MASShortcut
 
+// Where the app -> shortcut mappings are stored.
+let entrySavePath = URL(fileURLWithPath: "/Users/acheronfail/Desktop/output.json")
+
 struct ApplicationEntry: CustomDebugStringConvertible {
     let name: String
     let key: String
