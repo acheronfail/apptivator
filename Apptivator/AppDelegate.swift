@@ -6,6 +6,12 @@
 import Cocoa
 import AXSwift
 import MASShortcut
+import SwiftyJSON
+
+// Whether or not the shortcuts are enabled.
+var enabled = true
+// Where the app -> shortcut mappings are stored.
+let entrySavePath = URL(fileURLWithPath: "/Users/acheronfail/Desktop/output.json")
 
 struct ApplicationEntry: CustomDebugStringConvertible {
     let name: String
@@ -21,13 +27,45 @@ struct ApplicationEntry: CustomDebugStringConvertible {
         self.shortcutCell = MASShortcutView()
         
         // "." cannot appear here, see: https://github.com/shpakovski/MASShortcut/issues/64
-        self.key = "Shortcut::\(url.absoluteString)".replacingOccurrences(of: ".", with: "_")
+        self.key = makeApplicationEntryKey(url)
         self.shortcutCell.associatedUserDefaultsKey = self.key
+        self.shortcutCell.shortcutValueChange = makeBinder(forEntry: self)
+    }
+    
+    init?(json: JSON) throws {
+        self.url = json["url"].url!
+        let properties = try (self.url as NSURL).resourceValues(forKeys: [.localizedNameKey, .effectiveIconKey])
+        self.name = properties[.localizedNameKey] as? String ?? json["name"].string ?? ""
+        self.icon = properties[.effectiveIconKey] as? NSImage ?? NSImage()
+        
+        let key = makeApplicationEntryKey(self.url)
+        self.key = key
+        
+        self.shortcutCell = MASShortcutView()
+        self.shortcutCell.associatedUserDefaultsKey = key
+        self.shortcutCell.shortcutValueChange = makeBinder(forEntry: self)
+        let shortcut = MASShortcut(keyCode: json["keyCode"].uInt!, modifierFlags: json["modifierFlags"].uInt!)
+        self.shortcutCell.shortcutValue = shortcut
+    }
+    
+    var asJSON: JSON {
+        let shortcut = shortcutCell.shortcutValue!
+        let json: JSON = [
+            "url": url.absoluteString,
+            "name": name,
+            "keyCode": shortcut.keyCode,
+            "modifierFlags": shortcut.modifierFlags
+        ]
+        return json
     }
     
     public var debugDescription: String {
         return name + " " + "Shortcut: \(shortcutCell.shortcutValue)"
     }
+}
+
+func makeApplicationEntryKey(_ url: URL) -> String {
+    return "Shortcut::\(url.absoluteString)".replacingOccurrences(of: ".", with: "_")
 }
 
 @NSApplicationMain
@@ -36,9 +74,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     @IBOutlet weak var window: NSWindow!
     // Table in Shortcuts window.
     @IBOutlet weak var tableView: NSTableView!
-    // Items
+    // Items.
     var items: [ApplicationEntry] = []
-    //
+    // Buttons.
     @IBOutlet weak var addApplicationButton: NSButton!
     @IBOutlet weak var removeApplicationButton: NSButton!
     
@@ -46,10 +84,21 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     var menuBarItem: NSStatusItem? = nil
     // The menu.
     var contextMenu: NSMenu = NSMenu()
-    // Whether or not the shortcuts are enabled.
-    var enabled: Bool = true
     
     func applicationDidFinishLaunching(_ aNotification: Notification) {
+        // Restore Application list from disk.
+        do {
+            let jsonString = try String(contentsOf: entrySavePath, encoding: .utf8)
+            let dataFromString = jsonString.data(using: .utf8, allowLossyConversion: false)!
+            let json = try JSON(data: dataFromString)
+            for (_, entryJson):(String, JSON) in json {
+                let appEntry = try ApplicationEntry.init(json: entryJson)!
+                items.append(appEntry)
+            }
+        } catch {
+            print("oops - couldn't read list from file")
+        }
+        
         tableView.delegate = self
         tableView.dataSource = self
         
@@ -70,12 +119,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         menuBarItem?.sendAction(on: [.leftMouseUp, .rightMouseUp])
         
         // TODO: remove
-//        shortcuts()
-    }
-    
-    // Check for Accessibility API permissions
-    func checkPermissions() -> Bool {
-        return UIElement.isProcessTrusted(withPrompt: true)
+        shortcuts()
     }
     
     func enable(_ flag: Bool) {
@@ -110,38 +154,12 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                     icon: properties[.effectiveIconKey] as? NSImage ?? NSImage(),
                     shortcut: MASShortcut()
                 )
-                appEntry.shortcutCell.shortcutValueChange = makeBinder(forEntry: appEntry)
                 items.append(appEntry)
                 tableView.reloadData()
             } catch {
                 print("Error reading file attributes")
             }
         }
-    }
-    
-    func makeBinder(forEntry entry: ApplicationEntry) -> (MASShortcutView?) -> () {
-        return { sender in
-            MASShortcutBinder.shared().bindShortcut(withDefaultsKey: entry.key, toAction: {
-                if self.enabled && self.checkPermissions() {
-                    if let app = self.findApp(withURL: entry.url) {
-                        if app.isActive {
-                            app.hide()
-                        } else {
-                            app.activate(options: .activateIgnoringOtherApps)
-                        }
-                    }
-                }
-            })
-        }
-    }
-    
-    func findApp(withURL url: URL) -> NSRunningApplication? {
-        let runningApps = NSWorkspace.shared.runningApplications
-        if let i = runningApps.index(where: { $0.bundleURL?.path == url.path || $0.executableURL?.path == url.path }) {
-            return runningApps[i]
-        }
-        
-        return nil
     }
     
     @objc func removeApplication(_ sender: NSButton) {
@@ -168,7 +186,13 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
     func applicationWillTerminate(_ aNotification: Notification) {
-        // Insert code here to tear down your application
+        // Save item list to disk.
+        let json = JSON(items.map { $0.asJSON })
+        do {
+            try json.rawString()?.write(to: entrySavePath, atomically: false, encoding: .utf8)
+        } catch {
+            print("oops! couldn't save list!")
+        }
     }
 
 
@@ -209,9 +233,32 @@ extension AppDelegate: NSTableViewDelegate {
     
 }
 
+func makeBinder(forEntry entry: ApplicationEntry) -> (MASShortcutView?) -> () {
+    print("bind")
+    return { sender in
+        print("fire")
+        MASShortcutBinder.shared().bindShortcut(withDefaultsKey: entry.key, toAction: {
+            if enabled && UIElement.isProcessTrusted(withPrompt: true) {
+                if let app = findApp(withURL: entry.url) {
+                    if app.isActive {
+                        app.hide()
+                    } else {
+                        app.activate(options: .activateIgnoringOtherApps)
+                    }
+                }
+            }
+        })
+    }
+}
 
-
-
+func findApp(withURL url: URL) -> NSRunningApplication? {
+    let runningApps = NSWorkspace.shared.runningApplications
+    if let i = runningApps.index(where: { $0.bundleURL?.path == url.path || $0.executableURL?.path == url.path }) {
+        return runningApps[i]
+    }
+    
+    return nil
+}
 
 
 

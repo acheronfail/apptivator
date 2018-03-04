@@ -170,11 +170,13 @@
 				"${SRCROOT}/Pods/Target Support Files/Pods-Apptivator/Pods-Apptivator-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/AXSwift/AXSwift.framework",
 				"${BUILT_PRODUCTS_DIR}/MASShortcut/MASShortcut.framework",
+				"${BUILT_PRODUCTS_DIR}/SwiftyJSON/SwiftyJSON.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/AXSwift.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MASShortcut.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SwiftyJSON.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
