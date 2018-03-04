@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="13771" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
     <dependencies>
+        <deployment identifier="macosx"/>
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="13771"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -12,11 +13,16 @@
         </customObject>
         <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
         <customObject id="-3" userLabel="Application" customClass="NSObject"/>
-        <customObject id="Voe-Tx-rLC" customClass="AppDelegate" customModule="MenuBarApp" customModuleProvider="target">
+        <viewController id="goT-YD-soK" customClass="ViewController" customModule="Apptivator" customModuleProvider="target">
             <connections>
-                <outlet property="addApplicationButton" destination="GlZ-ch-c4n" id="aax-5O-v70"/>
-                <outlet property="removeApplicationButton" destination="QPF-Hk-Mw9" id="SOB-il-tyq"/>
-                <outlet property="tableView" destination="jvZ-CW-zzH" id="xF5-Fy-MIh"/>
+                <outlet property="addButton" destination="GlZ-ch-c4n" id="5AS-YC-EIl"/>
+                <outlet property="removeButton" destination="QPF-Hk-Mw9" id="GUv-7j-Xsz"/>
+                <outlet property="tableView" destination="jvZ-CW-zzH" id="ktV-Gc-BWq"/>
+                <outlet property="view" destination="EiT-Mj-1SZ" id="bDs-sb-2yV"/>
+            </connections>
+        </viewController>
+        <customObject id="Voe-Tx-rLC" customClass="AppDelegate" customModule="Apptivator" customModuleProvider="target">
+            <connections>
                 <outlet property="window" destination="QvC-M9-y7g" id="gIp-Ho-8D9"/>
             </connections>
         </customObject>
@@ -34,7 +40,7 @@
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <clipView key="contentView" ambiguous="YES" id="B8o-Kt-iL5">
                             <rect key="frame" x="1" y="0.0" width="438" height="187"/>
-                            <autoresizingMask key="autoresizingMask"/>
+                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             <subviews>
                                 <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" alternatingRowBackgroundColors="YES" columnSelection="YES" multipleSelection="NO" autosaveColumns="NO" rowHeight="19" rowSizeStyle="automatic" headerView="GnD-WD-VDB" viewBased="YES" id="jvZ-CW-zzH">
                                     <rect key="frame" x="0.0" y="0.0" width="438" height="164"/>

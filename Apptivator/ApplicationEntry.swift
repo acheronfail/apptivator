@@ -61,23 +61,23 @@ struct ApplicationEntry: CustomDebugStringConvertible {
 }
 
 // Restore Application list from disk.
-func loadItemsFromDisk(_ items: inout [ApplicationEntry]) {
+func loadEntriesFromDisk(_ entries: inout [ApplicationEntry]) {
     do {
         let jsonString = try String(contentsOf: entrySavePath, encoding: .utf8)
         let dataFromString = jsonString.data(using: .utf8, allowLossyConversion: false)!
         let json = try JSON(data: dataFromString)
         for (_, entryJson):(String, JSON) in json {
             let appEntry = try ApplicationEntry.init(json: entryJson)!
-            items.append(appEntry)
+            entries.append(appEntry)
         }
     } catch {
         print("oops - couldn't load list from file")
     }
 }
 
-func saveItemsToDisk(_ items: [ApplicationEntry]) {
+func saveEntriesToDisk(_ entries: [ApplicationEntry]) {
     // Save item list to disk.
-    let json = JSON(items.map { $0.asJSON })
+    let json = JSON(entries.map { $0.asJSON })
     do {
         try json.rawString()?.write(to: entrySavePath, atomically: false, encoding: .utf8)
     } catch {
