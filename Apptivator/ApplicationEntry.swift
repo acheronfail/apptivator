@@ -9,12 +9,14 @@ import MASShortcut
 // Where the app -> shortcut mappings are stored.
 let entrySavePath = URL(fileURLWithPath: "/Users/acheronfail/Desktop/output.json")
 
+// Represents an item in the Shortcut table of the app's window.
+// Each ApplicationEntry is simply a URL of an app mapped to a shortcut.
 struct ApplicationEntry: CustomDebugStringConvertible {
     let name: String
     let key: String
     let icon: NSImage
     let url: URL
-    var shortcutCell: MASShortcutView
+    let shortcutCell: MASShortcutView
     
     init(url: URL, name: String, icon: NSImage, shortcut: MASShortcut) {
         self.name = name
@@ -22,7 +24,6 @@ struct ApplicationEntry: CustomDebugStringConvertible {
         self.url = url
         self.shortcutCell = MASShortcutView()
         
-        // "." cannot appear here, see: https://github.com/shpakovski/MASShortcut/issues/64
         self.key = makeApplicationEntryKey(url)
         self.shortcutCell.associatedUserDefaultsKey = self.key
         self.shortcutCell.shortcutValueChange = makeBinder(forEntry: self)
@@ -56,39 +57,47 @@ struct ApplicationEntry: CustomDebugStringConvertible {
     }
     
     public var debugDescription: String {
-        return name + " " + "Shortcut: \(shortcutCell.shortcutValue)"
+        return name + " " + "Shortcut: \(shortcutCell.shortcutValue!)"
     }
 }
 
-// Restore Application list from disk.
+// Restore Application entry list from disk.
 func loadEntriesFromDisk(_ entries: inout [ApplicationEntry]) {
     do {
         let jsonString = try String(contentsOf: entrySavePath, encoding: .utf8)
-        let dataFromString = jsonString.data(using: .utf8, allowLossyConversion: false)!
-        let json = try JSON(data: dataFromString)
-        for (_, entryJson):(String, JSON) in json {
-            let appEntry = try ApplicationEntry.init(json: entryJson)!
-            entries.append(appEntry)
+        if let dataFromString = jsonString.data(using: .utf8, allowLossyConversion: false) {
+            let json = try JSON(data: dataFromString)
+            for (_, entryJson):(String, JSON) in json {
+                if let appEntry = try ApplicationEntry.init(json: entryJson) {
+                    entries.append(appEntry)
+                }
+            }
         }
     } catch {
-        print("oops - couldn't load list from file")
+        print("Unexpected error loading application list from disk: \(error)")
     }
 }
 
+// Save the application entry list to disk.
 func saveEntriesToDisk(_ entries: [ApplicationEntry]) {
-    // Save item list to disk.
     let json = JSON(entries.map { $0.asJSON })
     do {
-        try json.rawString()?.write(to: entrySavePath, atomically: false, encoding: .utf8)
+        if let jsonString = json.rawString() {
+            try jsonString.write(to: entrySavePath, atomically: false, encoding: .utf8)
+        }
     } catch {
-        print("oops! couldn't save list!")
+        print("Unexpected error saving application list from disk: \(error)")
     }
 }
 
+// The character "." cannot appear in the MASShortcutView.associatedUserDefaultsKey property.
+// See: https://github.com/shpakovski/MASShortcut/issues/64
 func makeApplicationEntryKey(_ url: URL) -> String {
     return "Shortcut::\(url.absoluteString)".replacingOccurrences(of: ".", with: "_")
 }
 
+// Creates a function that returns a function which updates the global shortcut binding
+// each time that it's called.
 func makeBinder(forEntry entry: ApplicationEntry) -> (MASShortcutView?) -> () {
     return { sender in
         MASShortcutBinder.shared().bindShortcut(withDefaultsKey: entry.key, toAction: {
@@ -105,6 +114,7 @@ func makeBinder(forEntry entry: ApplicationEntry) -> (MASShortcutView?) -> () {
     }
 }
 
+// Find the app at the given URL.
 func findApp(withURL url: URL) -> NSRunningApplication? {
     let runningApps = NSWorkspace.shared.runningApplications
     if let i = runningApps.index(where: { $0.bundleURL?.path == url.path || $0.executableURL?.path == url.path }) {
