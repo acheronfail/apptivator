@@ -76,9 +76,18 @@ extension ViewController: NSTableViewDelegate {
         static let ShortcutCell = "ShortcutCellID"
     }
     
+    func tableView(_ tableView: NSTableView, sortDescriptorsDidChange oldDescriptors: [NSSortDescriptor]) {
+        if tableView.sortDescriptors[0].ascending {
+            entries.sort { $0.name.lowercased() < $1.name.lowercased() }
+        } else {
+            entries.sort { $0.name.lowercased() > $1.name.lowercased() }
+        }
+        tableView.reloadData()
+    }
+    
     func tableView(_ tableView: NSTableView, viewFor tableColumn: NSTableColumn?, row: Int) -> NSView? {
         let item = entries[row]
-        
+
         // Application column:
         if tableColumn == tableView.tableColumns[0] {
             if let cell = tableView.makeView(withIdentifier: .init(CellIdentifiers.ApplicationCell), owner: nil) as? NSTableCellView {
@@ -87,12 +96,12 @@ extension ViewController: NSTableViewDelegate {
                 return cell
             }
         }
-        
+
         // Shortcut column:
         if tableColumn == tableView.tableColumns[1] {
             return item.shortcutCell
         }
-        
+
         return nil
     }
 }

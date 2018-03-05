@@ -20,7 +20,7 @@ struct ApplicationEntry: CustomDebugStringConvertible {
     let url: URL
     let shortcutCell: MASShortcutView
     let observer: Observer? = nil
-    
+
     init(url: URL, name: String, icon: NSImage, shortcut: MASShortcut) {
         self.name = name
         self.icon = icon
@@ -33,7 +33,7 @@ struct ApplicationEntry: CustomDebugStringConvertible {
         
         self.shortcutCell.shortcutValueChange = makeBinder(forEntry: self)
     }
-    
+
     init?(json: JSON) throws {
         self.url = json["url"].url!
         let properties = try (self.url as NSURL).resourceValues(forKeys: [.localizedNameKey, .effectiveIconKey])
@@ -49,7 +49,7 @@ struct ApplicationEntry: CustomDebugStringConvertible {
         let shortcut = MASShortcut(keyCode: json["keyCode"].uInt!, modifierFlags: json["modifierFlags"].uInt!)
         self.shortcutCell.shortcutValue = shortcut
     }
-    
+
     var asJSON: JSON {
         let shortcut = shortcutCell.shortcutValue!
         let json: JSON = [
@@ -60,7 +60,7 @@ struct ApplicationEntry: CustomDebugStringConvertible {
         ]
         return json
     }
-    
+
     public var debugDescription: String {
         return name + " " + "Shortcut: \(shortcutCell.shortcutValue!)"
     }
