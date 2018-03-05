@@ -4,6 +4,7 @@
 //
 
 import Cocoa
+import AXSwift
 import SwiftyJSON
 import MASShortcut
 
@@ -18,6 +19,7 @@ struct ApplicationEntry: CustomDebugStringConvertible {
     let icon: NSImage
     let url: URL
     let shortcutCell: MASShortcutView
+    let observer: Observer? = nil
     
     init(url: URL, name: String, icon: NSImage, shortcut: MASShortcut) {
         self.name = name
@@ -25,8 +27,10 @@ struct ApplicationEntry: CustomDebugStringConvertible {
         self.url = url
         self.shortcutCell = MASShortcutView()
         
-        self.key = makeApplicationEntryKey(url)
-        self.shortcutCell.associatedUserDefaultsKey = self.key
+        let key = makeApplicationEntryKey(url)
+        self.key = key
+        self.shortcutCell.associatedUserDefaultsKey = key
+        
         self.shortcutCell.shortcutValueChange = makeBinder(forEntry: self)
     }
     
@@ -38,9 +42,9 @@ struct ApplicationEntry: CustomDebugStringConvertible {
         
         let key = makeApplicationEntryKey(self.url)
         self.key = key
-        
         self.shortcutCell = MASShortcutView()
         self.shortcutCell.associatedUserDefaultsKey = key
+        
         self.shortcutCell.shortcutValueChange = makeBinder(forEntry: self)
         let shortcut = MASShortcut(keyCode: json["keyCode"].uInt!, modifierFlags: json["modifierFlags"].uInt!)
         self.shortcutCell.shortcutValue = shortcut
@@ -101,6 +105,11 @@ func makeApplicationEntryKey(_ url: URL) -> String {
     return "Shortcut::\(url.absoluteString)".replacingOccurrences(of: ".", with: "_")
 }
 
+// Initialises an observer to watch certain events on each ApplicationEntry.
+func makeObserver(atURL url: URL) -> Observer? {
+    return nil
+}
+
 // Creates a function that returns a function which updates the global shortcut binding
 // each time that it's called.
 func makeBinder(forEntry entry: ApplicationEntry) -> (MASShortcutView?) -> () {
@@ -113,9 +122,43 @@ func makeBinder(forEntry entry: ApplicationEntry) -> (MASShortcutView?) -> () {
                     } else {
                         app.activate(options: .activateIgnoringOtherApps)
                     }
+                } else {
+                    launchApplication(at: entry.url)
                 }
             }
         })
+    }
+}
+
+// Launches the application at the given url. First tries to launch it as if it were a an
+// application bundle, and if that fails, it tries to run it as if it were an executable.
+func launchApplication(at url: URL) {
+    do {
+        try NSWorkspace.shared.launchApplication(at: url, options: [], configuration: [:])
+    } catch {
+        DispatchQueue.global(qos: .background).async {
+            do {
+                // Process.run() is a catchable form of Process.launch() but is only available on
+                // macOS 10.13 or later. On macOS 10.12 and below we have to launch the executable
+                // with "/usr/bin/env" instead, so it doesn't create a runtime exception and crash
+                // the app.
+                let process = Process()
+                if #available(OSX 10.13, *) {
+                    process.executableURL = url
+                    try process.run()
+                } else {
+                    process.launchPath = "/usr/bin/env"
+                    process.arguments = [url.path]
+                    process.launch()
+                    process.waitUntilExit()
+                    if process.terminationStatus != 0 {
+                        print("An error occurred launching the executable, /usr/bin/env exit status: \(process.terminationStatus)")
+                    }
+                }
+            } catch {
+                print("Could not launch \(error)")
+            }
+        }
     }
 }
 
