@@ -17,7 +17,7 @@ var appIsEnabled = true
 
     func applicationDidFinishLaunching(_ aNotification: Notification) {
         menuBarItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
-        menuBarItem?.title = "enabled"
+        menuBarItem?.title = "👍"
         menuBarItem?.action = #selector(onMenuClick)
         menuBarItem?.sendAction(on: [.leftMouseUp, .rightMouseUp])
 
@@ -35,7 +35,7 @@ var appIsEnabled = true
 
     func enable(_ flag: Bool) {
         appIsEnabled = flag
-        menuBarItem?.title = flag ? "enabled" : "disabled"
+        menuBarItem?.title = flag ? "👍" : "👎"
     }
 
     @objc func onMenuClick(sender: NSStatusItem) {
