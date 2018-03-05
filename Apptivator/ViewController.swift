@@ -6,29 +6,51 @@
 import MASShortcut
 
 class ViewController: NSViewController {
-    
+
     var entries: [ApplicationEntry] = []
 
+    var addMenu: NSMenu = NSMenu()
     @IBOutlet weak var tableView: NSTableView!
     @IBOutlet weak var addButton: NSButton!
     @IBOutlet weak var removeButton: NSButton!
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         loadEntriesFromDisk(&entries)
-        
+
+        addMenu.delegate = self
+        addMenu.addItem(NSMenuItem(title: "Choose from File System", action: #selector(chooseFromFileSystem), keyEquivalent: ""))
+        addMenu.addItem(NSMenuItem(title: "Choose from Running Applications", action: nil, keyEquivalent: ""))
+        addMenu.item(at: 1)?.submenu = NSMenu()
+
         tableView.delegate = self
         tableView.dataSource = self
-        
+
         addButton.action = #selector(addApplication(_:))
         removeButton.action = #selector(removeApplication(_:))
     }
-    
+
     override func viewWillDisappear() {
         saveEntriesToDisk(entries)
     }
-    
+
     @objc func addApplication(_ sender: NSButton) {
+        addMenu.popUp(positioning: addMenu.item(at: 0), at: NSEvent.mouseLocation, in: nil)
+    }
+
+    @objc func chooseFromRunningApps(_ sender: NSMenuItem) {
+        guard let app = sender.representedObject else {
+            return
+        }
+
+        if let url = (app as! NSRunningApplication).bundleURL {
+            addEntry(fromURL: url)
+        } else if let url = (app as! NSRunningApplication).executableURL {
+            addEntry(fromURL: url)
+        }
+    }
+    
+    @objc func chooseFromFileSystem() {
         let panel = NSOpenPanel()
         panel.canChooseFiles = true
         panel.canChooseDirectories = false
@@ -37,22 +59,10 @@ class ViewController: NSViewController {
         panel.runModal()
         
         if let url = panel.url {
-            do {
-                let properties = try (url as NSURL).resourceValues(forKeys: [.localizedNameKey, .effectiveIconKey])
-                let appEntry = ApplicationEntry(
-                    url: url,
-                    name: properties[.localizedNameKey] as? String ?? "",
-                    icon: properties[.effectiveIconKey] as? NSImage ?? NSImage(),
-                    shortcut: MASShortcut()
-                )
-                entries.append(appEntry)
-                tableView.reloadData()
-            } catch {
-                print("Error reading file attributes")
-            }
+            addEntry(fromURL: url)
         }
     }
-    
+
     @objc func removeApplication(_ sender: NSButton) {
         let selected = tableView.selectedRow
         if selected >= 0 {
@@ -62,6 +72,44 @@ class ViewController: NSViewController {
         }
     }
     
+    func addEntry(fromURL url: URL) {
+        do {
+            let properties = try (url as NSURL).resourceValues(forKeys: [.localizedNameKey, .effectiveIconKey])
+            let appEntry = ApplicationEntry(
+                url: url,
+                name: properties[.localizedNameKey] as? String ?? "",
+                icon: properties[.effectiveIconKey] as? NSImage ?? NSImage(),
+                shortcut: MASShortcut()
+            )
+            entries.append(appEntry)
+            tableView.reloadData()
+        } catch {
+            print("Error reading file attributes")
+        }
+    }
+}
+
+extension ViewController: NSMenuDelegate {
+    func menu(_ menu: NSMenu, willHighlight item: NSMenuItem?) {
+        guard let item = item, item == addMenu.item(at: 1) else {
+            return
+        }
+
+        let runningAppsMenu = item.submenu!
+        for runningApp in NSWorkspace.shared.runningApplications {
+            if runningApp.activationPolicy == .regular {
+                let appItem = NSMenuItem(title: runningApp.localizedName!, action: #selector(chooseFromRunningApps(_:)), keyEquivalent: "")
+                appItem.image = runningApp.icon
+                appItem.representedObject = runningApp
+                runningAppsMenu.addItem(appItem)
+            }
+        }
+        item.submenu = runningAppsMenu
+    }
+
+    func menuDidClose(_ menu: NSMenu) {
+        addMenu.item(at: 1)?.submenu?.removeAllItems()
+    }
 }
 
 extension ViewController: NSTableViewDataSource {
