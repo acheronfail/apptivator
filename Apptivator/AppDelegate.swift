@@ -3,6 +3,8 @@
 //  MenuBarApp
 //
 
+import Down
+
 // Whether or not the app is enabled.
 var appIsEnabled = true
 
@@ -46,7 +48,16 @@ var appIsEnabled = true
     }
 
     @objc func about() {
-        NSApp.orderFrontStandardAboutPanel()
+        do {
+            if let path = Bundle.main.path(forResource: "Credits", ofType: "md") {
+                let rawString = try String(contentsOf: URL(fileURLWithPath: path), encoding: .utf8)
+                let down = Down(markdownString: rawString)
+                let attributedString = try down.toAttributedString()
+                NSApp.orderFrontStandardAboutPanel(options: [NSApplication.AboutPanelOptionKey(rawValue: "Credits"): attributedString])
+            }
+        } catch {
+            NSApp.orderFrontStandardAboutPanel()
+        }
     }
 
     @objc func shortcuts() {

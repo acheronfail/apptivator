@@ -20,7 +20,6 @@
 		1537F5E0204C8D860056EE50 /* ApplicationEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApplicationEntry.swift; sourceTree = "<group>"; };
 		15F39F3B204CB72D00847CD5 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		15FF0CCC204A231800E04103 /* Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "Bridging-Header.h"; path = "Apptivator/Bridging-Header.h"; sourceTree = "<group>"; };
-		45AE51C7F2B4237841F73226 /* Pods-MenuBarApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MenuBarApp.release.xcconfig"; path = "Pods/Target Support Files/Pods-MenuBarApp/Pods-MenuBarApp.release.xcconfig"; sourceTree = "<group>"; };
 		73ECD1AABBFAADAFE262B827 /* Pods_Apptivator.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Apptivator.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A58FEA61D8F12C5425277BB0 /* Pods-Apptivator.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Apptivator.release.xcconfig"; path = "Pods/Target Support Files/Pods-Apptivator/Pods-Apptivator.release.xcconfig"; sourceTree = "<group>"; };
 		B3B4C2BD1E25894B009F8E4E /* Apptivator.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Apptivator.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -29,7 +28,6 @@
 		B3B4C2C51E25894B009F8E4E /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
 		B3B4C2C71E25894B009F8E4E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		B92238D88D6441A672373553 /* Pods-Apptivator.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Apptivator.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Apptivator/Pods-Apptivator.debug.xcconfig"; sourceTree = "<group>"; };
-		FF660E6768C8785993B326B4 /* Pods-MenuBarApp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MenuBarApp.debug.xcconfig"; path = "Pods/Target Support Files/Pods-MenuBarApp/Pods-MenuBarApp.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -47,8 +45,6 @@
 		0DC2BA5439C177A010D948B6 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				FF660E6768C8785993B326B4 /* Pods-MenuBarApp.debug.xcconfig */,
-				45AE51C7F2B4237841F73226 /* Pods-MenuBarApp.release.xcconfig */,
 				B92238D88D6441A672373553 /* Pods-Apptivator.debug.xcconfig */,
 				A58FEA61D8F12C5425277BB0 /* Pods-Apptivator.release.xcconfig */,
 			);
@@ -109,6 +105,7 @@
 				B3B4C2BB1E25894B009F8E4E /* Resources */,
 				CAEF1827813737F521F9195E /* [CP] Embed Pods Frameworks */,
 				E4070AC6F3B4204135E561E1 /* [CP] Copy Pods Resources */,
+				15FC8CC6204D21D3000B5E1E /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -167,6 +164,19 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		15FC8CC6204D21D3000B5E1E /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "cp \"Pods/Target Support Files/Pods-Apptivator/Pods-Apptivator-acknowledgements.markdown\" \"${CONFIGURATION_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Credits.md\"";
+		};
 		CAEF1827813737F521F9195E /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -175,12 +185,14 @@
 			inputPaths = (
 				"${SRCROOT}/Pods/Target Support Files/Pods-Apptivator/Pods-Apptivator-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/AXSwift/AXSwift.framework",
+				"${BUILT_PRODUCTS_DIR}/Down/Down.framework",
 				"${BUILT_PRODUCTS_DIR}/MASShortcut/MASShortcut.framework",
 				"${BUILT_PRODUCTS_DIR}/SwiftyJSON/SwiftyJSON.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/AXSwift.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Down.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MASShortcut.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SwiftyJSON.framework",
 			);

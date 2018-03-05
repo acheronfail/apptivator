@@ -1,18 +1,21 @@
 PODS:
   - AXSwift (0.2.1)
+  - Down (0.5.0)
   - MASShortcut (2.3.6)
   - SwiftyJSON (4.0.0)
 
 DEPENDENCIES:
   - AXSwift (~> 0.2)
+  - Down
   - MASShortcut
   - SwiftyJSON
 
 SPEC CHECKSUMS:
   AXSwift: 4042f63258a556ab3e6335ccaf02196e3f7745fa
+  Down: 560261dbefd41f7a86f11c5e7a5cd9f9596ae5b3
   MASShortcut: 9c215e8a8a78f3d01ce56da48e2730ab66b538fa
   SwiftyJSON: 070dabdcb1beb81b247c65ffa3a79dbbfb3b48aa
 
-PODFILE CHECKSUM: 46f7ba2453b9d9406ef48f7fdd1e50f772b8286c
+PODFILE CHECKSUM: eeb9b20f87456e67b9012df044605d14957943ef
 
 COCOAPODS: 1.4.0

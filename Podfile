@@ -11,4 +11,5 @@ target 'Apptivator' do
   pod 'MASShortcut'
   pod 'AXSwift', '~> 0.2'
   pod 'SwiftyJSON'
+  pod 'Down'
 end
