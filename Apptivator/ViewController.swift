@@ -16,22 +16,23 @@ class ViewController: NSViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        loadEntriesFromDisk(&entries)
+        ApplicationEntry.loadFromDisk(&entries)
+
+        tableView.delegate = self
+        tableView.dataSource = self
 
         addMenu.delegate = self
         addMenu.addItem(NSMenuItem(title: "Choose from File System", action: #selector(chooseFromFileSystem), keyEquivalent: ""))
         addMenu.addItem(NSMenuItem(title: "Choose from Running Applications", action: nil, keyEquivalent: ""))
         addMenu.item(at: 1)?.submenu = NSMenu()
 
-        tableView.delegate = self
-        tableView.dataSource = self
-
         addButton.action = #selector(addApplication(_:))
         removeButton.action = #selector(removeApplication(_:))
     }
 
     override func viewWillDisappear() {
-        saveEntriesToDisk(entries)
+        super.viewWillDisappear()
+        ApplicationEntry.saveToDisk(entries)
     }
 
     @objc func addApplication(_ sender: NSButton) {
@@ -90,6 +91,7 @@ class ViewController: NSViewController {
 }
 
 extension ViewController: NSMenuDelegate {
+    // Populate context menu with a list of running apps when it's highlighted.
     func menu(_ menu: NSMenu, willHighlight item: NSMenuItem?) {
         guard let item = item, item == addMenu.item(at: 1) else {
             return
@@ -123,7 +125,7 @@ extension ViewController: NSTableViewDelegate {
         static let ApplicationCell = "ApplicationCellID"
         static let ShortcutCell = "ShortcutCellID"
     }
-    
+
     func tableView(_ tableView: NSTableView, sortDescriptorsDidChange oldDescriptors: [NSSortDescriptor]) {
         if tableView.sortDescriptors[0].ascending {
             entries.sort { $0.name.lowercased() < $1.name.lowercased() }
@@ -132,7 +134,7 @@ extension ViewController: NSTableViewDelegate {
         }
         tableView.reloadData()
     }
-    
+
     func tableView(_ tableView: NSTableView, viewFor tableColumn: NSTableColumn?, row: Int) -> NSView? {
         let item = entries[row]
 
