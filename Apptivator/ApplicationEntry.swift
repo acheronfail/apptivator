@@ -3,6 +3,7 @@
 //  Apptivator
 //
 
+import Cocoa
 import SwiftyJSON
 import MASShortcut
 
@@ -74,7 +75,11 @@ func loadEntriesFromDisk(_ entries: inout [ApplicationEntry]) {
             }
         }
     } catch {
-        print("Unexpected error loading application list from disk: \(error)")
+        // Ignore error when there's no file.
+        let err = error as NSError
+        if err.domain != NSCocoaErrorDomain && err.code != CocoaError.fileReadNoSuchFile.rawValue {
+            print("Unexpected error loading application list from disk: \(error)")
+        }
     }
 }
 
