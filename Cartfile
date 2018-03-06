@@ -1,0 +1,5 @@
+github "shpakovski/MASShortcut"
+github "SwiftyJSON/SwiftyJSON"
+github "tmandry/AXSwift" ~> 0.2
+github "iwasrobbed/Down"
+github "sindresorhus/LaunchAtLogin"
