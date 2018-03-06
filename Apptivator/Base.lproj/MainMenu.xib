@@ -148,7 +148,7 @@
                         </buttonCell>
                     </button>
                     <button identifier="hideAppsWithShortcutWhenActive" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Ucs-lf-XIV">
-                        <rect key="frame" x="18" y="78" width="285" height="18"/>
+                        <rect key="frame" x="18" y="58" width="285" height="18"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <buttonCell key="cell" type="check" title="Hide apps when active and shortcut is fired" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="05p-zN-EYB">
                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
@@ -158,21 +158,10 @@
                             <action selector="onCheckboxChange:" target="goT-YD-soK" id="FEf-aE-hDZ"/>
                         </connections>
                     </button>
-                    <button identifier="hideAppsWhenDeactivated" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="0kg-bg-dYL">
-                        <rect key="frame" x="18" y="58" width="299" height="18"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <buttonCell key="cell" type="check" title="Automatically hide apps when they lose focus" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="FAm-P7-nYy">
-                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                            <font key="font" metaFont="system"/>
-                        </buttonCell>
-                        <connections>
-                            <action selector="onCheckboxChange:" target="goT-YD-soK" id="Eow-V5-cij"/>
-                        </connections>
-                    </button>
                     <button identifier="launchAppIfNotRunning" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="BXg-y8-t5S">
-                        <rect key="frame" x="18" y="38" width="273" height="18"/>
+                        <rect key="frame" x="18" y="38" width="229" height="18"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <buttonCell key="cell" type="check" title="Launch applications if they're not running" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="sHK-Wd-9r7">
+                        <buttonCell key="cell" type="check" title="Launch apps if they're not running" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="sHK-Wd-9r7">
                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
@@ -189,6 +178,17 @@
                         </buttonCell>
                         <connections>
                             <action selector="onCheckboxChange:" target="goT-YD-soK" id="AHF-nq-Xif"/>
+                        </connections>
+                    </button>
+                    <button identifier="hideAppsWhenDeactivated" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="0kg-bg-dYL">
+                        <rect key="frame" x="18" y="78" width="299" height="18"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <buttonCell key="cell" type="check" title="Automatically hide apps when they lose focus" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="FAm-P7-nYy">
+                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                            <font key="font" metaFont="system"/>
+                        </buttonCell>
+                        <connections>
+                            <action selector="onCheckboxChange:" target="goT-YD-soK" id="Eow-V5-cij"/>
                         </connections>
                     </button>
                 </subviews>
