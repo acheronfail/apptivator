@@ -23,7 +23,10 @@ class ApplicationEntry: CustomDebugStringConvertible {
 
     init?(url: URL) {
         self.url = url
-        let key = ApplicationEntry.createApplicationEntryKey(url)
+
+        // The character "." cannot appear in the MASShortcutView.associatedUserDefaultsKey property.
+        // See: https://github.com/shpakovski/MASShortcut/issues/64
+        let key = "Shortcut::\(url.absoluteString)".replacingOccurrences(of: ".", with: "_")
         self.key = key
         self.shortcutCell = MASShortcutView()
         self.shortcutCell.associatedUserDefaultsKey = key
@@ -129,12 +132,6 @@ class ApplicationEntry: CustomDebugStringConvertible {
             json["modifierFlags"].uInt = shortcut.modifierFlags
         }
         return json
-    }
-
-    // The character "." cannot appear in the MASShortcutView.associatedUserDefaultsKey property.
-    // See: https://github.com/shpakovski/MASShortcut/issues/64
-    static func createApplicationEntryKey(_ url: URL) -> String {
-        return "Shortcut::\(url.absoluteString)".replacingOccurrences(of: ".", with: "_")
     }
 
     static func serialiseList(entries: [ApplicationEntry]) -> JSON {
