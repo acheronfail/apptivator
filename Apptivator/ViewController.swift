@@ -110,6 +110,7 @@ extension ViewController: NSMenuDelegate {
     // Populate context menu with a list of running apps when it's highlighted.
     func menu(_ menu: NSMenu, willHighlight item: NSMenuItem?) {
         guard let item = item, item == addMenu.item(at: 1) else {
+            addMenu.item(at: 1)?.submenu?.removeAllItems()
             return
         }
 
