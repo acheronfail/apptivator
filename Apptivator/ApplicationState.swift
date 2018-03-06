@@ -4,6 +4,7 @@
 //
 
 import SwiftyJSON
+import LaunchAtLogin
 
 @objcMembers class ApplicationState: NSObject {
     // Location of our serialised application state.
@@ -14,7 +15,7 @@ import SwiftyJSON
     // Whether or not the app is globally enabled.
     var appIsEnabled = true
     // Whether or not the app should launch after login.
-    var launchAppAtLogin = false
+    var launchAppAtLogin = LaunchAtLogin.isEnabled
     // Should we launch the application if it's not running and the shortcut is pressed?
     var launchAppIfNotRunning = true
     // Should apps in the list be automatically hidden once they lose focus?
@@ -38,8 +39,6 @@ import SwiftyJSON
                         hideAppsWhenDeactivated = value.bool ?? hideAppsWhenDeactivated
                     case "launchAppIfNotRunning":
                         launchAppIfNotRunning = value.bool ?? launchAppIfNotRunning
-                    case "launchAppAtLogin":
-                        launchAppAtLogin = value.bool ?? launchAppAtLogin
                     default:
                         print("unknown key '\(key)' encountered in json")
                     }
@@ -60,8 +59,7 @@ import SwiftyJSON
             "entries": ApplicationEntry.serialiseList(entries: entries),
             "hideAppsWithShortcutWhenActive": hideAppsWithShortcutWhenActive,
             "hideAppsWhenDeactivated": hideAppsWhenDeactivated,
-            "launchAppIfNotRunning": launchAppIfNotRunning,
-            "launchAppAtLogin": launchAppAtLogin
+            "launchAppIfNotRunning": launchAppIfNotRunning
         ]
         do {
             if let jsonString = json.rawString() {

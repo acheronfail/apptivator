@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		151859FE204F35C5007CD792 /* LaunchAtLogin.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 151859FD204F35C5007CD792 /* LaunchAtLogin.framework */; };
+		151859FF204F35C6007CD792 /* LaunchAtLogin.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 151859FD204F35C5007CD792 /* LaunchAtLogin.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		1537F5E1204C8D860056EE50 /* ApplicationEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1537F5E0204C8D860056EE50 /* ApplicationEntry.swift */; };
 		15BB82A4204E512E0039B4E2 /* AXSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 15BB82A0204E512E0039B4E2 /* AXSwift.framework */; };
 		15BB82A5204E512E0039B4E2 /* AXSwift.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 15BB82A0204E512E0039B4E2 /* AXSwift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -32,6 +34,7 @@
 			files = (
 				15BB82A7204E512E0039B4E2 /* Down.framework in Embed Frameworks */,
 				15BB82A5204E512E0039B4E2 /* AXSwift.framework in Embed Frameworks */,
+				151859FF204F35C6007CD792 /* LaunchAtLogin.framework in Embed Frameworks */,
 				15BB82AB204E512E0039B4E2 /* MASShortcut.framework in Embed Frameworks */,
 				15BB82A9204E512E0039B4E2 /* SwiftyJSON.framework in Embed Frameworks */,
 			);
@@ -41,6 +44,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		151859FD204F35C5007CD792 /* LaunchAtLogin.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = LaunchAtLogin.framework; path = Carthage/Build/Mac/LaunchAtLogin.framework; sourceTree = "<group>"; };
 		1537F5E0204C8D860056EE50 /* ApplicationEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApplicationEntry.swift; sourceTree = "<group>"; };
 		15BB82A0204E512E0039B4E2 /* AXSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AXSwift.framework; path = Carthage/Build/Mac/AXSwift.framework; sourceTree = "<group>"; };
 		15BB82A1204E512E0039B4E2 /* Down.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Down.framework; path = Carthage/Build/Mac/Down.framework; sourceTree = "<group>"; };
@@ -63,6 +67,7 @@
 			files = (
 				15BB82A6204E512E0039B4E2 /* Down.framework in Frameworks */,
 				15BB82A4204E512E0039B4E2 /* AXSwift.framework in Frameworks */,
+				151859FE204F35C5007CD792 /* LaunchAtLogin.framework in Frameworks */,
 				15BB82AA204E512E0039B4E2 /* MASShortcut.framework in Frameworks */,
 				15BB82A8204E512E0039B4E2 /* SwiftyJSON.framework in Frameworks */,
 			);
@@ -74,6 +79,7 @@
 		B3B4C2B41E25894B009F8E4E = {
 			isa = PBXGroup;
 			children = (
+				151859FD204F35C5007CD792 /* LaunchAtLogin.framework */,
 				15BB82A0204E512E0039B4E2 /* AXSwift.framework */,
 				15BB82A1204E512E0039B4E2 /* Down.framework */,
 				15BB82A3204E512E0039B4E2 /* MASShortcut.framework */,
@@ -117,6 +123,7 @@
 				B3B4C2BA1E25894B009F8E4E /* Frameworks */,
 				B3B4C2BB1E25894B009F8E4E /* Resources */,
 				15BB82AC204E512E0039B4E2 /* Embed Frameworks */,
+				15185A00204F364A007CD792 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -139,6 +146,7 @@
 				TargetAttributes = {
 					B3B4C2BC1E25894B009F8E4E = {
 						CreatedOnToolsVersion = 8.2.1;
+						DevelopmentTeam = 8FUFLLHWE9;
 						LastSwiftMigration = 0920;
 						ProvisioningStyle = Automatic;
 					};
@@ -173,6 +181,22 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		15185A00204F364A007CD792 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "./Carthage/Build/Mac/LaunchAtLogin.framework/Resources/copy-helper.sh";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		B3B4C2B91E25894B009F8E4E /* Sources */ = {
@@ -312,17 +336,20 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "";
+				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = 8FUFLLHWE9;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/Mac",
 				);
 				INFOPLIST_FILE = Apptivator/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				MACOSX_DEPLOYMENT_TARGET = 10.12;
 				PRODUCT_BUNDLE_IDENTIFIER = com.acheronfail.menu;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "Apptivator/Bridging-Header.h";
 				SWIFT_SWIFT3_OBJC_INFERENCE = On;
 				SWIFT_VERSION = 4.0;
@@ -333,17 +360,20 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "";
+				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = 8FUFLLHWE9;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/Mac",
 				);
 				INFOPLIST_FILE = Apptivator/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				MACOSX_DEPLOYMENT_TARGET = 10.12;
 				PRODUCT_BUNDLE_IDENTIFIER = com.acheronfail.menu;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "Apptivator/Bridging-Header.h";
 				SWIFT_SWIFT3_OBJC_INFERENCE = On;
 				SWIFT_VERSION = 4.0;

@@ -4,6 +4,7 @@
 //
 
 import MASShortcut
+import LaunchAtLogin
 
 class ViewController: NSViewController {
 
@@ -19,8 +20,13 @@ class ViewController: NSViewController {
     @IBOutlet weak var launchAppAtLogin: NSButton!
 
     @IBAction func onCheckboxChange(_ sender: NSButton) {
+        let flag = sender.state == .on
         if let identifier = sender.identifier?.rawValue {
-            state.setValue(sender.state == .on, forKey: identifier)
+            if identifier == "launchAppAtLogin" {
+                LaunchAtLogin.isEnabled = flag
+            } else {
+                state.setValue(flag, forKey: identifier)
+            }
         }
     }
 
@@ -48,7 +54,7 @@ class ViewController: NSViewController {
         hideAppsWithShortcutWhenActive.state = state.hideAppsWithShortcutWhenActive ? .on : .off
         hideAppsWhenDeactivated.state = state.hideAppsWhenDeactivated ? .on : .off
         launchAppIfNotRunning.state = state.launchAppIfNotRunning ? .on : .off
-        // TODO: launch app at login
+        launchAppAtLogin.state = LaunchAtLogin.isEnabled ? .on : .off
     }
 
     @objc func addApplication(_ sender: NSButton) {

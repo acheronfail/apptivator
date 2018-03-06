@@ -172,7 +172,7 @@
                     <button identifier="launchAppAtLogin" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="6hT-2E-Fxn">
                         <rect key="frame" x="18" y="18" width="185" height="18"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <buttonCell key="cell" type="check" title="Launch Apptivator at Login" bezelStyle="regularSquare" imagePosition="left" enabled="NO" state="on" identifier="launchAppAtLogin" inset="2" id="4WJ-rC-CTx">
+                        <buttonCell key="cell" type="check" title="Launch Apptivator at Login" bezelStyle="regularSquare" imagePosition="left" state="on" identifier="launchAppAtLogin" inset="2" id="4WJ-rC-CTx">
                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
