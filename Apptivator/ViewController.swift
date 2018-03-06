@@ -90,18 +90,9 @@ class ViewController: NSViewController {
     }
     
     func addEntry(fromURL url: URL) {
-        do {
-            let properties = try (url as NSURL).resourceValues(forKeys: [.localizedNameKey, .effectiveIconKey])
-            let appEntry = ApplicationEntry(
-                url: url,
-                name: properties[.localizedNameKey] as? String ?? "",
-                icon: properties[.effectiveIconKey] as? NSImage ?? NSImage(),
-                shortcut: MASShortcut()
-            )
+        if let appEntry = ApplicationEntry(url: url) {
             state.entries.append(appEntry)
             tableView.reloadData()
-        } catch {
-            print("Error reading file attributes")
         }
     }
 }

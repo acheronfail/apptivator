@@ -18,34 +18,36 @@ class ApplicationEntry: CustomDebugStringConvertible {
     let key: String
     let icon: NSImage
     let url: URL
-    let shortcutCell: MASShortcutView
+    let shortcutCell: MASShortcutView!
     var observer: Observer?
 
-    init(url: URL, name: String, icon: NSImage, shortcut: MASShortcut) {
-        self.name = name
-        self.icon = icon
+    init?(url: URL) {
         self.url = url
-        self.shortcutCell = MASShortcutView()
-
         let key = ApplicationEntry.createApplicationEntryKey(url)
         self.key = key
-        self.shortcutCell.associatedUserDefaultsKey = key
-
-        self.shortcutCell.shortcutValueChange = onShortcutValueChange
-    }
-
-    init?(json: JSON) throws {
-        self.url = json["url"].url!
-        let properties = try (self.url as NSURL).resourceValues(forKeys: [.localizedNameKey, .effectiveIconKey])
-        self.name = properties[.localizedNameKey] as? String ?? json["name"].string ?? ""
-        self.icon = properties[.effectiveIconKey] as? NSImage ?? NSImage()
-
-        let key = ApplicationEntry.createApplicationEntryKey(self.url)
-        self.key = key
         self.shortcutCell = MASShortcutView()
         self.shortcutCell.associatedUserDefaultsKey = key
 
+        do {
+            let properties = try (url as NSURL).resourceValues(forKeys: [.localizedNameKey, .effectiveIconKey])
+            self.name = properties[.localizedNameKey] as? String ?? ""
+            self.icon = properties[.effectiveIconKey] as? NSImage ?? NSImage()
+        } catch {
+            return nil
+        }
+
         self.shortcutCell.shortcutValueChange = onShortcutValueChange
+        if let app = findRunningApp(withURL: url) {
+            self.createObserver(app)
+        }
+    }
+
+    convenience init?(json: JSON) throws {
+        guard let url = json["url"].url else {
+            return nil
+        }
+
+        self.init(url: url)
         if let keyCode = json["keyCode"].uInt, let modifierFlags = json["modifierFlags"].uInt {
             let shortcut = MASShortcut(keyCode: keyCode, modifierFlags: modifierFlags)
             self.shortcutCell.shortcutValue = shortcut
@@ -99,7 +101,6 @@ class ApplicationEntry: CustomDebugStringConvertible {
 
             // If enabled, respond to events.
             if self.enabled() {
-                print("received events for \(runningApp.localizedName!)")
                 if event == .applicationDeactivated && state.hideAppsWhenDeactivated {
                     runningApp.hide()
                 }
@@ -122,10 +123,7 @@ class ApplicationEntry: CustomDebugStringConvertible {
     }
 
     var asJSON: JSON {
-        var json: JSON = [
-            "url": url.absoluteString,
-            "name": name
-        ]
+        var json: JSON = ["url": url.absoluteString]
         if let shortcut = shortcutCell.shortcutValue {
             json["keyCode"].uInt = shortcut.keyCode
             json["modifierFlags"].uInt = shortcut.modifierFlags
@@ -185,7 +183,7 @@ func launchApplication(at url: URL) -> NSRunningApplication? {
                     process.launch()
                 }
             } catch {
-                print("Could not launch application at \(url), \(error)")
+                print("Could not launch application at \(url)\n\(error)\n")
             }
         }
     }
