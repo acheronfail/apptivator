@@ -4,13 +4,16 @@
 //
 
 import Down
+import SwiftyJSON
 
-// Whether or not the app is enabled.
-var appIsEnabled = true
+// Global application state.
+let appName = Bundle.main.infoDictionary![kCFBundleNameKey as String] as! String
+let state = ApplicationState()
 
 @NSApplicationMain class AppDelegate: NSObject, NSApplicationDelegate {
     // Shortcuts window.
     @IBOutlet weak var window: NSWindow!
+    @IBOutlet weak var viewController: ViewController!
 
     var menuBarItem: NSStatusItem? = nil
     var contextMenu: NSMenu = NSMenu()
@@ -21,20 +24,26 @@ var appIsEnabled = true
         menuBarItem?.action = #selector(onMenuClick)
         menuBarItem?.sendAction(on: [.leftMouseUp, .rightMouseUp])
 
-        let appName = Bundle.main.infoDictionary![kCFBundleNameKey as String] as! String
-        contextMenu.addItem(NSMenuItem(title: "About", action: #selector(about), keyEquivalent: ""))
+        contextMenu.addItem(NSMenuItem(title: "About", action: #selector(showAboutPanel), keyEquivalent: ""))
         contextMenu.addItem(NSMenuItem.separator())
-        contextMenu.addItem(NSMenuItem(title: "Shortcuts", action: #selector(shortcuts), keyEquivalent: ""))
+        contextMenu.addItem(NSMenuItem(title: "Shortcuts", action: #selector(openPreferencesWindow), keyEquivalent: ""))
         contextMenu.addItem(NSMenuItem.separator())
         contextMenu.addItem(NSMenuItem(title: "Quit \(appName)", action: #selector(quitApplication), keyEquivalent: ""))
 
+        state.loadFromDisk()
+        viewController.tableView.reloadData()
+
         #if DEBUG
-            shortcuts()
+            openPreferencesWindow()
         #endif
     }
 
+    func applicationWillTerminate(_ aNotification: Notification) {
+        state.saveToDisk()
+    }
+
     func enable(_ flag: Bool) {
-        appIsEnabled = flag
+        state.appIsEnabled = flag
         menuBarItem?.title = flag ? "👍" : "👎"
     }
 
@@ -43,11 +52,11 @@ var appIsEnabled = true
         if event.type == .rightMouseUp {
             menuBarItem?.popUpMenu(contextMenu)
         } else if event.type == .leftMouseUp {
-            enable(!appIsEnabled)
+            enable(!state.appIsEnabled)
         }
     }
 
-    @objc func about() {
+    @objc func showAboutPanel() {
         do {
             if let path = Bundle.main.path(forResource: "Credits", ofType: "md") {
                 let rawString = try String(contentsOf: URL(fileURLWithPath: path), encoding: .utf8)
@@ -60,7 +69,7 @@ var appIsEnabled = true
         }
     }
 
-    @objc func shortcuts() {
+    @objc func openPreferencesWindow() {
         window.center()
         window.makeKeyAndOrderFront(window)
         NSApplication.shared.activate(ignoringOtherApps: true)
@@ -68,10 +77,6 @@ var appIsEnabled = true
 
     @objc func quitApplication() {
         NSApplication.shared.terminate(self)
-    }
-
-    func applicationWillTerminate(_ aNotification: Notification) {
-        // Code to tear down application
     }
 }
 

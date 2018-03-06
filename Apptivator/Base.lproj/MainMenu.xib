@@ -16,6 +16,7 @@
         <viewController id="goT-YD-soK" customClass="ViewController" customModule="Apptivator" customModuleProvider="target">
             <connections>
                 <outlet property="addButton" destination="GlZ-ch-c4n" id="5AS-YC-EIl"/>
+                <outlet property="appDelegate" destination="Voe-Tx-rLC" id="k1C-Cb-LO9"/>
                 <outlet property="removeButton" destination="QPF-Hk-Mw9" id="GUv-7j-Xsz"/>
                 <outlet property="tableView" destination="jvZ-CW-zzH" id="ktV-Gc-BWq"/>
                 <outlet property="view" destination="EiT-Mj-1SZ" id="bDs-sb-2yV"/>
@@ -23,6 +24,7 @@
         </viewController>
         <customObject id="Voe-Tx-rLC" customClass="AppDelegate" customModule="Apptivator" customModuleProvider="target">
             <connections>
+                <outlet property="viewController" destination="goT-YD-soK" id="pWf-s8-gZe"/>
                 <outlet property="window" destination="QvC-M9-y7g" id="gIp-Ho-8D9"/>
             </connections>
         </customObject>

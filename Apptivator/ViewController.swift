@@ -7,16 +7,14 @@ import MASShortcut
 
 class ViewController: NSViewController {
 
-    var entries: [ApplicationEntry] = []
-
     var addMenu: NSMenu = NSMenu()
     @IBOutlet weak var tableView: NSTableView!
     @IBOutlet weak var addButton: NSButton!
     @IBOutlet weak var removeButton: NSButton!
+    @IBOutlet weak var appDelegate: AppDelegate!
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        ApplicationEntry.loadFromDisk(&entries)
 
         tableView.delegate = self
         tableView.dataSource = self
@@ -31,8 +29,7 @@ class ViewController: NSViewController {
     }
 
     override func viewWillDisappear() {
-        super.viewWillDisappear()
-        ApplicationEntry.saveToDisk(entries)
+        state.saveToDisk()
     }
 
     @objc func addApplication(_ sender: NSButton) {
@@ -67,7 +64,7 @@ class ViewController: NSViewController {
     @objc func removeApplication(_ sender: NSButton) {
         let selected = tableView.selectedRow
         if selected >= 0 {
-            let entry = entries.remove(at: selected)
+            let entry = state.entries.remove(at: selected)
             MASShortcutBinder.shared().breakBinding(withDefaultsKey: entry.key)
             tableView.reloadData()
         }
@@ -82,7 +79,7 @@ class ViewController: NSViewController {
                 icon: properties[.effectiveIconKey] as? NSImage ?? NSImage(),
                 shortcut: MASShortcut()
             )
-            entries.append(appEntry)
+            state.entries.append(appEntry)
             tableView.reloadData()
         } catch {
             print("Error reading file attributes")
@@ -116,7 +113,7 @@ extension ViewController: NSMenuDelegate {
 
 extension ViewController: NSTableViewDataSource {
     func numberOfRows(in tableView: NSTableView) -> Int {
-        return entries.count
+        return state.entries.count
     }
 }
 
@@ -128,15 +125,15 @@ extension ViewController: NSTableViewDelegate {
 
     func tableView(_ tableView: NSTableView, sortDescriptorsDidChange oldDescriptors: [NSSortDescriptor]) {
         if tableView.sortDescriptors[0].ascending {
-            entries.sort { $0.name.lowercased() < $1.name.lowercased() }
+            state.entries.sort { $0.name.lowercased() < $1.name.lowercased() }
         } else {
-            entries.sort { $0.name.lowercased() > $1.name.lowercased() }
+            state.entries.sort { $0.name.lowercased() > $1.name.lowercased() }
         }
         tableView.reloadData()
     }
 
     func tableView(_ tableView: NSTableView, viewFor tableColumn: NSTableColumn?, row: Int) -> NSView? {
-        let item = entries[row]
+        let item = state.entries[row]
 
         // Application column:
         if tableColumn == tableView.tableColumns[0] {

@@ -3,7 +3,6 @@
 //  Apptivator
 //
 
-import Cocoa
 import AXSwift
 import SwiftyJSON
 import MASShortcut
@@ -15,10 +14,6 @@ let APP_LAUNCH_DELAY = 2.0
 // Represents an item in the Shortcut table of the app's window.
 // Each ApplicationEntry is simply a URL of an app mapped to a shortcut.
 class ApplicationEntry: CustomDebugStringConvertible {
-
-    // Where the app -> shortcut mappings are stored.
-    static let entrySavePath = URL(fileURLWithPath: "/Users/acheronfail/Desktop/output.json")
-
     let name: String
     let key: String
     let icon: NSImage
@@ -51,13 +46,19 @@ class ApplicationEntry: CustomDebugStringConvertible {
         self.shortcutCell.associatedUserDefaultsKey = key
 
         self.shortcutCell.shortcutValueChange = onShortcutValueChange
-        let shortcut = MASShortcut(keyCode: json["keyCode"].uInt!, modifierFlags: json["modifierFlags"].uInt!)
-        self.shortcutCell.shortcutValue = shortcut
+        if let keyCode = json["keyCode"].uInt, let modifierFlags = json["modifierFlags"].uInt {
+            let shortcut = MASShortcut(keyCode: keyCode, modifierFlags: modifierFlags)
+            self.shortcutCell.shortcutValue = shortcut
+        }
+    }
+
+    func enabled() -> Bool {
+        return state.appIsEnabled && UIElement.isProcessTrusted(withPrompt: true)
     }
 
     func onShortcutValueChange(_ sender: MASShortcutView?) -> () {
         MASShortcutBinder.shared().bindShortcut(withDefaultsKey: self.key, toAction: {
-            if appIsEnabled && UIElement.isProcessTrusted(withPrompt: true) {
+            if self.enabled() {
                 if let app = findRunningApp(withURL: self.url) {
                     if app.isActive {
                         app.hide()
@@ -102,25 +103,31 @@ class ApplicationEntry: CustomDebugStringConvertible {
     // NSRunningApplication so we can use its methods.
     func createListener(_ runningApp: NSRunningApplication) -> (Observer, UIElement, AXNotification) -> () {
         return { (observer, element, event) in
-            print("received events for \(runningApp.localizedName!)")
+            // Remove observer if the app is terminated.
             if runningApp.isTerminated {
                 self.observer = nil
                 return
             }
-            if event == .applicationDeactivated {
-                runningApp.hide()
+
+            // If enabled, respond to events.
+            if self.enabled() {
+                print("received events for \(runningApp.localizedName!)")
+                if event == .applicationDeactivated {
+                    runningApp.hide()
+                }
             }
         }
     }
 
     var asJSON: JSON {
-        let shortcut = shortcutCell.shortcutValue!
-        let json: JSON = [
+        var json: JSON = [
             "url": url.absoluteString,
-            "name": name,
-            "keyCode": shortcut.keyCode,
-            "modifierFlags": shortcut.modifierFlags
+            "name": name
         ]
+        if let shortcut = shortcutCell.shortcutValue {
+            json["keyCode"].uInt = shortcut.keyCode
+            json["modifierFlags"].uInt = shortcut.modifierFlags
+        }
         return json
     }
 
@@ -130,37 +137,23 @@ class ApplicationEntry: CustomDebugStringConvertible {
         return "Shortcut::\(url.absoluteString)".replacingOccurrences(of: ".", with: "_")
     }
 
-    // Restore Application entry list from disk.
-    static func loadFromDisk(_ entries: inout [ApplicationEntry]) {
-        do {
-            let jsonString = try String(contentsOf: entrySavePath, encoding: .utf8)
-            if let dataFromString = jsonString.data(using: .utf8, allowLossyConversion: false) {
-                let json = try JSON(data: dataFromString)
-                for (_, entryJson):(String, JSON) in json {
-                    if let appEntry = try ApplicationEntry.init(json: entryJson) {
-                        entries.append(appEntry)
-                    }
-                }
-            }
-        } catch {
-            // Ignore error when there's no file.
-            let err = error as NSError
-            if err.domain != NSCocoaErrorDomain && err.code != CocoaError.fileReadNoSuchFile.rawValue {
-                print("Unexpected error loading application list from disk: \(error)")
-            }
-        }
+    static func serialiseList(entries: [ApplicationEntry]) -> JSON {
+        return JSON(entries.map { $0.asJSON })
     }
 
-    // Save the application entry list to disk.
-    static func saveToDisk(_ entries: [ApplicationEntry]) {
-        let json = JSON(entries.map { $0.asJSON })
-        do {
-            if let jsonString = json.rawString() {
-                try jsonString.write(to: entrySavePath, atomically: false, encoding: .utf8)
+    static func deserialiseList(fromJSON json: JSON) -> [ApplicationEntry] {
+        var entries: [ApplicationEntry] = []
+        for (_, entryJson):(String, JSON) in json {
+            do {
+                if let entry = try ApplicationEntry.init(json: entryJson) {
+                    entries.append(entry)
+                }
+            } catch {
+                print("Unexpected error deserialising ApplicationEntry: \(entryJson), \(error)")
             }
-        } catch {
-            print("Unexpected error saving application list from disk: \(error)")
         }
+
+        return entries
     }
 
     public var debugDescription: String {
