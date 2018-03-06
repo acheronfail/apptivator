@@ -5,7 +5,7 @@
 
 import SwiftyJSON
 
-class ApplicationState: NSObject {
+@objcMembers class ApplicationState: NSObject {
     // Location of our serialised application state.
     let savePath = URL(fileURLWithPath: "\(NSHomeDirectory())/Library/Preferences/\(appName)/configuration.json")
 

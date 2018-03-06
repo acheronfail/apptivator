@@ -13,6 +13,17 @@ class ViewController: NSViewController {
     @IBOutlet weak var removeButton: NSButton!
     @IBOutlet weak var appDelegate: AppDelegate!
 
+    @IBOutlet weak var hideAppsWithShortcutWhenActive: NSButton!
+    @IBOutlet weak var hideAppsWhenDeactivated: NSButton!
+    @IBOutlet weak var launchAppIfNotRunning: NSButton!
+    @IBOutlet weak var launchAppAtLogin: NSButton!
+
+    @IBAction func onCheckboxChange(_ sender: NSButton) {
+        if let identifier = sender.identifier?.rawValue {
+            state.setValue(sender.state == .on, forKey: identifier)
+        }
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -30,6 +41,14 @@ class ViewController: NSViewController {
 
     override func viewWillDisappear() {
         state.saveToDisk()
+    }
+
+    func reloadView() {
+        tableView.reloadData()
+        hideAppsWithShortcutWhenActive.state = state.hideAppsWithShortcutWhenActive ? .on : .off
+        hideAppsWhenDeactivated.state = state.hideAppsWhenDeactivated ? .on : .off
+        launchAppIfNotRunning.state = state.launchAppIfNotRunning ? .on : .off
+        // TODO: launch app at login
     }
 
     @objc func addApplication(_ sender: NSButton) {

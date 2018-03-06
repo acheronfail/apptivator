@@ -17,6 +17,10 @@
             <connections>
                 <outlet property="addButton" destination="GlZ-ch-c4n" id="5AS-YC-EIl"/>
                 <outlet property="appDelegate" destination="Voe-Tx-rLC" id="k1C-Cb-LO9"/>
+                <outlet property="hideAppsWhenDeactivated" destination="0kg-bg-dYL" id="Cv7-Qy-9Nn"/>
+                <outlet property="hideAppsWithShortcutWhenActive" destination="Ucs-lf-XIV" id="3UU-Oi-i7X"/>
+                <outlet property="launchAppAtLogin" destination="6hT-2E-Fxn" id="h6K-3n-cLw"/>
+                <outlet property="launchAppIfNotRunning" destination="BXg-y8-t5S" id="4EU-c2-1VZ"/>
                 <outlet property="removeButton" destination="QPF-Hk-Mw9" id="GUv-7j-Xsz"/>
                 <outlet property="tableView" destination="jvZ-CW-zzH" id="ktV-Gc-BWq"/>
                 <outlet property="view" destination="EiT-Mj-1SZ" id="bDs-sb-2yV"/>
@@ -142,6 +146,50 @@
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
+                    </button>
+                    <button identifier="hideAppsWithShortcutWhenActive" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Ucs-lf-XIV">
+                        <rect key="frame" x="18" y="78" width="285" height="18"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <buttonCell key="cell" type="check" title="Hide apps when active and shortcut is fired" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="05p-zN-EYB">
+                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                            <font key="font" metaFont="system"/>
+                        </buttonCell>
+                        <connections>
+                            <action selector="onCheckboxChange:" target="goT-YD-soK" id="FEf-aE-hDZ"/>
+                        </connections>
+                    </button>
+                    <button identifier="hideAppsWhenDeactivated" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="0kg-bg-dYL">
+                        <rect key="frame" x="18" y="58" width="299" height="18"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <buttonCell key="cell" type="check" title="Automatically hide apps when they lose focus" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="FAm-P7-nYy">
+                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                            <font key="font" metaFont="system"/>
+                        </buttonCell>
+                        <connections>
+                            <action selector="onCheckboxChange:" target="goT-YD-soK" id="Eow-V5-cij"/>
+                        </connections>
+                    </button>
+                    <button identifier="launchAppIfNotRunning" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="BXg-y8-t5S">
+                        <rect key="frame" x="18" y="38" width="273" height="18"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <buttonCell key="cell" type="check" title="Launch applications if they're not running" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="sHK-Wd-9r7">
+                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                            <font key="font" metaFont="system"/>
+                        </buttonCell>
+                        <connections>
+                            <action selector="onCheckboxChange:" target="goT-YD-soK" id="HIi-g9-xc4"/>
+                        </connections>
+                    </button>
+                    <button identifier="launchAppAtLogin" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="6hT-2E-Fxn">
+                        <rect key="frame" x="18" y="18" width="185" height="18"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <buttonCell key="cell" type="check" title="Launch Apptivator at Login" bezelStyle="regularSquare" imagePosition="left" enabled="NO" state="on" identifier="launchAppAtLogin" inset="2" id="4WJ-rC-CTx">
+                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                            <font key="font" metaFont="system"/>
+                        </buttonCell>
+                        <connections>
+                            <action selector="onCheckboxChange:" target="goT-YD-soK" id="AHF-nq-Xif"/>
+                        </connections>
                     </button>
                 </subviews>
             </view>

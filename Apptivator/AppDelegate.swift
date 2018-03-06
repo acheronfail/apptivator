@@ -31,7 +31,7 @@ let state = ApplicationState()
         contextMenu.addItem(NSMenuItem(title: "Quit \(appName)", action: #selector(quitApplication), keyEquivalent: ""))
 
         state.loadFromDisk()
-        viewController.tableView.reloadData()
+        viewController.reloadView()
 
         #if DEBUG
             openPreferencesWindow()
