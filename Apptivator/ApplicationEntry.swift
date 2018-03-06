@@ -60,14 +60,16 @@ class ApplicationEntry: CustomDebugStringConvertible {
         MASShortcutBinder.shared().bindShortcut(withDefaultsKey: self.key, toAction: {
             if self.enabled() {
                 if let app = findRunningApp(withURL: self.url) {
-                    if app.isActive {
-                        app.hide()
-                    } else {
-                        app.unhide()
+                    if !app.isActive {
+                        if app.isHidden {
+                            app.unhide()
+                        }
                         app.activate(options: .activateIgnoringOtherApps)
                         self.createObserver(app)
+                    } else if state.hideAppsWithShortcutWhenActive {
+                        app.hide()
                     }
-                } else {
+                } else if state.launchAppIfNotRunning {
                     // Launch the application if it's not running, and after a delay attempt to
                     // create an observer to watch it for events. We have to wait since we cannot
                     // start observing an application if it hasn't fully launched.
@@ -85,20 +87,6 @@ class ApplicationEntry: CustomDebugStringConvertible {
         })
     }
 
-    // Creates an observer (if one doesn't already exist) to watch certain events on each ApplicationEntry.
-    func createObserver(_ runningApp: NSRunningApplication) {
-        guard observer == nil, let app = Application(runningApp) else {
-            return
-        }
-
-        observer = app.createObserver(createListener(runningApp))
-        do {
-            try observer?.addNotification(.applicationDeactivated, forElement: app)
-        } catch {
-            print("Failed to add observers to [\(app)]: \(error)")
-        }
-    }
-
     // The listener that receives the events of the given application. Wraps an instance of an
     // NSRunningApplication so we can use its methods.
     func createListener(_ runningApp: NSRunningApplication) -> (Observer, UIElement, AXNotification) -> () {
@@ -112,10 +100,24 @@ class ApplicationEntry: CustomDebugStringConvertible {
             // If enabled, respond to events.
             if self.enabled() {
                 print("received events for \(runningApp.localizedName!)")
-                if event == .applicationDeactivated {
+                if event == .applicationDeactivated && state.hideAppsWhenDeactivated {
                     runningApp.hide()
                 }
             }
+        }
+    }
+
+    // Creates an observer (if one doesn't already exist) to watch certain events on each ApplicationEntry.
+    func createObserver(_ runningApp: NSRunningApplication) {
+        guard observer == nil, let app = Application(runningApp) else {
+            return
+        }
+
+        observer = app.createObserver(createListener(runningApp))
+        do {
+            try observer?.addNotification(.applicationDeactivated, forElement: app)
+        } catch {
+            print("Failed to add observers to [\(app)]: \(error)")
         }
     }
 
