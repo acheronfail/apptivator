@@ -7,29 +7,57 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1523F567204E3B09002E4666 /* AXSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1523F562204E3B09002E4666 /* AXSwift.framework */; };
+		1523F568204E3B09002E4666 /* AXSwift.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 1523F562204E3B09002E4666 /* AXSwift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		1523F569204E3B09002E4666 /* Down.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1523F563204E3B09002E4666 /* Down.framework */; };
+		1523F56A204E3B09002E4666 /* Down.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 1523F563204E3B09002E4666 /* Down.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		1523F56B204E3B09002E4666 /* SwiftyJSON.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1523F564204E3B09002E4666 /* SwiftyJSON.framework */; };
+		1523F56C204E3B09002E4666 /* SwiftyJSON.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 1523F564204E3B09002E4666 /* SwiftyJSON.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		1523F56D204E3B09002E4666 /* MASShortcut.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1523F565204E3B09002E4666 /* MASShortcut.framework */; };
+		1523F56E204E3B09002E4666 /* MASShortcut.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 1523F565204E3B09002E4666 /* MASShortcut.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		1523F56F204E3B09002E4666 /* LaunchAtLogin.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1523F566204E3B09002E4666 /* LaunchAtLogin.framework */; };
+		1523F570204E3B09002E4666 /* LaunchAtLogin.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 1523F566204E3B09002E4666 /* LaunchAtLogin.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		1537F5E1204C8D860056EE50 /* ApplicationEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1537F5E0204C8D860056EE50 /* ApplicationEntry.swift */; };
 		15F39F3C204CB72D00847CD5 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15F39F3B204CB72D00847CD5 /* ViewController.swift */; };
 		15FC8CC8204E2E2C000B5E1E /* ApplicationState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15FC8CC7204E2E2C000B5E1E /* ApplicationState.swift */; };
-		7CEF31C542FC128DB21A031E /* Pods_Apptivator.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 73ECD1AABBFAADAFE262B827 /* Pods_Apptivator.framework */; };
 		B3B4C2C11E25894B009F8E4E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3B4C2C01E25894B009F8E4E /* AppDelegate.swift */; };
 		B3B4C2C31E25894B009F8E4E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B3B4C2C21E25894B009F8E4E /* Assets.xcassets */; };
 		B3B4C2C61E25894B009F8E4E /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = B3B4C2C41E25894B009F8E4E /* MainMenu.xib */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		1523F571204E3B09002E4666 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				1523F56A204E3B09002E4666 /* Down.framework in Embed Frameworks */,
+				1523F568204E3B09002E4666 /* AXSwift.framework in Embed Frameworks */,
+				1523F570204E3B09002E4666 /* LaunchAtLogin.framework in Embed Frameworks */,
+				1523F56E204E3B09002E4666 /* MASShortcut.framework in Embed Frameworks */,
+				1523F56C204E3B09002E4666 /* SwiftyJSON.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
-		145CD7FB45802E3E719A8923 /* Pods_MenuBarApp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MenuBarApp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		1523F562204E3B09002E4666 /* AXSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AXSwift.framework; path = Carthage/Build/Mac/AXSwift.framework; sourceTree = "<group>"; };
+		1523F563204E3B09002E4666 /* Down.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Down.framework; path = Carthage/Build/Mac/Down.framework; sourceTree = "<group>"; };
+		1523F564204E3B09002E4666 /* SwiftyJSON.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftyJSON.framework; path = Carthage/Build/Mac/SwiftyJSON.framework; sourceTree = "<group>"; };
+		1523F565204E3B09002E4666 /* MASShortcut.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MASShortcut.framework; path = Carthage/Build/Mac/MASShortcut.framework; sourceTree = "<group>"; };
+		1523F566204E3B09002E4666 /* LaunchAtLogin.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = LaunchAtLogin.framework; path = Carthage/Build/Mac/LaunchAtLogin.framework; sourceTree = "<group>"; };
 		1537F5E0204C8D860056EE50 /* ApplicationEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApplicationEntry.swift; sourceTree = "<group>"; };
 		15F39F3B204CB72D00847CD5 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		15FC8CC7204E2E2C000B5E1E /* ApplicationState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApplicationState.swift; sourceTree = "<group>"; };
 		15FF0CCC204A231800E04103 /* Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "Bridging-Header.h"; path = "Apptivator/Bridging-Header.h"; sourceTree = "<group>"; };
-		73ECD1AABBFAADAFE262B827 /* Pods_Apptivator.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Apptivator.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		A58FEA61D8F12C5425277BB0 /* Pods-Apptivator.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Apptivator.release.xcconfig"; path = "Pods/Target Support Files/Pods-Apptivator/Pods-Apptivator.release.xcconfig"; sourceTree = "<group>"; };
 		B3B4C2BD1E25894B009F8E4E /* Apptivator.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Apptivator.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B3B4C2C01E25894B009F8E4E /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		B3B4C2C21E25894B009F8E4E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		B3B4C2C51E25894B009F8E4E /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
 		B3B4C2C71E25894B009F8E4E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		B92238D88D6441A672373553 /* Pods-Apptivator.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Apptivator.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Apptivator/Pods-Apptivator.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -37,39 +65,28 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7CEF31C542FC128DB21A031E /* Pods_Apptivator.framework in Frameworks */,
+				1523F569204E3B09002E4666 /* Down.framework in Frameworks */,
+				1523F567204E3B09002E4666 /* AXSwift.framework in Frameworks */,
+				1523F56F204E3B09002E4666 /* LaunchAtLogin.framework in Frameworks */,
+				1523F56D204E3B09002E4666 /* MASShortcut.framework in Frameworks */,
+				1523F56B204E3B09002E4666 /* SwiftyJSON.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		0DC2BA5439C177A010D948B6 /* Pods */ = {
-			isa = PBXGroup;
-			children = (
-				B92238D88D6441A672373553 /* Pods-Apptivator.debug.xcconfig */,
-				A58FEA61D8F12C5425277BB0 /* Pods-Apptivator.release.xcconfig */,
-			);
-			name = Pods;
-			sourceTree = "<group>";
-		};
-		7308F4468569CB324248EEEA /* Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-				145CD7FB45802E3E719A8923 /* Pods_MenuBarApp.framework */,
-				73ECD1AABBFAADAFE262B827 /* Pods_Apptivator.framework */,
-			);
-			name = Frameworks;
-			sourceTree = "<group>";
-		};
 		B3B4C2B41E25894B009F8E4E = {
 			isa = PBXGroup;
 			children = (
+				1523F562204E3B09002E4666 /* AXSwift.framework */,
+				1523F563204E3B09002E4666 /* Down.framework */,
+				1523F566204E3B09002E4666 /* LaunchAtLogin.framework */,
+				1523F565204E3B09002E4666 /* MASShortcut.framework */,
+				1523F564204E3B09002E4666 /* SwiftyJSON.framework */,
 				15FF0CCC204A231800E04103 /* Bridging-Header.h */,
 				B3B4C2BF1E25894B009F8E4E /* Apptivator */,
 				B3B4C2BE1E25894B009F8E4E /* Products */,
-				0DC2BA5439C177A010D948B6 /* Pods */,
-				7308F4468569CB324248EEEA /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -102,13 +119,10 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = B3B4C2CA1E25894B009F8E4E /* Build configuration list for PBXNativeTarget "Apptivator" */;
 			buildPhases = (
-				E02BCAD4EB56976820658D88 /* [CP] Check Pods Manifest.lock */,
 				B3B4C2B91E25894B009F8E4E /* Sources */,
 				B3B4C2BA1E25894B009F8E4E /* Frameworks */,
 				B3B4C2BB1E25894B009F8E4E /* Resources */,
-				CAEF1827813737F521F9195E /* [CP] Embed Pods Frameworks */,
-				E4070AC6F3B4204135E561E1 /* [CP] Copy Pods Resources */,
-				15FC8CC6204D21D3000B5E1E /* ShellScript */,
+				1523F571204E3B09002E4666 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -165,79 +179,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
-
-/* Begin PBXShellScriptBuildPhase section */
-		15FC8CC6204D21D3000B5E1E /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "cp \"Pods/Target Support Files/Pods-Apptivator/Pods-Apptivator-acknowledgements.markdown\" \"${CONFIGURATION_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Credits.md\"";
-		};
-		CAEF1827813737F521F9195E /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"${SRCROOT}/Pods/Target Support Files/Pods-Apptivator/Pods-Apptivator-frameworks.sh",
-				"${BUILT_PRODUCTS_DIR}/AXSwift/AXSwift.framework",
-				"${BUILT_PRODUCTS_DIR}/Down/Down.framework",
-				"${BUILT_PRODUCTS_DIR}/MASShortcut/MASShortcut.framework",
-				"${BUILT_PRODUCTS_DIR}/SwiftyJSON/SwiftyJSON.framework",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputPaths = (
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/AXSwift.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Down.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MASShortcut.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SwiftyJSON.framework",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Apptivator/Pods-Apptivator-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		E02BCAD4EB56976820658D88 /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-Apptivator-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		E4070AC6F3B4204135E561E1 /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Copy Pods Resources";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Apptivator/Pods-Apptivator-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		B3B4C2B91E25894B009F8E4E /* Sources */ = {
@@ -375,11 +316,14 @@
 		};
 		B3B4C2CB1E25894B009F8E4E /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B92238D88D6441A672373553 /* Pods-Apptivator.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = "";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/Mac",
+				);
 				INFOPLIST_FILE = Apptivator/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
@@ -393,11 +337,14 @@
 		};
 		B3B4C2CC1E25894B009F8E4E /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = A58FEA61D8F12C5425277BB0 /* Pods-Apptivator.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = "";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/Mac",
+				);
 				INFOPLIST_FILE = Apptivator/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
