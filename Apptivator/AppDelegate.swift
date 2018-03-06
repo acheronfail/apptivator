@@ -33,6 +33,15 @@ let state = ApplicationState()
         state.loadFromDisk()
         viewController.reloadView()
 
+        // Check for accessibility permissions.
+        if !UIElement.isProcessTrusted(withPrompt: true) {
+            let alert = NSAlert()
+            alert.messageText = "Action Required"
+            alert.informativeText = "\(appName) requires access to the accessibility API in order to hide/show other application's windows.\n\nPlease open System Preferences and allow \(appName) access.\n\nSystem Preferences -> Security & Privacy -> Privacy"
+            alert.alertStyle = .warning
+            alert.runModal()
+        }
+
         #if DEBUG
             openPreferencesWindow()
         #endif
