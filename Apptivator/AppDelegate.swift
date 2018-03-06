@@ -1,14 +1,16 @@
 //
 //  AppDelegate.swift
-//  MenuBarApp
+//  Apptivator
 //
 
-import Down
 import SwiftyJSON
 
 // Global application state.
 let appName = Bundle.main.infoDictionary![kCFBundleNameKey as String] as! String
 let state = ApplicationState()
+
+let iconOn = NSImage(named: NSImage.Name(rawValue: "icon-on"))
+let iconOff = NSImage(named: NSImage.Name(rawValue: "icon-off"))
 
 @NSApplicationMain class AppDelegate: NSObject, NSApplicationDelegate {
     // Shortcuts window.
@@ -19,8 +21,11 @@ let state = ApplicationState()
     var contextMenu: NSMenu = NSMenu()
 
     func applicationDidFinishLaunching(_ aNotification: Notification) {
+        setupIcon(iconOn)
+        setupIcon(iconOff)
+
         menuBarItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
-        menuBarItem?.title = "👍"
+        menuBarItem?.image = iconOn
         menuBarItem?.action = #selector(onMenuClick)
         menuBarItem?.sendAction(on: [.leftMouseUp, .rightMouseUp])
 
@@ -53,7 +58,12 @@ let state = ApplicationState()
 
     func enable(_ flag: Bool) {
         state.appIsEnabled = flag
-        menuBarItem?.title = flag ? "👍" : "👎"
+        menuBarItem?.image = flag ? iconOn : iconOff
+    }
+
+    func setupIcon(_ image: NSImage?) {
+        image?.isTemplate = true
+        image?.size = NSSize(width: 16, height: 16)
     }
 
     @objc func onMenuClick(sender: NSStatusItem) {
@@ -67,16 +77,8 @@ let state = ApplicationState()
 
     @objc func showAboutPanel() {
         // TODO: include acknowledgements
-//        do {
-//            if let path = Bundle.main.path(forResource: "Credits", ofType: "md") {
-//                let rawString = try String(contentsOf: URL(fileURLWithPath: path), encoding: .utf8)
-//                let down = Down(markdownString: rawString)
-//                let attributedString = try down.toAttributedString()
-//                NSApp.orderFrontStandardAboutPanel(options: [NSApplication.AboutPanelOptionKey(rawValue: "Credits"): attributedString])
-//            }
-//        } catch {
-            NSApp.orderFrontStandardAboutPanel()
-//        }
+//        NSApp.orderFrontStandardAboutPanel(options: [NSApplication.AboutPanelOptionKey(rawValue: "Credits"): attributedString])
+        NSApp.orderFrontStandardAboutPanel()
     }
 
     @objc func openPreferencesWindow() {
