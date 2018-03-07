@@ -1,5 +1,3 @@
-# Apptivator
-
 ![Apptivator Banner](./Resources/banner.png)
 
 With Apptivator, you can create global hotkeys that will activate chosen apps with a predefined shortcuts. This means you can have a shortcut to show/hide any application at any time.
