@@ -98,12 +98,12 @@
 			isa = PBXGroup;
 			children = (
 				B3B4C2C01E25894B009F8E4E /* AppDelegate.swift */,
-				155D2C02204F61220087478B /* Credits.rtfd */,
 				15F39F3B204CB72D00847CD5 /* ViewController.swift */,
 				1537F5E0204C8D860056EE50 /* ApplicationEntry.swift */,
 				15FC8CC7204E2E2C000B5E1E /* ApplicationState.swift */,
 				B3B4C2C21E25894B009F8E4E /* Assets.xcassets */,
 				B3B4C2C41E25894B009F8E4E /* MainMenu.xib */,
+				155D2C02204F61220087478B /* Credits.rtfd */,
 				B3B4C2C71E25894B009F8E4E /* Info.plist */,
 			);
 			path = Apptivator;
