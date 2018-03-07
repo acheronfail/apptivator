@@ -77,6 +77,7 @@ let iconOff = NSImage(named: NSImage.Name(rawValue: "icon-off"))
 
     @objc func showAboutPanel() {
         NSApp.orderFrontStandardAboutPanel()
+        NSApplication.shared.activate(ignoringOtherApps: true)
     }
 
     @objc func openPreferencesWindow() {
