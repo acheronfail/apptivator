@@ -76,8 +76,6 @@ let iconOff = NSImage(named: NSImage.Name(rawValue: "icon-off"))
     }
 
     @objc func showAboutPanel() {
-        // TODO: include acknowledgements
-//        NSApp.orderFrontStandardAboutPanel(options: [NSApplication.AboutPanelOptionKey(rawValue: "Credits"): attributedString])
         NSApp.orderFrontStandardAboutPanel()
     }
 
