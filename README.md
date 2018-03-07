@@ -24,7 +24,7 @@ Apptivator provides some neat options:
 	- If this is set then when you press the shortcut the application will hide if it's shown, or be shown if it's hidden.
 * **Launch apps if they're not running**
 	- When set, if the application is fired then Apptivator will attempt to launch it.
-	- There are some known issues with this at the moment, see: #18
+	- There are some known issues with this at the moment, see: [#18](https://github.com/acheronfail/apptivator/issues/18)
 * **Launch Apptivator at login**
 	- self-explanatory
 
