@@ -28,7 +28,7 @@ Apptivator provides some neat options:
 * **Launch Apptivator at login**
 	- self-explanatory
 
-## Questions/Concenrs
+## Questions/Concerns
 
 * **When I activate my app its window doesn't appear**
 	- Set the application to appear on all spaces. This can be done by right-clicking on the icon in the dock and selecting -> `Options` -> `All Desktops` (see [#12](https://github.com/acheronfail/apptivator/issues/12#issuecomment-370787813) for a discussion and ways to automate this).
