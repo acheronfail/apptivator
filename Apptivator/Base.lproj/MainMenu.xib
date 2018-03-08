@@ -139,6 +139,9 @@
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
+                        <connections>
+                            <action selector="onAddClick:" target="goT-YD-soK" id="qDB-2m-bMC"/>
+                        </connections>
                     </button>
                     <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="QPF-Hk-Mw9">
                         <rect key="frame" x="308" y="133" width="89" height="32"/>
@@ -147,6 +150,9 @@
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
+                        <connections>
+                            <action selector="onRemoveClick:" target="goT-YD-soK" id="8Rn-qn-mpy"/>
+                        </connections>
                     </button>
                     <button identifier="hideAppsWithShortcutWhenActive" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Ucs-lf-XIV">
                         <rect key="frame" x="18" y="87" width="285" height="18"/>

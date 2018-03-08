@@ -44,9 +44,6 @@ class ViewController: NSViewController {
         addMenu.addItem(NSMenuItem(title: "Choose from Running Applications", action: nil, keyEquivalent: ""))
         addMenu.item(at: 1)?.submenu = NSMenu()
 
-        addButton.action = #selector(addApplication(_:))
-        removeButton.action = #selector(removeApplication(_:))
-
         let onToggleWindowShortcutChange = { (_: MASShortcutView?) in
             MASShortcutBinder.shared().bindShortcut(withDefaultsKey: toggleWindowShortcutKey, toAction: { self.appDelegate.openPreferencesWindow() })
         }
@@ -67,10 +64,19 @@ class ViewController: NSViewController {
         launchAppAtLogin.state = LaunchAtLogin.isEnabled ? .on : .off
     }
 
-    @objc func addApplication(_ sender: NSButton) {
+    @IBAction func onAddClick(_ sender: NSButton) {
         addMenu.popUp(positioning: addMenu.item(at: 0), at: NSEvent.mouseLocation, in: nil)
     }
 
+    @IBAction func onRemoveClick(_ sender: NSButton) {
+        let selected = tableView.selectedRow
+        if selected >= 0 {
+            let entry = state.entries.remove(at: selected)
+            MASShortcutBinder.shared().breakBinding(withDefaultsKey: entry.key)
+            tableView.reloadData()
+        }
+    }
+    
     @objc func chooseFromRunningApps(_ sender: NSMenuItem) {
         guard let app = sender.representedObject else {
             return
@@ -82,7 +88,7 @@ class ViewController: NSViewController {
             addEntry(fromURL: url)
         }
     }
-    
+
     @objc func chooseFromFileSystem() {
         let panel = NSOpenPanel()
         panel.canChooseFiles = true
@@ -90,21 +96,12 @@ class ViewController: NSViewController {
         panel.allowsMultipleSelection = false
         panel.directoryURL = NSURL.fileURL(withPath: "/Applications")
         panel.runModal()
-        
+
         if let url = panel.url {
             addEntry(fromURL: url)
         }
     }
 
-    @objc func removeApplication(_ sender: NSButton) {
-        let selected = tableView.selectedRow
-        if selected >= 0 {
-            let entry = state.entries.remove(at: selected)
-            MASShortcutBinder.shared().breakBinding(withDefaultsKey: entry.key)
-            tableView.reloadData()
-        }
-    }
-    
     func addEntry(fromURL url: URL) {
         if let appEntry = ApplicationEntry(url: url) {
             state.entries.append(appEntry)
