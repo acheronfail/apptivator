@@ -6,6 +6,8 @@
 import MASShortcut
 import LaunchAtLogin
 
+let toggleWindowShortcutKey = "__Apptivator_global_show__"
+
 class ViewController: NSViewController {
 
     var addMenu: NSMenu = NSMenu()
@@ -13,6 +15,7 @@ class ViewController: NSViewController {
     @IBOutlet weak var addButton: NSButton!
     @IBOutlet weak var removeButton: NSButton!
     @IBOutlet weak var appDelegate: AppDelegate!
+    @IBOutlet weak var toggleWindowShortcut: MASShortcutView!
 
     @IBOutlet weak var hideAppsWithShortcutWhenActive: NSButton!
     @IBOutlet weak var hideAppsWhenDeactivated: NSButton!
@@ -43,6 +46,13 @@ class ViewController: NSViewController {
 
         addButton.action = #selector(addApplication(_:))
         removeButton.action = #selector(removeApplication(_:))
+
+        let onToggleWindowShortcutChange = { (_: MASShortcutView?) in
+            MASShortcutBinder.shared().bindShortcut(withDefaultsKey: toggleWindowShortcutKey, toAction: { self.appDelegate.openPreferencesWindow() })
+        }
+        toggleWindowShortcut.associatedUserDefaultsKey = toggleWindowShortcutKey
+        toggleWindowShortcut.shortcutValueChange = onToggleWindowShortcutChange
+        onToggleWindowShortcutChange(toggleWindowShortcut)
     }
 
     override func viewWillDisappear() {
