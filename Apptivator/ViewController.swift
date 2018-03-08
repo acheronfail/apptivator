@@ -73,6 +73,7 @@ class ViewController: NSViewController {
         if selected >= 0 {
             let entry = state.entries.remove(at: selected)
             MASShortcutBinder.shared().breakBinding(withDefaultsKey: entry.key)
+            entry.destroy()
             tableView.reloadData()
         }
     }

@@ -57,6 +57,14 @@ class ApplicationEntry: CustomDebugStringConvertible {
         }
     }
 
+    // Swift won't deinitialise this object as long as there are references to it. Both the
+    // shortcutValueChange and the observer are closures which reference the entry, so they
+    // have to be destroyed so that ARC will deallocate the object.
+    func destroy() {
+        self.shortcutCell.shortcutValueChange = nil
+        self.observer = nil
+    }
+
     func enabled() -> Bool {
         return state.appIsEnabled && UIElement.isProcessTrusted(withPrompt: true)
     }
