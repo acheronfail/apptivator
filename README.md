@@ -2,7 +2,7 @@
 
 With Apptivator, you can create global hotkeys that will activate chosen apps with a predefined shortcuts. This means you can have a shortcut to show/hide any application at any time.
 
-I created this because I liked iTerm2's concept of a "hotkey" window, but I prefer to use kitty as my main terminal. So I created this so I could have a global hotkey to activate/deactivate kitty at the touch of a button.
+I created this because I liked iTerm2's concept of a "hotkey" window, and I wanted to try kitty as my main terminal for a while and found I couldn't live without a window I could activate at any time. So, I created this in order to have a global hotkey to activate/deactivate kitty (and any other apps) at the touch of a button.
 
 ## Installation
 
