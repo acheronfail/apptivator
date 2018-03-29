@@ -19,7 +19,8 @@ class ApplicationEntry: CustomDebugStringConvertible {
     let icon: NSImage
     let url: URL
     let shortcutCell: MASShortcutView!
-    var observer: Observer?
+    weak var observer: Observer?
+    private var recordingWatcher: NSKeyValueObservation
 
     init?(url: URL) {
         self.url = url
@@ -30,6 +31,10 @@ class ApplicationEntry: CustomDebugStringConvertible {
         self.key = key
         self.shortcutCell = MASShortcutView()
         self.shortcutCell.associatedUserDefaultsKey = key
+        // Watch MASShortcutView.isRecording for changes.
+        self.recordingWatcher = self.shortcutCell.observe(\.isRecording) { shortcutCell, _ in
+            state.currentlyRecording = shortcutCell.isRecording
+        }
 
         do {
             let properties = try (url as NSURL).resourceValues(forKeys: [.localizedNameKey, .effectiveIconKey])
@@ -39,7 +44,9 @@ class ApplicationEntry: CustomDebugStringConvertible {
             return nil
         }
 
-        self.shortcutCell.shortcutValueChange = onShortcutValueChange
+        self.shortcutCell.shortcutValueChange = { [weak self] (view: MASShortcutView?) in
+            self?.onShortcutValueChange()
+        }
         if let app = findRunningApp(withURL: url) {
             self.createObserver(app)
         }
@@ -57,19 +64,11 @@ class ApplicationEntry: CustomDebugStringConvertible {
         }
     }
 
-    // Swift won't deinitialise this object as long as there are references to it. Both the
-    // shortcutValueChange and the observer are closures which reference the entry, so they
-    // have to be destroyed so that ARC will deallocate the object.
-    func destroy() {
-        self.shortcutCell.shortcutValueChange = nil
-        self.observer = nil
-    }
-
     func enabled() -> Bool {
-        return state.appIsEnabled && UIElement.isProcessTrusted(withPrompt: true)
+        return state.isEnabled() && UIElement.isProcessTrusted(withPrompt: true)
     }
 
-    func onShortcutValueChange(_ sender: MASShortcutView?) -> () {
+    func onShortcutValueChange() -> () {
         MASShortcutBinder.shared().bindShortcut(withDefaultsKey: self.key, toAction: {
             if self.enabled() {
                 if let app = findRunningApp(withURL: self.url) {

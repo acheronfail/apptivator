@@ -14,6 +14,8 @@ import LaunchAtLogin
     var entries: [ApplicationEntry] = []
     // Whether or not the app is globally enabled.
     var appIsEnabled = true
+    // Don't fire any shortcuts if user is recording a new shortcut.
+    var currentlyRecording = false
     // Whether or not the app should launch after login.
     var launchAppAtLogin = LaunchAtLogin.isEnabled
     // Should we launch the application if it's not running and the shortcut is pressed?
@@ -22,6 +24,10 @@ import LaunchAtLogin
     var hideAppsWhenDeactivated = true
     // When the application is active, should pressing the shortcut hide the app?
     var hideAppsWithShortcutWhenActive = true
+
+    func isEnabled() -> Bool {
+        return appIsEnabled && !currentlyRecording
+    }
 
     // Loads the app state (JSON) from disk - if the file exists, otherwise it does nothing.
     func loadFromDisk() {
