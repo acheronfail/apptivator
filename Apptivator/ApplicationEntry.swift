@@ -44,8 +44,8 @@ class ApplicationEntry: CustomDebugStringConvertible {
             return nil
         }
 
-        self.shortcutCell.shortcutValueChange = { [weak self] (view: MASShortcutView?) in
-            self?.onShortcutValueChange()
+        self.shortcutCell.shortcutValueChange = { [unowned self] (view: MASShortcutView?) in
+            self.onShortcutValueChange()
         }
         if let app = findRunningApp(withURL: url) {
             self.createObserver(app)
