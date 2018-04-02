@@ -35,7 +35,24 @@ Apptivator provides some neat options:
 * **Activating my app always moves my computer to another space**
 	- This behaviour can be adjusted by going to `System Preferences` -> `Mission Control` -> and enabling/disabling the checkbox: `When switching to an application, switch to a Space with open windows for the application`
 
-## Creating a DMG
+## Developing
+
+#### Setting up the project
+
+Apptivator uses `carthage` to manage its dependencies (you can install it with `brew`). To build Apptivator on your machine:
+
+```bash
+# Clone the repository
+git clone git@github.com:acheronfail/apptivator.git && cd apptivator
+# Install dependencies with carthage
+carthage update --platform macos
+# Open the project
+open Apptivator.xcodeproj
+```
+
+Once you've opened the Xcode project, it should be enough to make your changes and then just hit the build/run button and go from there.
+
+#### Creating a DMG
 
 The process to create build artefacts for this app is extremely simple:
 
