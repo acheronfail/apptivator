@@ -103,6 +103,16 @@ class ViewController: NSViewController {
     }
 
     func addEntry(fromURL url: URL) {
+        // Check if the entry already exists.
+        if let app = (state.entries.first { $0.url == url }) {
+            let alert = NSAlert()
+            alert.messageText = "Duplicate Entry"
+            alert.informativeText = "The application \"\(app.name)\" has already been added. Please edit its entry in the list, or remove it to add it again."
+            alert.alertStyle = .warning
+            alert.runModal()
+            return
+        }
+
         if let appEntry = ApplicationEntry(url: url) {
             state.entries.append(appEntry)
             tableView.reloadData()
