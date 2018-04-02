@@ -174,6 +174,7 @@ extension ViewController: NSTableViewDelegate {
             if let cell = tableView.makeView(withIdentifier: .init(CellIdentifiers.ApplicationCell), owner: nil) as? NSTableCellView {
                 cell.textField?.stringValue = item.name
                 cell.imageView?.image = item.icon
+                cell.toolTip = item.url.path
                 return cell
             }
         }
