@@ -35,6 +35,15 @@ Apptivator provides some neat options:
 * **Activating my app always moves my computer to another space**
 	- This behaviour can be adjusted by going to `System Preferences` -> `Mission Control` -> and enabling/disabling the checkbox: `When switching to an application, switch to a Space with open windows for the application`
 
+## Creating a DMG
+
+The process to create build artefacts for this app is extremely simple:
+
+1. Archive a build in Xcode (`Products` -> `Archive`)
+2. Export the app
+3. Run [`create-dmg`](https://github.com/sindresorhus/create-dmg)
+4. 🎉
+
 ## License
 
 [MIT](./LICENSE)
