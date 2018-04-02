@@ -29,7 +29,7 @@
 	<key>NSHumanReadableCopyright</key>
 	<string>Copyright © 2018 acheronfail</string>
 	<key>NSMainNibFile</key>
-	<string>MainMenu</string>
+	<string>ApplicationWindow</string>
 	<key>NSPrincipalClass</key>
 	<string>NSApplication</string>
 </dict>
