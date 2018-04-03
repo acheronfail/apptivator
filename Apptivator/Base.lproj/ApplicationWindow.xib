@@ -22,6 +22,7 @@
                 <outlet property="launchAppAtLogin" destination="6hT-2E-Fxn" id="h6K-3n-cLw"/>
                 <outlet property="launchAppIfNotRunning" destination="BXg-y8-t5S" id="4EU-c2-1VZ"/>
                 <outlet property="removeButton" destination="QPF-Hk-Mw9" id="GUv-7j-Xsz"/>
+                <outlet property="showOnScreenWithMouse" destination="1OL-Vt-c3V" id="N4Z-3H-97e"/>
                 <outlet property="tableView" destination="jvZ-CW-zzH" id="ktV-Gc-BWq"/>
                 <outlet property="toggleWindowShortcut" destination="Zp6-jf-6Yu" id="fIn-F7-xow"/>
                 <outlet property="view" destination="EiT-Mj-1SZ" id="bDs-sb-2yV"/>
@@ -36,14 +37,14 @@
         <window title="Apptivator" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" animationBehavior="default" id="QvC-M9-y7g">
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
-            <rect key="contentRect" x="335" y="390" width="480" height="389"/>
+            <rect key="contentRect" x="335" y="390" width="480" height="420"/>
             <rect key="screenRect" x="0.0" y="0.0" width="1680" height="1028"/>
             <view key="contentView" wantsLayer="YES" id="EiT-Mj-1SZ">
-                <rect key="frame" x="0.0" y="0.0" width="480" height="389"/>
+                <rect key="frame" x="0.0" y="0.0" width="480" height="420"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <scrollView fixedFrame="YES" autohidesScrollers="YES" horizontalLineScroll="21" horizontalPageScroll="10" verticalLineScroll="21" verticalPageScroll="10" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gFi-ns-n0J">
-                        <rect key="frame" x="20" y="181" width="440" height="188"/>
+                        <rect key="frame" x="20" y="212" width="440" height="188"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <clipView key="contentView" ambiguous="YES" id="B8o-Kt-iL5">
                             <rect key="frame" x="1" y="0.0" width="438" height="187"/>
@@ -133,7 +134,7 @@
                         </tableHeaderView>
                     </scrollView>
                     <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="GlZ-ch-c4n">
-                        <rect key="frame" x="393" y="133" width="65" height="32"/>
+                        <rect key="frame" x="393" y="164" width="65" height="32"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <buttonCell key="cell" type="push" title="Add" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="GUs-FH-V3y">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -144,7 +145,7 @@
                         </connections>
                     </button>
                     <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="QPF-Hk-Mw9">
-                        <rect key="frame" x="308" y="133" width="89" height="32"/>
+                        <rect key="frame" x="308" y="164" width="89" height="32"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <buttonCell key="cell" type="push" title="Remove" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="huO-52-El8">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -155,7 +156,7 @@
                         </connections>
                     </button>
                     <button identifier="hideAppsWithShortcutWhenActive" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Ucs-lf-XIV">
-                        <rect key="frame" x="18" y="87" width="285" height="18"/>
+                        <rect key="frame" x="18" y="118" width="285" height="18"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <buttonCell key="cell" type="check" title="Hide apps when active and shortcut is fired" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="05p-zN-EYB">
                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
@@ -166,7 +167,7 @@
                         </connections>
                     </button>
                     <button identifier="launchAppIfNotRunning" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="BXg-y8-t5S">
-                        <rect key="frame" x="18" y="67" width="229" height="18"/>
+                        <rect key="frame" x="18" y="98" width="229" height="18"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <buttonCell key="cell" type="check" title="Launch apps if they're not running" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="sHK-Wd-9r7">
                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
@@ -177,7 +178,7 @@
                         </connections>
                     </button>
                     <button identifier="launchAppAtLogin" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="6hT-2E-Fxn">
-                        <rect key="frame" x="18" y="47" width="185" height="18"/>
+                        <rect key="frame" x="18" y="78" width="185" height="18"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <buttonCell key="cell" type="check" title="Launch Apptivator at Login" bezelStyle="regularSquare" imagePosition="left" state="on" identifier="launchAppAtLogin" inset="2" id="4WJ-rC-CTx">
                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
@@ -187,8 +188,19 @@
                             <action selector="onCheckboxChange:" target="goT-YD-soK" id="AHF-nq-Xif"/>
                         </connections>
                     </button>
+                    <button identifier="showOnScreenWithMouse" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="1OL-Vt-c3V">
+                        <rect key="frame" x="18" y="58" width="248" height="18"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <buttonCell key="cell" type="check" title="Show windows on screen with mouse" bezelStyle="regularSquare" imagePosition="left" state="on" identifier="showOnScreenWithMouse" inset="2" id="5Qd-NF-0hA">
+                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                            <font key="font" metaFont="system"/>
+                        </buttonCell>
+                        <connections>
+                            <action selector="onCheckboxChange:" target="goT-YD-soK" id="nBW-Ok-ZGi"/>
+                        </connections>
+                    </button>
                     <button identifier="hideAppsWhenDeactivated" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="0kg-bg-dYL">
-                        <rect key="frame" x="18" y="107" width="299" height="18"/>
+                        <rect key="frame" x="18" y="138" width="299" height="18"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <buttonCell key="cell" type="check" title="Automatically hide apps when they lose focus" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="FAm-P7-nYy">
                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
@@ -213,7 +225,7 @@
                     </customView>
                 </subviews>
             </view>
-            <point key="canvasLocation" x="139" y="601.5"/>
+            <point key="canvasLocation" x="139" y="617"/>
         </window>
     </objects>
     <resources>

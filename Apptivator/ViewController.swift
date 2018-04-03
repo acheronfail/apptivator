@@ -21,6 +21,7 @@ class ViewController: NSViewController {
     @IBOutlet weak var hideAppsWhenDeactivated: NSButton!
     @IBOutlet weak var launchAppIfNotRunning: NSButton!
     @IBOutlet weak var launchAppAtLogin: NSButton!
+    @IBOutlet weak var showOnScreenWithMouse: NSButton!
 
     @IBAction func onCheckboxChange(_ sender: NSButton) {
         let flag = sender.state == .on
@@ -60,6 +61,7 @@ class ViewController: NSViewController {
         tableView.reloadData()
         hideAppsWithShortcutWhenActive.state = state.hideAppsWithShortcutWhenActive ? .on : .off
         hideAppsWhenDeactivated.state = state.hideAppsWhenDeactivated ? .on : .off
+        showOnScreenWithMouse.state = state.showOnScreenWithMouse ? .on : .off
         launchAppIfNotRunning.state = state.launchAppIfNotRunning ? .on : .off
         launchAppAtLogin.state = LaunchAtLogin.isEnabled ? .on : .off
     }

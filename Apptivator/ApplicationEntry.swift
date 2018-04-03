@@ -22,6 +22,13 @@ class ApplicationEntry: CustomDebugStringConvertible {
     weak var observer: Observer?
     private var recordingWatcher: NSKeyValueObservation
 
+    // Include a deinit block during development to ensure that these objects are cleaned up.
+    #if DEBUG
+    deinit {
+        print("\(self.name) entry deinitialised")
+    }
+    #endif
+
     init?(url: URL) {
         self.url = url
 
@@ -45,7 +52,7 @@ class ApplicationEntry: CustomDebugStringConvertible {
         }
 
         self.shortcutCell.shortcutValueChange = { [unowned self] (view: MASShortcutView?) in
-            self.onShortcutValueChange()
+            MASShortcutBinder.shared().bindShortcut(withDefaultsKey: self.key, toAction: self.apptivate)
         }
         if let app = findRunningApp(withURL: url) {
             self.createObserver(app)
@@ -68,35 +75,53 @@ class ApplicationEntry: CustomDebugStringConvertible {
         return state.isEnabled() && UIElement.isProcessTrusted(withPrompt: true)
     }
 
-    func onShortcutValueChange() -> () {
-        MASShortcutBinder.shared().bindShortcut(withDefaultsKey: self.key, toAction: {
-            if self.enabled() {
-                if let app = findRunningApp(withURL: self.url) {
-                    if !app.isActive {
-                        if app.isHidden {
-                            app.unhide()
-                        }
-                        app.activate(options: .activateIgnoringOtherApps)
-                        self.createObserver(app)
-                    } else if state.hideAppsWithShortcutWhenActive {
-                        app.hide()
-                    }
-                } else if state.launchAppIfNotRunning {
-                    // Launch the application if it's not running, and after a delay attempt to
-                    // create an observer to watch it for events. We have to wait since we cannot
-                    // start observing an application if it hasn't fully launched.
-                    var runningApp = launchApplication(at: self.url)
-                    DispatchQueue.main.asyncAfter(deadline: .now() + APP_LAUNCH_DELAY) {
-                        if runningApp == nil {
-                            runningApp = findRunningApp(withURL: self.url)
-                        }
-                        if runningApp != nil {
-                            self.createObserver(runningApp!)
-                        }
-                    }
+    // Where the magic happens!
+    func apptivate() {
+        if self.enabled() {
+            if let runningApp = findRunningApp(withURL: self.url) {
+                if !runningApp.isActive {
+                    if state.showOnScreenWithMouse { self.showOnScreenWithMouse(runningApp) }
+                    if runningApp.isHidden { runningApp.unhide() }
+                    runningApp.activate(options: .activateIgnoringOtherApps)
+                    self.createObserver(runningApp)
+                } else if state.hideAppsWithShortcutWhenActive {
+                    runningApp.hide()
+                }
+            } else if state.launchAppIfNotRunning {
+                // Launch the application if it's not running, and after a delay attempt to
+                // create an observer to watch it for events. We have to wait since we cannot
+                // start observing an application if it hasn't fully launched.
+                // TODO: there's probably a better way of doing this.
+                var runningApp = launchApplication(at: self.url)
+                DispatchQueue.main.asyncAfter(deadline: .now() + APP_LAUNCH_DELAY) {
+                    if runningApp == nil { runningApp = findRunningApp(withURL: self.url) }
+                    if runningApp != nil { self.createObserver(runningApp!) }
                 }
             }
-        })
+        }
+    }
+
+    // Move all the application's windows to the screen where the mouse currently lies.
+    func showOnScreenWithMouse(_ runningApp: NSRunningApplication) {
+        if let destScreen = getScreenWithMouse(), let app = Application(runningApp) {
+            do {
+                for window in try app.windows()! {
+                    // Get current CGRect of the window.
+                    let prevFrame: CGRect = try window.attribute(.frame)!
+                    var frame = prevFrame
+                    // Translate that rect's coords from the source screen to the dest screen.
+                    translate(rect: &frame, fromScreenFrame: getScreenOfRect(frame)!.frame, toScreenFrame: destScreen.frame)
+                    // Clamp the rect's values inside the visible frame of the dest screen.
+                    clamp(rect: &frame, to: destScreen.visibleFrame)
+                    // Ensure rect's coords are valid.
+                    normaliseCoordinates(ofRect: &frame, inScreenFrame: destScreen.frame)
+                    // Move the window to the new destination.
+                    if !frame.equalTo(prevFrame) { setRect(ofElement: window, rect: frame) }
+                }
+            } catch {
+                print("Failed to move windows of \(app) (\(runningApp))")
+            }
+        }
     }
 
     // The listener that receives the events of the given application. Wraps an instance of an
@@ -110,19 +135,15 @@ class ApplicationEntry: CustomDebugStringConvertible {
             }
 
             // If enabled, respond to events.
-            if self.enabled() {
-                if event == .applicationDeactivated && state.hideAppsWhenDeactivated {
-                    runningApp.hide()
-                }
+            if self.enabled() && (event == .applicationDeactivated && state.hideAppsWhenDeactivated) {
+                runningApp.hide()
             }
         }
     }
 
     // Creates an observer (if one doesn't already exist) to watch certain events on each ApplicationEntry.
     func createObserver(_ runningApp: NSRunningApplication) {
-        guard observer == nil, let app = Application(runningApp) else {
-            return
-        }
+        guard observer == nil, let app = Application(runningApp) else { return }
 
         observer = app.createObserver(createListener(runningApp))
         do {
@@ -149,9 +170,7 @@ class ApplicationEntry: CustomDebugStringConvertible {
         var entries: [ApplicationEntry] = []
         for (_, entryJson):(String, JSON) in json {
             do {
-                if let entry = try ApplicationEntry.init(json: entryJson) {
-                    entries.append(entry)
-                }
+                if let entry = try ApplicationEntry.init(json: entryJson) { entries.append(entry) }
             } catch {
                 print("Unexpected error deserialising ApplicationEntry: \(entryJson), \(error)")
             }
@@ -203,4 +222,58 @@ func findRunningApp(withURL url: URL) -> NSRunningApplication? {
     }
     
     return nil
+}
+
+// Returns the screen which contains the mouse cursor.
+func getScreenWithMouse() -> NSScreen? {
+    return NSScreen.screens.first { NSMouseInRect(NSEvent.mouseLocation, $0.frame, false) }
+}
+
+// Returns the screen that contains the given rect.
+func getScreenOfRect(_ rect: CGRect) -> NSScreen? {
+    return NSScreen.screens.first { $0.frame.contains(rect) }
+}
+
+// Translates a CGRect from one parent rect to another. This is used so when we move a window
+// from one screen to another, its ratio and size are proportional to the screen.
+func translate(rect: inout CGRect, fromScreenFrame source: CGRect, toScreenFrame dest: CGRect) {
+    let xRel = source.width / dest.width
+    let yRel = source.height / dest.height
+
+    rect.origin.x *= xRel
+    rect.origin.y *= yRel
+    rect.size.width *= xRel
+    rect.size.height *= yRel
+}
+
+// Clamps the given (inner) rect to the outer rect, basically the inner rect may not be larger
+// than the outer rect.
+func clamp(rect inner: inout CGRect, to outer: CGRect) {
+    if (inner.origin.x < outer.origin.x) {
+        inner.origin.x = outer.origin.x;
+    } else if ((inner.origin.x + inner.size.width) > (outer.origin.x + outer.size.width)) {
+        inner.origin.x = outer.origin.x + outer.size.width - inner.size.width;
+    }
+
+    if (inner.origin.y < outer.origin.y) {
+        inner.origin.y = outer.origin.y;
+    } else if ((inner.origin.y + inner.size.height) > (outer.origin.y + outer.size.height)) {
+        inner.origin.y = outer.origin.y + outer.size.height - inner.size.height;
+    }
+}
+
+func normaliseCoordinates(ofRect rect: inout CGRect, inScreenFrame frameOfScreen: CGRect) {
+    let frameOfScreenWithMenuBar = NSScreen.screens[0].frame
+    rect.origin.y = frameOfScreen.size.height - NSMaxY(rect) + (frameOfScreenWithMenuBar.size.height - frameOfScreen.size.height)
+}
+
+// Sets the rect of the given element. The "frame" attribute isn't writable, so we have to
+// use the "position" and "size" attributes instead.
+func setRect(ofElement element: UIElement, rect: CGRect) {
+    do {
+        try element.setAttribute(.position, value: rect.origin)
+        try element.setAttribute(.size, value: rect.size)
+    } catch {
+        print("Failed to set frame of UIElement: \(element), \(error)")
+    }
 }

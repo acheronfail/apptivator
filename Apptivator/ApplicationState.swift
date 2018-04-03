@@ -22,6 +22,8 @@ import LaunchAtLogin
     var launchAppIfNotRunning = true
     // Should apps in the list be automatically hidden once they lose focus?
     var hideAppsWhenDeactivated = true
+    // When activating applications, move them first to the screen where the mouse is.
+    var showOnScreenWithMouse = false
     // When the application is active, should pressing the shortcut hide the app?
     var hideAppsWithShortcutWhenActive = true
 
@@ -43,6 +45,8 @@ import LaunchAtLogin
                         hideAppsWithShortcutWhenActive = value.bool ?? hideAppsWithShortcutWhenActive
                     case "hideAppsWhenDeactivated":
                         hideAppsWhenDeactivated = value.bool ?? hideAppsWhenDeactivated
+                    case "showOnScreenWithMouse":
+                        showOnScreenWithMouse = value.bool ?? showOnScreenWithMouse
                     case "launchAppIfNotRunning":
                         launchAppIfNotRunning = value.bool ?? launchAppIfNotRunning
                     default:
@@ -65,7 +69,8 @@ import LaunchAtLogin
             "entries": ApplicationEntry.serialiseList(entries: entries),
             "hideAppsWithShortcutWhenActive": hideAppsWithShortcutWhenActive,
             "hideAppsWhenDeactivated": hideAppsWhenDeactivated,
-            "launchAppIfNotRunning": launchAppIfNotRunning
+            "launchAppIfNotRunning": launchAppIfNotRunning,
+            "showOnScreenWithMouse": showOnScreenWithMouse
         ]
         do {
             if let jsonString = json.rawString() {
