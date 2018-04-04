@@ -110,6 +110,7 @@ class ApplicationEntry: CustomDebugStringConvertible {
                     let prevFrame: CGRect = try window.attribute(.frame)!
                     var frame = prevFrame
                     if let screenOfRect = getScreenOfRect(prevFrame) {
+                        if screenOfRect == destScreen { continue }
                         // Translate that rect's coords from the source screen to the dest screen.
                         translate(rect: &frame, fromScreenFrame: screenOfRect.frame, toScreenFrame: destScreen.frame)
                         // Clamp the rect's values inside the visible frame of the dest screen.
