@@ -109,14 +109,18 @@ class ApplicationEntry: CustomDebugStringConvertible {
                     // Get current CGRect of the window.
                     let prevFrame: CGRect = try window.attribute(.frame)!
                     var frame = prevFrame
-                    // Translate that rect's coords from the source screen to the dest screen.
-                    translate(rect: &frame, fromScreenFrame: getScreenOfRect(frame)!.frame, toScreenFrame: destScreen.frame)
-                    // Clamp the rect's values inside the visible frame of the dest screen.
-                    clamp(rect: &frame, to: destScreen.visibleFrame)
-                    // Ensure rect's coords are valid.
-                    normaliseCoordinates(ofRect: &frame, inScreenFrame: destScreen.frame)
-                    // Move the window to the new destination.
-                    if !frame.equalTo(prevFrame) { setRect(ofElement: window, rect: frame) }
+                    if let screenOfRect = getScreenOfRect(prevFrame) {
+                        // Translate that rect's coords from the source screen to the dest screen.
+                        translate(rect: &frame, fromScreenFrame: screenOfRect.frame, toScreenFrame: destScreen.frame)
+                        // Clamp the rect's values inside the visible frame of the dest screen.
+                        clamp(rect: &frame, to: destScreen.visibleFrame)
+                        // Ensure rect's coords are valid.
+                        normaliseCoordinates(ofRect: &frame, inScreenFrame: destScreen.frame)
+                        // Move the window to the new destination.
+                        if !frame.equalTo(prevFrame) { setRect(ofElement: window, rect: frame) }
+                    } else {
+                        print("Failed to find screen of rect: \(prevFrame)")
+                    }
                 }
             } catch {
                 print("Failed to move windows of \(app) (\(runningApp))")
@@ -231,17 +235,25 @@ func getScreenWithMouse() -> NSScreen? {
 
 // Returns the screen that contains the given rect.
 func getScreenOfRect(_ rect: CGRect) -> NSScreen? {
-    return NSScreen.screens.first { $0.frame.contains(rect) }
+    return NSScreen.screens.first { screen in
+        var normalised = rect
+        normaliseCoordinates(ofRect: &normalised, inScreenFrame: screen.frame)
+        return screen.frame.contains(normalised)
+    }
 }
 
 // Translates a CGRect from one parent rect to another. This is used so when we move a window
 // from one screen to another, its ratio and size are proportional to the screen.
 func translate(rect: inout CGRect, fromScreenFrame source: CGRect, toScreenFrame dest: CGRect) {
-    let xRel = source.width / dest.width
-    let yRel = source.height / dest.height
+    let xRel = dest.width / source.width
+    let yRel = dest.height / source.height
 
-    rect.origin.x *= xRel
-    rect.origin.y *= yRel
+    let xDiff = dest.origin.x - source.origin.x
+    let yDiff = dest.origin.y - source.origin.y
+
+    rect.origin.x = (rect.origin.x + xDiff) * xRel
+    rect.origin.y = (rect.origin.y + yDiff) * yRel
+
     rect.size.width *= xRel
     rect.size.height *= yRel
 }
