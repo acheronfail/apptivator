@@ -1,8 +1,10 @@
 ![Apptivator Banner](./Resources/banner.png)
 
-With Apptivator, you can create global hotkeys that will activate chosen apps with a predefined shortcuts. This means you can have a shortcut to show/hide any application at any time.
+With Apptivator, you can create global hotkeys that will activate chosen apps (or scripts/anything executable) with predefined shortcuts. This means you can have a shortcut to show/hide/execute any application at any time!
 
 I created this because I liked iTerm2's concept of a "hotkey" window, and I wanted to try kitty as my main terminal for a while and found I couldn't live without a window I could activate at any time. So, I created this in order to have a global hotkey to activate/deactivate kitty (and any other apps) at the touch of a button.
+
+It's also sometimes useful to run a script easily via a keyboard shortcut.
 
 ## Installation
 
@@ -34,6 +36,8 @@ Apptivator provides some neat options:
 	- Set the application to appear on all spaces. This can be done by right-clicking on the icon in the dock and selecting -> `Options` -> `All Desktops` (see [#12](https://github.com/acheronfail/apptivator/issues/12#issuecomment-370787813) for a discussion and ways to automate this).
 * **Activating my app always moves my computer to another space**
 	- This behaviour can be adjusted by going to `System Preferences` -> `Mission Control` -> and enabling/disabling the checkbox: `When switching to an application, switch to a Space with open windows for the application`
+* **Apptivator doesn't run my executable/script**
+	- Ensure that the file has execute permissions! Run `chmod +x path/to/file` to be sure.
 
 ## Developing
 
