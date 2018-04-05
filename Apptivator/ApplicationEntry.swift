@@ -70,7 +70,7 @@ class ApplicationEntry: CustomDebugStringConvertible {
     let shortcutCell: MASShortcutView!
 
     var config: ApplicationConfig
-    weak var observer: Observer?
+    var observer: Observer?
     private var recordingWatcher: NSKeyValueObservation
 
     // Include a deinit block during development to ensure that these objects are cleaned up.
@@ -184,7 +184,7 @@ class ApplicationEntry: CustomDebugStringConvertible {
     // The listener that receives the events of the given application. Wraps an instance of an
     // NSRunningApplication so we can use its methods.
     func createListener(_ runningApp: NSRunningApplication) -> (Observer, UIElement, AXNotification) -> () {
-        return { (observer, element, event) in
+        return { [unowned self] (observer, element, event) in
             // Remove observer if the app is terminated.
             if runningApp.isTerminated {
                 self.observer = nil
