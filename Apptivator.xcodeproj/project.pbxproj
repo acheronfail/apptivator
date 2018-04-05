@@ -11,6 +11,7 @@
 		151859FF204F35C6007CD792 /* LaunchAtLogin.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 151859FD204F35C5007CD792 /* LaunchAtLogin.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		1537F5E1204C8D860056EE50 /* ApplicationEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1537F5E0204C8D860056EE50 /* ApplicationEntry.swift */; };
 		155D2C03204F61220087478B /* Credits.rtfd in Resources */ = {isa = PBXBuildFile; fileRef = 155D2C02204F61220087478B /* Credits.rtfd */; };
+		1561AED2207615AC00C69338 /* MixedCheckbox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1561AED1207615AC00C69338 /* MixedCheckbox.swift */; };
 		15BB82A4204E512E0039B4E2 /* AXSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 15BB82A0204E512E0039B4E2 /* AXSwift.framework */; };
 		15BB82A5204E512E0039B4E2 /* AXSwift.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 15BB82A0204E512E0039B4E2 /* AXSwift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		15BB82A8204E512E0039B4E2 /* SwiftyJSON.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 15BB82A2204E512E0039B4E2 /* SwiftyJSON.framework */; };
@@ -45,6 +46,7 @@
 		151859FD204F35C5007CD792 /* LaunchAtLogin.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = LaunchAtLogin.framework; path = Carthage/Build/Mac/LaunchAtLogin.framework; sourceTree = "<group>"; };
 		1537F5E0204C8D860056EE50 /* ApplicationEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApplicationEntry.swift; sourceTree = "<group>"; };
 		155D2C02204F61220087478B /* Credits.rtfd */ = {isa = PBXFileReference; lastKnownFileType = wrapper.rtfd; path = Credits.rtfd; sourceTree = "<group>"; };
+		1561AED1207615AC00C69338 /* MixedCheckbox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MixedCheckbox.swift; sourceTree = "<group>"; };
 		15BB82A0204E512E0039B4E2 /* AXSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AXSwift.framework; path = Carthage/Build/Mac/AXSwift.framework; sourceTree = "<group>"; };
 		15BB82A2204E512E0039B4E2 /* SwiftyJSON.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftyJSON.framework; path = Carthage/Build/Mac/SwiftyJSON.framework; sourceTree = "<group>"; };
 		15BB82A3204E512E0039B4E2 /* MASShortcut.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MASShortcut.framework; path = Carthage/Build/Mac/MASShortcut.framework; sourceTree = "<group>"; };
@@ -101,6 +103,7 @@
 				15F39F3B204CB72D00847CD5 /* ViewController.swift */,
 				1537F5E0204C8D860056EE50 /* ApplicationEntry.swift */,
 				15FC8CC7204E2E2C000B5E1E /* ApplicationState.swift */,
+				1561AED1207615AC00C69338 /* MixedCheckbox.swift */,
 				B3B4C2C21E25894B009F8E4E /* Assets.xcassets */,
 				B3B4C2C41E25894B009F8E4E /* ApplicationWindow.xib */,
 				155D2C02204F61220087478B /* Credits.rtfd */,
@@ -203,6 +206,7 @@
 			files = (
 				15F39F3C204CB72D00847CD5 /* ViewController.swift in Sources */,
 				B3B4C2C11E25894B009F8E4E /* AppDelegate.swift in Sources */,
+				1561AED2207615AC00C69338 /* MixedCheckbox.swift in Sources */,
 				15FC8CC8204E2E2C000B5E1E /* ApplicationState.swift in Sources */,
 				1537F5E1204C8D860056EE50 /* ApplicationEntry.swift in Sources */,
 			);

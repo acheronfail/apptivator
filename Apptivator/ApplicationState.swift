@@ -18,14 +18,6 @@ import LaunchAtLogin
     var currentlyRecording = false
     // Whether or not the app should launch after login.
     var launchAppAtLogin = LaunchAtLogin.isEnabled
-    // Should we launch the application if it's not running and the shortcut is pressed?
-    var launchAppIfNotRunning = true
-    // Should apps in the list be automatically hidden once they lose focus?
-    var hideAppsWhenDeactivated = true
-    // When activating applications, move them first to the screen where the mouse is.
-    var showOnScreenWithMouse = false
-    // When the application is active, should pressing the shortcut hide the app?
-    var hideAppsWithShortcutWhenActive = true
 
     func isEnabled() -> Bool {
         return appIsEnabled && !currentlyRecording
@@ -41,14 +33,6 @@ import LaunchAtLogin
                     switch key {
                     case "entries":
                         entries = ApplicationEntry.deserialiseList(fromJSON: value)
-                    case "hideAppsWithShortcutWhenActive":
-                        hideAppsWithShortcutWhenActive = value.bool ?? hideAppsWithShortcutWhenActive
-                    case "hideAppsWhenDeactivated":
-                        hideAppsWhenDeactivated = value.bool ?? hideAppsWhenDeactivated
-                    case "showOnScreenWithMouse":
-                        showOnScreenWithMouse = value.bool ?? showOnScreenWithMouse
-                    case "launchAppIfNotRunning":
-                        launchAppIfNotRunning = value.bool ?? launchAppIfNotRunning
                     default:
                         print("unknown key '\(key)' encountered in json")
                     }
@@ -65,18 +49,15 @@ import LaunchAtLogin
 
     // Saves the app state to disk, creating the parent directories if they don't already exist.
     func saveToDisk() {
-        let json: JSON = [
-            "entries": ApplicationEntry.serialiseList(entries: entries),
-            "hideAppsWithShortcutWhenActive": hideAppsWithShortcutWhenActive,
-            "hideAppsWhenDeactivated": hideAppsWhenDeactivated,
-            "launchAppIfNotRunning": launchAppIfNotRunning,
-            "showOnScreenWithMouse": showOnScreenWithMouse
-        ]
+        let json: JSON = ["entries": ApplicationEntry.serialiseList(entries: entries)]
         do {
             if let jsonString = json.rawString() {
                 let configDir = savePath.deletingLastPathComponent()
                 try FileManager.default.createDirectory(atPath: configDir.path, withIntermediateDirectories: true, attributes: nil)
                 try jsonString.write(to: savePath, atomically: false, encoding: .utf8)
+                print("Saved config to disk")
+            } else {
+                print("Could not serialise config")
             }
         } catch {
             print("Unexpected error saving application state to disk: \(error)")

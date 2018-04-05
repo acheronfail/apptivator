@@ -17,19 +17,39 @@ class ViewController: NSViewController {
     @IBOutlet weak var appDelegate: AppDelegate!
     @IBOutlet weak var toggleWindowShortcut: MASShortcutView!
 
-    @IBOutlet weak var hideAppsWithShortcutWhenActive: NSButton!
-    @IBOutlet weak var hideAppsWhenDeactivated: NSButton!
-    @IBOutlet weak var launchAppIfNotRunning: NSButton!
-    @IBOutlet weak var launchAppAtLogin: NSButton!
+    // Local configuration values.
+    @IBOutlet weak var hideWithShortcutWhenActive: NSButton!
     @IBOutlet weak var showOnScreenWithMouse: NSButton!
+    @IBOutlet weak var hideWhenDeactivated: NSButton!
+    @IBOutlet weak var launchIfNotRunning: NSButton!
+    func getLocalConfigButtons() -> [NSButton] {
+        return [
+            hideWithShortcutWhenActive!,
+            showOnScreenWithMouse!,
+            hideWhenDeactivated!,
+            launchIfNotRunning!
+        ]
+    }
 
-    @IBAction func onCheckboxChange(_ sender: NSButton) {
+    // Global configuration values.
+    @IBOutlet weak var launchAppAtLogin: NSButton!
+
+    @IBAction func onLocalCheckboxChange(_ sender: NSButton) {
+        for index in tableView.selectedRowIndexes {
+            let entry = state.entries[index]
+            for button in getLocalConfigButtons() {
+                entry.config[button.identifier!.rawValue] = button.state == .on ? true : false
+            }
+        }
+    }
+
+    @IBAction func onGlobalCheckboxChange(_ sender: NSButton) {
         let flag = sender.state == .on
         if let identifier = sender.identifier?.rawValue {
             if identifier == "launchAppAtLogin" {
                 LaunchAtLogin.isEnabled = flag
             } else {
-                state.setValue(flag, forKey: identifier)
+                print("Unknown identifier found: \(identifier)")
             }
         }
     }
@@ -59,10 +79,6 @@ class ViewController: NSViewController {
 
     func reloadView() {
         tableView.reloadData()
-        hideAppsWithShortcutWhenActive.state = state.hideAppsWithShortcutWhenActive ? .on : .off
-        hideAppsWhenDeactivated.state = state.hideAppsWhenDeactivated ? .on : .off
-        showOnScreenWithMouse.state = state.showOnScreenWithMouse ? .on : .off
-        launchAppIfNotRunning.state = state.launchAppIfNotRunning ? .on : .off
         launchAppAtLogin.state = LaunchAtLogin.isEnabled ? .on : .off
     }
 
@@ -115,7 +131,7 @@ class ViewController: NSViewController {
             return
         }
 
-        if let appEntry = ApplicationEntry(url: url) {
+        if let appEntry = ApplicationEntry(url: url, config: nil) {
             state.entries.append(appEntry)
             tableView.reloadData()
         }
@@ -157,6 +173,41 @@ extension ViewController: NSTableViewDelegate {
     fileprivate enum CellIdentifiers {
         static let ApplicationCell = "ApplicationCellID"
         static let ShortcutCell = "ShortcutCellID"
+    }
+
+    func tableViewSelectionDidChange(_ notification: Notification) {
+        var localConfig = getLocalConfigButtons().map { ($0, nil as NSControl.StateValue?) }
+
+        // Return and disable checkboxes if no rows are selected.
+        let selectedIndexes = tableView.selectedRowIndexes
+        if selectedIndexes.count < 1 {
+            for (button, _) in localConfig {
+                button.state = .off
+                button.isEnabled = false
+            }
+            return
+        }
+
+        // Combine settings together: if one app has a flag on, and another off, then the checkbox
+        // state will be `.mixed`.
+        for index in selectedIndexes {
+            let entry = state.entries[index]
+            for (i, tuple) in localConfig.enumerated() {
+                let (button, newState) = tuple
+                let entryValue = entry.config[button.identifier!.rawValue]!
+                if newState == nil {
+                    localConfig[i].1 = entryValue ? .on : .off
+                } else if newState == .on && !entryValue || newState == .off && entryValue {
+                    localConfig[i].1 = .mixed
+                }
+            }
+        }
+
+        // Apply new states.
+        for (button, newState) in localConfig {
+            button.state = newState!
+            button.isEnabled = true
+        }
     }
 
     func tableView(_ tableView: NSTableView, sortDescriptorsDidChange oldDescriptors: [NSSortDescriptor]) {

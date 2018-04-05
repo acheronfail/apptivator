@@ -11,6 +11,55 @@ import MASShortcut
 // to attach listeners to it.
 let APP_LAUNCH_DELAY = 2.0
 
+struct ApplicationConfig {
+    // When the app is active, should pressing the shortcut hide it?
+    var hideWithShortcutWhenActive: Bool = true
+    // When activating, move windows to the screen where the mouse is.
+    var showOnScreenWithMouse: Bool = true
+    // Should the app be automatically hidden once it loses focus?
+    var hideWhenDeactivated: Bool = true
+    // Should we launch the application if it's not running and the shortcut is pressed?
+    var launchIfNotRunning: Bool = true
+
+    // Allow this struct to be subscripted. Swift makes this overly verbose. T_T
+    subscript(_ key: String) -> Bool? {
+        get {
+            if key == "hideWithShortcutWhenActive" { return self.hideWithShortcutWhenActive }
+            if key == "showOnScreenWithMouse" { return self.showOnScreenWithMouse }
+            if key == "hideWhenDeactivated" { return self.hideWhenDeactivated }
+            if key == "launchIfNotRunning" { return self.launchIfNotRunning }
+            return nil
+        }
+        set {
+            if newValue != nil {
+                if key == "hideWithShortcutWhenActive" { self.hideWithShortcutWhenActive = newValue! }
+                if key == "showOnScreenWithMouse" { self.showOnScreenWithMouse = newValue! }
+                if key == "hideWhenDeactivated" { self.hideWhenDeactivated = newValue! }
+                if key == "launchIfNotRunning" { self.launchIfNotRunning = newValue! }
+            }
+        }
+    }
+
+    init(withValues: [String: Bool]?) {
+        if let opts = withValues {
+            hideWithShortcutWhenActive = opts["hideWithShortcutWhenActive"] ?? hideWithShortcutWhenActive
+            showOnScreenWithMouse = opts["showOnScreenWithMouse"] ?? showOnScreenWithMouse
+            hideWhenDeactivated = opts["hideWhenDeactivated"] ?? hideWhenDeactivated
+            launchIfNotRunning = opts["launchIfNotRunning"] ?? launchIfNotRunning
+        }
+    }
+
+    var asJSON: JSON {
+        let json: JSON = [
+            "hideWithShortcutWhenActive": hideWithShortcutWhenActive,
+            "showOnScreenWithMouse": showOnScreenWithMouse,
+            "hideWhenDeactivated": hideWhenDeactivated,
+            "launchIfNotRunning": launchIfNotRunning
+        ]
+        return json
+    }
+}
+
 // Represents an item in the Shortcut table of the app's window.
 // Each ApplicationEntry is simply a URL of an app mapped to a shortcut.
 class ApplicationEntry: CustomDebugStringConvertible {
@@ -19,6 +68,8 @@ class ApplicationEntry: CustomDebugStringConvertible {
     let icon: NSImage
     let url: URL
     let shortcutCell: MASShortcutView!
+
+    var config: ApplicationConfig
     weak var observer: Observer?
     private var recordingWatcher: NSKeyValueObservation
 
@@ -29,8 +80,9 @@ class ApplicationEntry: CustomDebugStringConvertible {
     }
     #endif
 
-    init?(url: URL) {
+    init?(url: URL, config: [String:Bool]?) {
         self.url = url
+        self.config = ApplicationConfig(withValues: config)
 
         // The character "." cannot appear in the MASShortcutView.associatedUserDefaultsKey property.
         // See: https://github.com/shpakovski/MASShortcut/issues/64
@@ -64,7 +116,7 @@ class ApplicationEntry: CustomDebugStringConvertible {
             return nil
         }
 
-        self.init(url: url)
+        self.init(url: url, config: json["config"].dictionaryObject as? [String:Bool] ?? nil)
         if let keyCode = json["keyCode"].uInt, let modifierFlags = json["modifierFlags"].uInt {
             let shortcut = MASShortcut(keyCode: keyCode, modifierFlags: modifierFlags)
             self.shortcutCell.shortcutValue = shortcut
@@ -80,14 +132,14 @@ class ApplicationEntry: CustomDebugStringConvertible {
         if self.enabled() {
             if let runningApp = findRunningApp(withURL: self.url) {
                 if !runningApp.isActive {
-                    if state.showOnScreenWithMouse { self.showOnScreenWithMouse(runningApp) }
+                    if self.config.showOnScreenWithMouse { self.showOnScreenWithMouse(runningApp) }
                     if runningApp.isHidden { runningApp.unhide() }
                     runningApp.activate(options: .activateIgnoringOtherApps)
                     self.createObserver(runningApp)
-                } else if state.hideAppsWithShortcutWhenActive {
+                } else if self.config.hideWithShortcutWhenActive {
                     runningApp.hide()
                 }
-            } else if state.launchAppIfNotRunning {
+            } else if self.config.launchIfNotRunning {
                 // Launch the application if it's not running, and after a delay attempt to
                 // create an observer to watch it for events. We have to wait since we cannot
                 // start observing an application if it hasn't fully launched.
@@ -140,7 +192,7 @@ class ApplicationEntry: CustomDebugStringConvertible {
             }
 
             // If enabled, respond to events.
-            if self.enabled() && (event == .applicationDeactivated && state.hideAppsWhenDeactivated) {
+            if self.enabled() && (event == .applicationDeactivated && self.config.hideWhenDeactivated) {
                 runningApp.hide()
             }
         }
@@ -159,7 +211,10 @@ class ApplicationEntry: CustomDebugStringConvertible {
     }
 
     var asJSON: JSON {
-        var json: JSON = ["url": url.absoluteString]
+        var json: JSON = [
+            "url": url.absoluteString,
+            "config": self.config.asJSON
+        ]
         if let shortcut = shortcutCell.shortcutValue {
             json["keyCode"].uInt = shortcut.keyCode
             json["modifierFlags"].uInt = shortcut.modifierFlags
