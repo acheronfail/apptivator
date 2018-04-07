@@ -9,6 +9,9 @@ import SwiftyJSON
 let appName = Bundle.main.infoDictionary![kCFBundleNameKey as String] as! String
 let state = ApplicationState()
 
+let ENABLED_INDICATOR_ON = "\(appName): on"
+let ENABLED_INDICATOR_OFF = "\(appName): off"
+
 // Menu bar item icons.
 let iconOn = NSImage(named: NSImage.Name(rawValue: "icon-on"))
 let iconOff = NSImage(named: NSImage.Name(rawValue: "icon-off"))
@@ -19,7 +22,7 @@ let iconOff = NSImage(named: NSImage.Name(rawValue: "icon-off"))
 
     var contextMenu: NSMenu = NSMenu()
     var menuBarItem: NSStatusItem! = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
-    let enabledIndicator = NSMenuItem(title: "\(appName): Enabled", action: nil, keyEquivalent: "")
+    let enabledIndicator = NSMenuItem(title: ENABLED_INDICATOR_OFF, action: nil, keyEquivalent: "")
 
     func applicationDidFinishLaunching(_ aNotification: Notification) {
         setupIcon(iconOn)
@@ -27,7 +30,7 @@ let iconOff = NSImage(named: NSImage.Name(rawValue: "icon-off"))
 
         popover.delegate = self
 
-        menuBarItem.image = iconOn
+        menuBarItem.image = iconOff
         menuBarItem.action = #selector(onMenuClick)
         menuBarItem.sendAction(on: [.leftMouseUp, .rightMouseUp])
 
@@ -38,8 +41,8 @@ let iconOff = NSImage(named: NSImage.Name(rawValue: "icon-off"))
         contextMenu.addItem(NSMenuItem.separator())
         contextMenu.addItem(NSMenuItem(title: "Quit \(appName)", action: #selector(quitApplication), keyEquivalent: ""))
 
-        enable(true)
         state.loadFromDisk()
+        enable(state.appIsEnabled)
         viewController.reloadView()
 
         // Check for accessibility permissions.
@@ -52,7 +55,7 @@ let iconOff = NSImage(named: NSImage.Name(rawValue: "icon-off"))
         }
 
         #if DEBUG
-        togglePreferencesPopover()
+        //togglePreferencesPopover()
         #endif
     }
 
@@ -63,7 +66,7 @@ let iconOff = NSImage(named: NSImage.Name(rawValue: "icon-off"))
     func enable(_ flag: Bool) {
         state.appIsEnabled = flag
         menuBarItem?.image = flag ? iconOn : iconOff
-        enabledIndicator.title = "\(appName): \(flag ? "on" : "off")"
+        enabledIndicator.title = flag ? ENABLED_INDICATOR_ON : ENABLED_INDICATOR_OFF
     }
 
     func setupIcon(_ image: NSImage?) {

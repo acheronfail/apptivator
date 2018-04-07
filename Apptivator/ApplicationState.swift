@@ -31,6 +31,8 @@ import LaunchAtLogin
                 let json = try JSON(data: dataFromString)
                 for (key, value):(String, JSON) in json {
                     switch key {
+                    case "appIsEnabled":
+                        appIsEnabled = value.bool ?? true
                     case "entries":
                         entries = ApplicationEntry.deserialiseList(fromJSON: value)
                     default:
@@ -49,7 +51,10 @@ import LaunchAtLogin
 
     // Saves the app state to disk, creating the parent directories if they don't already exist.
     func saveToDisk() {
-        let json: JSON = ["entries": ApplicationEntry.serialiseList(entries: entries)]
+        let json: JSON = [
+            "appIsEnabled": appIsEnabled,
+            "entries": ApplicationEntry.serialiseList(entries: entries)
+        ]
         do {
             if let jsonString = json.rawString() {
                 let configDir = savePath.deletingLastPathComponent()
