@@ -130,6 +130,8 @@ let iconOff = NSImage(named: NSImage.Name(rawValue: "icon-off"))
 }
 
 extension AppDelegate: NSPopoverDelegate {
+    // Allows the user to click + drag to move the popover around, where it can become a separate,
+    // persistent window.
     func popoverShouldDetach(_ popover: NSPopover) -> Bool {
         return true
     }

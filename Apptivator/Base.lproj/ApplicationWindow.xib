@@ -52,19 +52,19 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="1NX-df-p5y">
-                                <rect key="frame" x="14" y="403" width="440" height="62"/>
+                                <rect key="frame" x="115" y="400" width="250" height="65"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="banner" id="lDl-95-2ao"/>
                             </imageView>
                             <scrollView fixedFrame="YES" autohidesScrollers="YES" horizontalLineScroll="21" horizontalPageScroll="10" verticalLineScroll="21" verticalPageScroll="10" usesPredominantAxisScrolling="NO" horizontalScrollElasticity="none" verticalScrollElasticity="allowed" translatesAutoresizingMaskIntoConstraints="NO" id="AVn-ZA-F5u">
-                                <rect key="frame" x="14" y="216" width="440" height="179"/>
+                                <rect key="frame" x="15" y="216" width="450" height="179"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <clipView key="contentView" ambiguous="YES" id="G3h-rF-URc">
-                                    <rect key="frame" x="1" y="0.0" width="438" height="178"/>
+                                    <rect key="frame" x="1" y="0.0" width="448" height="178"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" alternatingRowBackgroundColors="YES" columnSelection="YES" autosaveColumns="NO" rowHeight="19" rowSizeStyle="automatic" headerView="g5N-HU-6HD" viewBased="YES" id="2eX-UM-aS6">
-                                            <rect key="frame" x="0.0" y="0.0" width="438" height="155"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="448" height="155"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <size key="intercellSpacing" width="3" height="2"/>
                                             <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -110,7 +110,7 @@
                                                         </tableCellView>
                                                     </prototypeCellViews>
                                                 </tableColumn>
-                                                <tableColumn identifier="" width="131" minWidth="40" maxWidth="1000" id="LgK-ax-hg0">
+                                                <tableColumn identifier="" width="141" minWidth="40" maxWidth="1000" id="LgK-ax-hg0">
                                                     <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" title="Shortcut">
                                                         <font key="font" metaFont="smallSystem"/>
                                                         <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
@@ -124,7 +124,7 @@
                                                     <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                                     <prototypeCellViews>
                                                         <customView id="4Ev-Tc-Kua" customClass="MASShortcutView">
-                                                            <rect key="frame" x="305" y="1" width="131" height="19"/>
+                                                            <rect key="frame" x="305" y="1" width="141" height="19"/>
                                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                         </customView>
                                                     </prototypeCellViews>
@@ -142,15 +142,15 @@
                                     <autoresizingMask key="autoresizingMask"/>
                                 </scroller>
                                 <tableHeaderView key="headerView" id="g5N-HU-6HD">
-                                    <rect key="frame" x="0.0" y="0.0" width="438" height="23"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="448" height="23"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </tableHeaderView>
                             </scrollView>
                             <box fixedFrame="YES" boxType="secondary" borderType="bezel" title="Options for selected item(s):" translatesAutoresizingMaskIntoConstraints="NO" id="1pg-KJ-YJX">
-                                <rect key="frame" x="11" y="62" width="446" height="123"/>
+                                <rect key="frame" x="15" y="62" width="450" height="123"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <view key="contentView" id="OXh-IK-IbD">
-                                    <rect key="frame" x="3" y="3" width="440" height="105"/>
+                                    <rect key="frame" x="3" y="3" width="444" height="105"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <button identifier="hideWithShortcutWhenActive" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="fm8-ma-Yip">
@@ -208,7 +208,6 @@
                                         </textField>
                                     </subviews>
                                 </view>
-                                <font key="titleFont" metaFont="message" size="11"/>
                             </box>
                             <button identifier="launchAppAtLogin" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="aRw-eS-jNy">
                                 <rect key="frame" x="12" y="38" width="185" height="18"/>
@@ -221,38 +220,15 @@
                                     <action selector="onGlobalCheckboxChange:" target="goT-YD-soK" id="DJl-tX-6aa"/>
                                 </connections>
                             </button>
-                            <box fixedFrame="YES" boxType="custom" borderWidth="0.0" title="Toggle Preferences" translatesAutoresizingMaskIntoConstraints="NO" id="4fj-oJ-0QX">
-                                <rect key="frame" x="14" y="15" width="434" height="20"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                <view key="contentView" ambiguous="YES" id="ptY-l2-sEn">
-                                    <rect key="frame" x="0.0" y="0.0" width="434" height="20"/>
-                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                    <subviews>
-                                        <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="NkU-5s-GQQ">
-                                            <rect key="frame" x="-2" y="2" width="230" height="17"/>
-                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                            <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Show/hide this window with shortcut:" id="OlC-EW-f1C">
-                                                <font key="font" metaFont="system"/>
-                                                <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
-                                                <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                                            </textFieldCell>
-                                        </textField>
-                                        <customView fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Pkw-YC-fI1" customClass="MASShortcutView">
-                                            <rect key="frame" x="271" y="0.0" width="163" height="19"/>
-                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                        </customView>
-                                    </subviews>
-                                </view>
-                            </box>
                             <box fixedFrame="YES" boxType="custom" title="Button Box" translatesAutoresizingMaskIntoConstraints="NO" id="zgL-uM-OxW">
-                                <rect key="frame" x="14" y="194" width="440" height="23"/>
+                                <rect key="frame" x="15" y="194" width="450" height="23"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <view key="contentView" ambiguous="YES" id="r6b-X0-AlY">
-                                    <rect key="frame" x="1" y="1" width="438" height="21"/>
+                                    <rect key="frame" x="1" y="1" width="448" height="21"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="9Wu-r5-UQq">
-                                            <rect key="frame" x="311" y="-2" width="77" height="26"/>
+                                            <rect key="frame" x="321" y="-2" width="77" height="26"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <buttonCell key="cell" type="smallSquare" title="Remove" bezelStyle="smallSquare" alignment="center" enabled="NO" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="NoY-qx-3jt">
                                                 <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -263,7 +239,7 @@
                                             </connections>
                                         </button>
                                         <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Z53-PH-wbI">
-                                            <rect key="frame" x="386" y="-2" width="53" height="26"/>
+                                            <rect key="frame" x="396" y="-2" width="53" height="26"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <buttonCell key="cell" type="smallSquare" title="Add" bezelStyle="smallSquare" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="fPh-jD-Usf">
                                                 <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -277,7 +253,29 @@
                                 </view>
                                 <color key="borderColor" name="gridColor" catalog="System" colorSpace="catalog"/>
                                 <color key="fillColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
-                                <font key="titleFont" metaFont="message" size="11"/>
+                            </box>
+                            <box fixedFrame="YES" boxType="custom" borderWidth="0.0" title="Toggle Preferences" translatesAutoresizingMaskIntoConstraints="NO" id="4fj-oJ-0QX">
+                                <rect key="frame" x="15" y="15" width="450" height="20"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                <view key="contentView" ambiguous="YES" id="ptY-l2-sEn">
+                                    <rect key="frame" x="0.0" y="0.0" width="450" height="20"/>
+                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                    <subviews>
+                                        <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="NkU-5s-GQQ">
+                                            <rect key="frame" x="-2" y="2" width="230" height="17"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                            <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Show/hide this window with shortcut:" id="OlC-EW-f1C">
+                                                <font key="font" metaFont="system"/>
+                                                <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                                <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                            </textFieldCell>
+                                        </textField>
+                                        <customView fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Pkw-YC-fI1" customClass="MASShortcutView">
+                                            <rect key="frame" x="287" y="0.0" width="163" height="19"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                        </customView>
+                                    </subviews>
+                                </view>
                             </box>
                         </subviews>
                     </view>
