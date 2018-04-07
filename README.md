@@ -10,6 +10,8 @@ It's also sometimes useful to run a script easily via a keyboard shortcut.
 
 Simply download the dmg from the [releases](https://github.com/acheronfail/apptivator/releases) tab and drag Apptivator.app into your `/Applications` folder.
 
+![screenshot of apptivator](./Resources/screenshot.png)
+
 ## Usage
 
 It's simple really. Once Apptivator is running you'll see an icon in your menubar - click it to enable/disable Apptivator's functionality. You can open the shortcuts window by right-clicking on the icon and choosing it from the menu.
