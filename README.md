@@ -10,7 +10,7 @@ It's also sometimes useful to run a script easily via a keyboard shortcut.
 
 Simply download the dmg from the [releases](https://github.com/acheronfail/apptivator/releases) tab and drag Apptivator.app into your `/Applications` folder.
 
-![screenshot of apptivator](./Resources/screenshot.png)
+![screenshot of apptivator](./Resources/demo.png)
 
 ## Usage
 
