@@ -32,7 +32,7 @@ let iconOff = NSImage(named: NSImage.Name(rawValue: "icon-off"))
         menuBarItem?.sendAction(on: [.leftMouseUp, .rightMouseUp])
 
         contextMenu.addItem(enabledIndicator)
-        contextMenu.addItem(NSMenuItem(title: "Configure Shortcuts", action: #selector(openPreferencesWindow), keyEquivalent: ""))
+        contextMenu.addItem(NSMenuItem(title: "Configure Shortcuts", action: #selector(togglePreferencesWindow), keyEquivalent: ""))
         contextMenu.addItem(NSMenuItem.separator())
         contextMenu.addItem(NSMenuItem(title: "About", action: #selector(showAboutPanel), keyEquivalent: ""))
         contextMenu.addItem(NSMenuItem.separator())
@@ -52,7 +52,7 @@ let iconOff = NSImage(named: NSImage.Name(rawValue: "icon-off"))
         }
 
         #if DEBUG
-            openPreferencesWindow()
+            togglePreferencesWindow()
         #endif
     }
 
@@ -85,10 +85,14 @@ let iconOff = NSImage(named: NSImage.Name(rawValue: "icon-off"))
         NSApplication.shared.activate(ignoringOtherApps: true)
     }
 
-    @objc func openPreferencesWindow() {
-        window.center()
-        window.makeKeyAndOrderFront(window)
-        NSApplication.shared.activate(ignoringOtherApps: true)
+    @objc func togglePreferencesWindow() {
+        if window.isVisible {
+            window.close()
+        } else {
+            window.center()
+            window.makeKeyAndOrderFront(window)
+            NSApplication.shared.activate(ignoringOtherApps: true)
+        }
     }
 
     @objc func quitApplication() {

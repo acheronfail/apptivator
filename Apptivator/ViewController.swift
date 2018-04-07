@@ -65,12 +65,11 @@ class ViewController: NSViewController {
         addMenu.addItem(NSMenuItem(title: "Choose from Running Applications", action: nil, keyEquivalent: ""))
         addMenu.item(at: 1)?.submenu = NSMenu()
 
-        let onToggleWindowShortcutChange = { (_: MASShortcutView?) in
-            MASShortcutBinder.shared().bindShortcut(withDefaultsKey: toggleWindowShortcutKey, toAction: { self.appDelegate.openPreferencesWindow() })
-        }
         toggleWindowShortcut.associatedUserDefaultsKey = toggleWindowShortcutKey
-        toggleWindowShortcut.shortcutValueChange = onToggleWindowShortcutChange
-        onToggleWindowShortcutChange(toggleWindowShortcut)
+        toggleWindowShortcut.shortcutValueChange = { (_: MASShortcutView?) in
+            MASShortcutBinder.shared().bindShortcut(withDefaultsKey: toggleWindowShortcutKey, toAction: { self.appDelegate.togglePreferencesWindow() })
+        }
+        toggleWindowShortcut.shortcutValueChange(toggleWindowShortcut)
     }
 
     override func viewWillDisappear() {
