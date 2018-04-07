@@ -13,13 +13,13 @@ let APP_LAUNCH_DELAY = 2.0
 
 struct ApplicationConfig {
     // When the app is active, should pressing the shortcut hide it?
-    var hideWithShortcutWhenActive: Bool = true
+    var hideWithShortcutWhenActive: Bool = false
     // When activating, move windows to the screen where the mouse is.
-    var showOnScreenWithMouse: Bool = true
+    var showOnScreenWithMouse: Bool = false
     // Should the app be automatically hidden once it loses focus?
-    var hideWhenDeactivated: Bool = true
+    var hideWhenDeactivated: Bool = false
     // Should we launch the application if it's not running and the shortcut is pressed?
-    var launchIfNotRunning: Bool = true
+    var launchIfNotRunning: Bool = false
 
     // Allow this struct to be subscripted. Swift makes this overly verbose. T_T
     subscript(_ key: String) -> Bool? {
