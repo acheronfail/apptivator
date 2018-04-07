@@ -217,6 +217,11 @@ class ApplicationEntry: CustomDebugStringConvertible {
         }
     }
 
+    var asString: String {
+        let shortcutSequence = [self.shortcutCell.shortcutValue]
+        return shortcutSequence.compactMap({ $0 != nil ? "\($0!)" : nil }).joined(separator: " ")
+    }
+
     var asJSON: JSON {
         var json: JSON = [
             "url": url.absoluteString,
@@ -227,6 +232,10 @@ class ApplicationEntry: CustomDebugStringConvertible {
             json["modifierFlags"].uInt = shortcut.modifierFlags
         }
         return json
+    }
+
+    public var debugDescription: String {
+        return "AppEntry: \(name), Shortcut: \(shortcutCell.shortcutValue!)"
     }
 
     static func serialiseList(entries: [ApplicationEntry]) -> JSON {
@@ -244,10 +253,6 @@ class ApplicationEntry: CustomDebugStringConvertible {
         }
 
         return entries
-    }
-
-    public var debugDescription: String {
-        return "AppEntry: \(name), Shortcut: \(shortcutCell.shortcutValue!)"
     }
 }
 
