@@ -24,6 +24,9 @@
             <connections>
                 <outlet property="addButton" destination="Z53-PH-wbI" id="x6P-Uw-dhO"/>
                 <outlet property="appDelegate" destination="Voe-Tx-rLC" id="k1C-Cb-LO9"/>
+                <outlet property="bannerImage" destination="1NX-df-p5y" id="LqZ-tm-QDT"/>
+                <outlet property="boxWrapper" destination="cnP-0p-7HM" id="3vM-OA-Liv"/>
+                <outlet property="enableDarkMode" destination="S1m-gw-fuX" id="enB-xI-aIc"/>
                 <outlet property="hideWhenDeactivated" destination="bJl-e3-U5r" id="0U6-gi-B1x"/>
                 <outlet property="hideWithShortcutWhenActive" destination="fm8-ma-Yip" id="FcN-ND-DVp"/>
                 <outlet property="launchAppAtLogin" destination="aRw-eS-jNy" id="0lJ-hd-Sd6"/>
@@ -44,20 +47,20 @@
             <rect key="frame" x="0.0" y="0.0" width="500" height="500"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
             <subviews>
-                <box fixedFrame="YES" boxType="custom" cornerRadius="4" title="Wrapper" translatesAutoresizingMaskIntoConstraints="NO" id="cnP-0p-7HM">
+                <box fixedFrame="YES" boxType="custom" borderWidth="0.0" cornerRadius="4" title="Wrapper" translatesAutoresizingMaskIntoConstraints="NO" id="cnP-0p-7HM">
                     <rect key="frame" x="10" y="10" width="480" height="480"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <view key="contentView" ambiguous="YES" id="Tz7-Sh-kPR">
-                        <rect key="frame" x="1" y="1" width="478" height="478"/>
+                        <rect key="frame" x="0.0" y="0.0" width="480" height="480"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="1NX-df-p5y">
-                                <rect key="frame" x="115" y="400" width="250" height="65"/>
+                                <rect key="frame" x="115" y="415" width="250" height="65"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="banner" id="lDl-95-2ao"/>
                             </imageView>
                             <scrollView fixedFrame="YES" autohidesScrollers="YES" horizontalLineScroll="21" horizontalPageScroll="10" verticalLineScroll="21" verticalPageScroll="10" usesPredominantAxisScrolling="NO" horizontalScrollElasticity="none" verticalScrollElasticity="allowed" translatesAutoresizingMaskIntoConstraints="NO" id="AVn-ZA-F5u">
-                                <rect key="frame" x="15" y="216" width="450" height="179"/>
+                                <rect key="frame" x="15" y="236" width="450" height="179"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <clipView key="contentView" ambiguous="YES" id="G3h-rF-URc">
                                     <rect key="frame" x="1" y="0.0" width="448" height="178"/>
@@ -147,7 +150,7 @@
                                 </tableHeaderView>
                             </scrollView>
                             <box fixedFrame="YES" boxType="secondary" borderType="bezel" title="Options for selected item(s):" translatesAutoresizingMaskIntoConstraints="NO" id="1pg-KJ-YJX">
-                                <rect key="frame" x="15" y="62" width="450" height="123"/>
+                                <rect key="frame" x="15" y="89" width="450" height="123"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <view key="contentView" id="OXh-IK-IbD">
                                     <rect key="frame" x="3" y="3" width="444" height="105"/>
@@ -210,7 +213,7 @@
                                 </view>
                             </box>
                             <button identifier="launchAppAtLogin" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="aRw-eS-jNy">
-                                <rect key="frame" x="12" y="38" width="185" height="18"/>
+                                <rect key="frame" x="12" y="40" width="185" height="18"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <buttonCell key="cell" type="check" title="Launch Apptivator at Login" bezelStyle="regularSquare" imagePosition="left" state="on" identifier="launchAppAtLogin" inset="2" id="X5y-Xa-aR7">
                                     <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
@@ -221,7 +224,7 @@
                                 </connections>
                             </button>
                             <box fixedFrame="YES" boxType="custom" title="Button Box" translatesAutoresizingMaskIntoConstraints="NO" id="zgL-uM-OxW">
-                                <rect key="frame" x="15" y="194" width="450" height="23"/>
+                                <rect key="frame" x="15" y="214" width="450" height="23"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <view key="contentView" ambiguous="YES" id="r6b-X0-AlY">
                                     <rect key="frame" x="1" y="1" width="448" height="21"/>
@@ -258,7 +261,7 @@ CA
                                 <color key="fillColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                             </box>
                             <box fixedFrame="YES" boxType="custom" borderWidth="0.0" title="Toggle Preferences" translatesAutoresizingMaskIntoConstraints="NO" id="4fj-oJ-0QX">
-                                <rect key="frame" x="15" y="15" width="450" height="20"/>
+                                <rect key="frame" x="15" y="17" width="450" height="20"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <view key="contentView" ambiguous="YES" id="ptY-l2-sEn">
                                     <rect key="frame" x="0.0" y="0.0" width="450" height="20"/>
@@ -280,13 +283,24 @@ CA
                                     </subviews>
                                 </view>
                             </box>
+                            <button identifier="enableDarkMode" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="S1m-gw-fuX">
+                                <rect key="frame" x="13" y="60" width="131" height="18"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                <buttonCell key="cell" type="check" title="Enable dark mode" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="dhj-WG-Jq7">
+                                    <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                    <font key="font" metaFont="system"/>
+                                </buttonCell>
+                                <connections>
+                                    <action selector="onGlobalCheckboxChange:" target="goT-YD-soK" id="OY2-lH-qYQ"/>
+                                </connections>
+                            </button>
                         </subviews>
                     </view>
                     <color key="borderColor" name="gridColor" catalog="System" colorSpace="catalog"/>
                     <color key="fillColor" name="secondarySelectedControlColor" catalog="System" colorSpace="catalog"/>
                 </box>
             </subviews>
-            <point key="canvasLocation" x="61" y="215"/>
+            <point key="canvasLocation" x="122" y="174"/>
         </view>
     </objects>
     <resources>

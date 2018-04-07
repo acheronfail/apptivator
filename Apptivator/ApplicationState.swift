@@ -14,6 +14,8 @@ import LaunchAtLogin
     var entries: [ApplicationEntry] = []
     // Whether or not the app is globally enabled.
     var appIsEnabled = true
+    // Toggle for dark mode.
+    var darkModeEnabled = false
     // Don't fire any shortcuts if user is recording a new shortcut.
     var currentlyRecording = false
     // Whether or not the app should launch after login.
@@ -31,6 +33,8 @@ import LaunchAtLogin
                 let json = try JSON(data: dataFromString)
                 for (key, value):(String, JSON) in json {
                     switch key {
+                    case "darkModeEnabled":
+                        darkModeEnabled = value.bool ?? false
                     case "appIsEnabled":
                         appIsEnabled = value.bool ?? true
                     case "entries":
@@ -53,6 +57,7 @@ import LaunchAtLogin
     func saveToDisk() {
         let json: JSON = [
             "appIsEnabled": appIsEnabled,
+            "darkModeEnabled": darkModeEnabled,
             "entries": ApplicationEntry.serialiseList(entries: entries)
         ]
         do {

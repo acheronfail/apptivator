@@ -15,6 +15,8 @@ class ViewController: NSViewController {
     @IBOutlet weak var addButton: NSButton!
     @IBOutlet weak var removeButton: NSButton!
     @IBOutlet weak var appDelegate: AppDelegate!
+    @IBOutlet weak var boxWrapper: NSBox!
+    @IBOutlet weak var bannerImage: NSImageView!
     @IBOutlet weak var toggleWindowShortcut: MASShortcutView!
 
     // Local configuration values.
@@ -33,7 +35,8 @@ class ViewController: NSViewController {
 
     // Global configuration values.
     @IBOutlet weak var launchAppAtLogin: NSButton!
-
+    @IBOutlet weak var enableDarkMode: NSButton!
+    
     @IBAction func onLocalCheckboxChange(_ sender: NSButton) {
         for index in tableView.selectedRowIndexes {
             let entry = state.entries[index]
@@ -46,16 +49,22 @@ class ViewController: NSViewController {
     @IBAction func onGlobalCheckboxChange(_ sender: NSButton) {
         let flag = sender.state == .on
         if let identifier = sender.identifier?.rawValue {
-            if identifier == "launchAppAtLogin" {
+            switch identifier {
+            case "launchAppAtLogin":
                 LaunchAtLogin.isEnabled = flag
-            } else {
-                print("Unknown identifier found: \(identifier)")
+            case "enableDarkMode":
+                state.darkModeEnabled = flag
+                toggleDarkMode(flag)
+            default:
+                print("Unknown identifier encountered: \(identifier)")
             }
         }
     }
 
     override func viewDidLoad() {
         super.viewDidLoad()
+
+        bannerImage.image?.isTemplate = true
 
         tableView.delegate = self
         tableView.dataSource = self
@@ -76,9 +85,17 @@ class ViewController: NSViewController {
         state.saveToDisk()
     }
 
-    func reloadView() {
+    func toggleDarkMode(_ flag: Bool) {
+        appDelegate.popover.appearance = NSAppearance.init(named: flag ? .vibrantDark : .aqua)
+        boxWrapper.isTransparent = flag
         tableView.reloadData()
+    }
+
+    func reloadView() {
+        toggleDarkMode(state.darkModeEnabled)
+        enableDarkMode.state = state.darkModeEnabled ? .on : .off
         launchAppAtLogin.state = LaunchAtLogin.isEnabled ? .on : .off
+        tableView.reloadData()
     }
 
     @IBAction func onAddClick(_ sender: NSButton) {
