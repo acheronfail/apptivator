@@ -85,17 +85,13 @@ let iconOff = NSImage(named: NSImage.Name(rawValue: "icon-off"))
         NSApplication.shared.activate(ignoringOtherApps: true)
     }
 
-    func applicationWillResignActive(_ notification: Notification) {
-        print("will resign")
-        popover.performClose(nil)
-    }
-
     @objc func togglePreferencesPopover() {
         if popover.isShown {
             popover.performClose(nil)
         } else {
             let button = menuBarItem.button!
             popover.show(relativeTo: button.bounds, of: button, preferredEdge: NSRectEdge.minY)
+            NSApp.activate(ignoringOtherApps: true)
         }
     }
 

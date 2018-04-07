@@ -35,7 +35,7 @@
                 <outlet property="view" destination="WKh-ca-1Vm" id="bDW-96-eBc"/>
             </connections>
         </viewController>
-        <popover appearance="aqua" id="WQx-Ab-Sa5">
+        <popover appearance="aqua" behavior="t" id="WQx-Ab-Sa5">
             <connections>
                 <outlet property="contentViewController" destination="goT-YD-soK" id="KmB-It-NBm"/>
             </connections>
