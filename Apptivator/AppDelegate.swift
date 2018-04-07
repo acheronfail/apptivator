@@ -62,7 +62,7 @@ let iconOff = NSImage(named: NSImage.Name(rawValue: "icon-off"))
         }
 
         #if DEBUG
-        //togglePreferencesPopover()
+        togglePreferencesPopover()
         #endif
     }
 
