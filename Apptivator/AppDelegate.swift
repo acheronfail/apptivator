@@ -86,7 +86,7 @@ let iconOff = NSImage(named: NSImage.Name(rawValue: "icon-off"))
     }
 
     @objc func togglePreferencesWindow() {
-        if window.isVisible {
+        if window.isKeyWindow {
             window.close()
         } else {
             window.center()

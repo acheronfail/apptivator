@@ -37,22 +37,23 @@
         </customObject>
         <window title="Apptivator" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" animationBehavior="default" id="QvC-M9-y7g">
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES"/>
+            <windowCollectionBehavior key="collectionBehavior" canJoinAllSpaces="YES" fullScreenNone="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
-            <rect key="contentRect" x="335" y="390" width="480" height="403"/>
+            <rect key="contentRect" x="335" y="390" width="480" height="395"/>
             <rect key="screenRect" x="0.0" y="0.0" width="1680" height="1028"/>
             <view key="contentView" wantsLayer="YES" id="EiT-Mj-1SZ">
-                <rect key="frame" x="0.0" y="0.0" width="480" height="403"/>
+                <rect key="frame" x="0.0" y="0.0" width="480" height="395"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <scrollView fixedFrame="YES" autohidesScrollers="YES" horizontalLineScroll="21" horizontalPageScroll="10" verticalLineScroll="21" verticalPageScroll="10" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gFi-ns-n0J">
-                        <rect key="frame" x="20" y="198" width="440" height="185"/>
+                        <rect key="frame" x="20" y="214" width="440" height="161"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <clipView key="contentView" ambiguous="YES" id="B8o-Kt-iL5">
-                            <rect key="frame" x="1" y="0.0" width="438" height="184"/>
+                            <rect key="frame" x="1" y="0.0" width="438" height="160"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             <subviews>
                                 <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" alternatingRowBackgroundColors="YES" columnSelection="YES" autosaveColumns="NO" rowHeight="19" rowSizeStyle="automatic" headerView="GnD-WD-VDB" viewBased="YES" id="jvZ-CW-zzH">
-                                    <rect key="frame" x="0.0" y="0.0" width="438" height="161"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="438" height="137"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <size key="intercellSpacing" width="3" height="2"/>
                                     <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -134,19 +135,8 @@
                             <autoresizingMask key="autoresizingMask"/>
                         </tableHeaderView>
                     </scrollView>
-                    <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="QPF-Hk-Mw9">
-                        <rect key="frame" x="312" y="40" width="89" height="32"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <buttonCell key="cell" type="push" title="Remove" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="huO-52-El8">
-                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                            <font key="font" metaFont="system"/>
-                        </buttonCell>
-                        <connections>
-                            <action selector="onRemoveClick:" target="goT-YD-soK" id="8Rn-qn-mpy"/>
-                        </connections>
-                    </button>
                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ArQ-KW-qOj">
-                        <rect key="frame" x="18" y="20" width="230" height="17"/>
+                        <rect key="frame" x="18" y="21" width="230" height="17"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Show/hide this window with shortcut:" id="hX3-C3-CjE">
                             <font key="font" metaFont="system"/>
@@ -155,11 +145,11 @@
                         </textFieldCell>
                     </textField>
                     <customView fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Zp6-jf-6Yu" customClass="MASShortcutView">
-                        <rect key="frame" x="297" y="19" width="163" height="19"/>
+                        <rect key="frame" x="297" y="20" width="163" height="19"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     </customView>
                     <button identifier="launchAppAtLogin" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="6hT-2E-Fxn">
-                        <rect key="frame" x="18" y="43" width="185" height="18"/>
+                        <rect key="frame" x="18" y="45" width="185" height="18"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <buttonCell key="cell" type="check" title="Launch Apptivator at Login" bezelStyle="regularSquare" imagePosition="left" state="on" identifier="launchAppAtLogin" inset="2" id="4WJ-rC-CTx">
                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
@@ -170,7 +160,7 @@
                         </connections>
                     </button>
                     <box fixedFrame="YES" boxType="secondary" borderType="bezel" title="Options for selected item(s):" translatesAutoresizingMaskIntoConstraints="NO" id="Sz4-X0-8Xg">
-                        <rect key="frame" x="17" y="73" width="446" height="123"/>
+                        <rect key="frame" x="17" y="65" width="446" height="123"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <view key="contentView" id="VXq-Yt-AUB">
                             <rect key="frame" x="3" y="3" width="440" height="105"/>
@@ -187,19 +177,8 @@
                                         <action selector="onLocalCheckboxChange:" target="goT-YD-soK" id="k9a-cq-5Da"/>
                                     </connections>
                                 </button>
-                                <button identifier="hideWhenDeactivated" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="0kg-bg-dYL">
-                                    <rect key="frame" x="8" y="60" width="242" height="18"/>
-                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                    <buttonCell key="cell" type="check" title="Automatically hide when loses focus" bezelStyle="regularSquare" imagePosition="left" enabled="NO" allowsMixedState="YES" inset="2" id="FAm-P7-nYy" customClass="MixedCheckboxCell" customModule="Apptivator" customModuleProvider="target">
-                                        <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                        <font key="font" metaFont="system"/>
-                                    </buttonCell>
-                                    <connections>
-                                        <action selector="onLocalCheckboxChange:" target="goT-YD-soK" id="Jym-iw-fqS"/>
-                                    </connections>
-                                </button>
                                 <button identifier="showOnScreenWithMouse" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="1OL-Vt-c3V">
-                                    <rect key="frame" x="8" y="40" width="248" height="18"/>
+                                    <rect key="frame" x="8" y="60" width="248" height="18"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                     <buttonCell key="cell" type="check" title="Show windows on screen with mouse" bezelStyle="regularSquare" imagePosition="left" enabled="NO" identifier="showOnScreenWithMouse" allowsMixedState="YES" inset="2" id="5Qd-NF-0hA" customClass="MixedCheckboxCell" customModule="Apptivator" customModuleProvider="target">
                                         <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
@@ -229,23 +208,57 @@
                                         <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                     </textFieldCell>
                                 </textField>
+                                <button identifier="hideWhenDeactivated" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="0kg-bg-dYL">
+                                    <rect key="frame" x="8" y="40" width="242" height="18"/>
+                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                    <buttonCell key="cell" type="check" title="Automatically hide when loses focus" bezelStyle="regularSquare" imagePosition="left" enabled="NO" allowsMixedState="YES" inset="2" id="FAm-P7-nYy" customClass="MixedCheckboxCell" customModule="Apptivator" customModuleProvider="target">
+                                        <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                        <font key="font" metaFont="system"/>
+                                    </buttonCell>
+                                    <connections>
+                                        <action selector="onLocalCheckboxChange:" target="goT-YD-soK" id="Jym-iw-fqS"/>
+                                    </connections>
+                                </button>
                             </subviews>
                         </view>
                     </box>
-                    <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="GlZ-ch-c4n">
-                        <rect key="frame" x="401" y="40" width="65" height="32"/>
+                    <box fixedFrame="YES" boxType="custom" title="Box" translatesAutoresizingMaskIntoConstraints="NO" id="sy3-oA-o5X">
+                        <rect key="frame" x="20" y="192" width="440" height="23"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <buttonCell key="cell" type="push" title="Add" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="GUs-FH-V3y">
-                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                            <font key="font" metaFont="system"/>
-                        </buttonCell>
-                        <connections>
-                            <action selector="onAddClick:" target="goT-YD-soK" id="qDB-2m-bMC"/>
-                        </connections>
-                    </button>
+                        <view key="contentView" ambiguous="YES" id="Tqo-zt-SzP">
+                            <rect key="frame" x="1" y="1" width="438" height="21"/>
+                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                            <subviews>
+                                <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="QPF-Hk-Mw9">
+                                    <rect key="frame" x="311" y="-2" width="77" height="26"/>
+                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                    <buttonCell key="cell" type="smallSquare" title="Remove" bezelStyle="smallSquare" alignment="center" enabled="NO" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="huO-52-El8">
+                                        <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                        <font key="font" metaFont="system"/>
+                                    </buttonCell>
+                                    <connections>
+                                        <action selector="onRemoveClick:" target="goT-YD-soK" id="8Rn-qn-mpy"/>
+                                    </connections>
+                                </button>
+                                <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="GlZ-ch-c4n">
+                                    <rect key="frame" x="386" y="-2" width="53" height="26"/>
+                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                    <buttonCell key="cell" type="smallSquare" title="Add" bezelStyle="smallSquare" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="GUs-FH-V3y">
+                                        <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                        <font key="font" metaFont="system"/>
+                                    </buttonCell>
+                                    <connections>
+                                        <action selector="onAddClick:" target="goT-YD-soK" id="qDB-2m-bMC"/>
+                                    </connections>
+                                </button>
+                            </subviews>
+                        </view>
+                        <color key="borderColor" name="gridColor" catalog="System" colorSpace="catalog"/>
+                        <color key="fillColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
+                    </box>
                 </subviews>
             </view>
-            <point key="canvasLocation" x="39" y="662.5"/>
+            <point key="canvasLocation" x="39" y="658.5"/>
         </window>
     </objects>
     <resources>

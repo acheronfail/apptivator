@@ -138,27 +138,31 @@ class ViewController: NSViewController {
 }
 
 extension ViewController: NSMenuDelegate {
+    func menuDidClose(_ menu: NSMenu) {
+        addMenu.item(at: 1)?.submenu?.removeAllItems()
+    }
+
     // Populate context menu with a list of running apps when it's highlighted.
     func menu(_ menu: NSMenu, willHighlight item: NSMenuItem?) {
-        guard let item = item, item == addMenu.item(at: 1) else {
+        guard let menuItem = item, menuItem == addMenu.item(at: 1) else {
             addMenu.item(at: 1)?.submenu?.removeAllItems()
             return
         }
 
-        let runningAppsMenu = item.submenu!
-        for runningApp in NSWorkspace.shared.runningApplications {
+        // Get all running application, sort them and add them to the menu.
+        NSWorkspace.shared.runningApplications.compactMap({ runningApp in
             if runningApp.activationPolicy == .regular {
                 let appItem = NSMenuItem(title: runningApp.localizedName!, action: #selector(chooseFromRunningApps(_:)), keyEquivalent: "")
-                appItem.image = runningApp.icon
                 appItem.representedObject = runningApp
-                runningAppsMenu.addItem(appItem)
+                appItem.image = runningApp.icon
+                return appItem
             }
-        }
-        item.submenu = runningAppsMenu
-    }
-
-    func menuDidClose(_ menu: NSMenu) {
-        addMenu.item(at: 1)?.submenu?.removeAllItems()
+            return nil
+        }).sorted(by: { a, b in
+            return a.title.lowercased() < b.title.lowercased()
+        }).forEach({ item in
+            menuItem.submenu!.addItem(item)
+        })
     }
 }
 
@@ -183,6 +187,7 @@ extension ViewController: NSTableViewDelegate {
             for (button, _) in localConfig {
                 button.state = .off
                 button.isEnabled = false
+                removeButton.isEnabled = false
             }
             return
         }
@@ -203,6 +208,7 @@ extension ViewController: NSTableViewDelegate {
         }
 
         // Apply new states.
+        removeButton.isEnabled = true
         for (button, newState) in localConfig {
             button.state = newState!
             button.isEnabled = true
