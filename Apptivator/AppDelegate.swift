@@ -24,11 +24,18 @@ let iconOff = NSImage(named: NSImage.Name(rawValue: "icon-off"))
     var menuBarItem: NSStatusItem! = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
     let enabledIndicator = NSMenuItem(title: ENABLED_INDICATOR_OFF, action: nil, keyEquivalent: "")
 
+    // The window must be at least 1x1 pixel in order for it to be drawn on the screen.
+    // See @togglePreferencesPopover for why an invisible window exists.
+    let invisibleWindow = NSWindow(contentRect: NSMakeRect(0, 0, 1, 1), styleMask: .borderless, backing: .buffered, defer: false)
+
     func applicationDidFinishLaunching(_ aNotification: Notification) {
         setupIcon(iconOn)
         setupIcon(iconOff)
 
         popover.delegate = self
+        invisibleWindow.alphaValue = 0
+        invisibleWindow.hidesOnDeactivate = true
+        invisibleWindow.collectionBehavior = .canJoinAllSpaces
 
         menuBarItem.image = iconOff
         menuBarItem.action = #selector(onMenuClick)
@@ -88,12 +95,31 @@ let iconOff = NSImage(named: NSImage.Name(rawValue: "icon-off"))
         NSApplication.shared.activate(ignoringOtherApps: true)
     }
 
+    // NSPopovers will follow the view they are relative to, even if it moves. Apps like Bartender
+    // that control the menubar can move the menu bar item, which moves and janks the popover
+    // around. We get around this by attaching it to a tiny, invisible window whose location we
+    // can control.
     @objc func togglePreferencesPopover() {
         if popover.isShown {
             popover.performClose(nil)
         } else {
-            let button = menuBarItem.button!
-            popover.show(relativeTo: button.bounds, of: button, preferredEdge: NSRectEdge.minY)
+            // Get the screen coords of the menu bar item's current location.
+            let menuBarButton = menuBarItem.button!
+            let buttonBounds = menuBarButton.convert(menuBarButton.bounds, to: nil)
+            let screenBounds = menuBarButton.window!.convertToScreen(buttonBounds)
+
+            // Account for Bartender moving the menu bar item offscreen. If the midpoint doesn't
+            // seem to be on the screen, then place the popup in the top-right corner of the screen.
+            var xPosition = screenBounds.midX
+            let screenFrame = NSScreen.main!.frame
+            if abs(xPosition) > screenFrame.width {
+                xPosition = screenFrame.width - 1
+            }
+
+            // Move the window to the coords, and activate the popover on the window.
+            invisibleWindow.setFrameOrigin(NSPoint(x: xPosition, y: screenBounds.origin.y))
+            invisibleWindow.makeKeyAndOrderFront(nil)
+            popover.show(relativeTo: invisibleWindow.contentView!.frame, of: invisibleWindow.contentView!, preferredEdge: NSRectEdge.minY)
             NSApp.activate(ignoringOtherApps: true)
         }
     }
