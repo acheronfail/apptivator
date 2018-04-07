@@ -132,6 +132,7 @@ class ViewController: NSViewController {
         if let appEntry = ApplicationEntry(url: url, config: nil) {
             state.entries.append(appEntry)
             tableView.reloadData()
+            if !appDelegate.popover.isShown { appDelegate.togglePreferencesPopover() }
         }
     }
 }
