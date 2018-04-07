@@ -22,11 +22,13 @@ In the menu, select an application (or exectuable) from the Finder (or optionall
 
 Apptivator provides some neat options:
 
-* **Automatically hide apps when they lose focus**
+* **Automatically hide when app loses focus**
 	- When enabled, if an application in the list loses focus then Apptivator will automatically hide that application for you.
-* **Hide apps when active and shortcut is fired**
+* **Show on the screen with mouse**
+	- When this is on, then when activated the application will show up on whichever monitor your mouse is on.
+* **Hide when active and shortcut is fired**
 	- If this is set then when you press the shortcut the application will hide if it's shown, or be shown if it's hidden.
-* **Launch apps if they're not running**
+* **Launch app if it's not running**
 	- When set, if the application is fired then Apptivator will attempt to launch it.
 	- There are some known issues with this at the moment, see: [#18](https://github.com/acheronfail/apptivator/issues/18)
 * **Launch Apptivator at login**
