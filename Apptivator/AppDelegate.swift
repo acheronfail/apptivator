@@ -14,25 +14,25 @@ let iconOn = NSImage(named: NSImage.Name(rawValue: "icon-on"))
 let iconOff = NSImage(named: NSImage.Name(rawValue: "icon-off"))
 
 @NSApplicationMain class AppDelegate: NSObject, NSApplicationDelegate {
-    // Shortcuts window.
-    @IBOutlet weak var window: NSWindow!
+    @IBOutlet weak var popover: NSPopover!
     @IBOutlet weak var viewController: ViewController!
 
-    var menuBarItem: NSStatusItem? = nil
     var contextMenu: NSMenu = NSMenu()
+    var menuBarItem: NSStatusItem! = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
     let enabledIndicator = NSMenuItem(title: "\(appName): Enabled", action: nil, keyEquivalent: "")
 
     func applicationDidFinishLaunching(_ aNotification: Notification) {
         setupIcon(iconOn)
         setupIcon(iconOff)
 
-        menuBarItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
-        menuBarItem?.image = iconOn
-        menuBarItem?.action = #selector(onMenuClick)
-        menuBarItem?.sendAction(on: [.leftMouseUp, .rightMouseUp])
+        popover.delegate = self
+
+        menuBarItem.image = iconOn
+        menuBarItem.action = #selector(onMenuClick)
+        menuBarItem.sendAction(on: [.leftMouseUp, .rightMouseUp])
 
         contextMenu.addItem(enabledIndicator)
-        contextMenu.addItem(NSMenuItem(title: "Configure Shortcuts", action: #selector(togglePreferencesWindow), keyEquivalent: ""))
+        contextMenu.addItem(NSMenuItem(title: "Configure Shortcuts", action: #selector(togglePreferencesPopover), keyEquivalent: ""))
         contextMenu.addItem(NSMenuItem.separator())
         contextMenu.addItem(NSMenuItem(title: "About", action: #selector(showAboutPanel), keyEquivalent: ""))
         contextMenu.addItem(NSMenuItem.separator())
@@ -52,7 +52,7 @@ let iconOff = NSImage(named: NSImage.Name(rawValue: "icon-off"))
         }
 
         #if DEBUG
-            togglePreferencesWindow()
+        togglePreferencesPopover()
         #endif
     }
 
@@ -85,13 +85,17 @@ let iconOff = NSImage(named: NSImage.Name(rawValue: "icon-off"))
         NSApplication.shared.activate(ignoringOtherApps: true)
     }
 
-    @objc func togglePreferencesWindow() {
-        if window.isKeyWindow {
-            window.close()
+    func applicationWillResignActive(_ notification: Notification) {
+        print("will resign")
+        popover.performClose(nil)
+    }
+
+    @objc func togglePreferencesPopover() {
+        if popover.isShown {
+            popover.performClose(nil)
         } else {
-            window.center()
-            window.makeKeyAndOrderFront(window)
-            NSApplication.shared.activate(ignoringOtherApps: true)
+            let button = menuBarItem.button!
+            popover.show(relativeTo: button.bounds, of: button, preferredEdge: NSRectEdge.minY)
         }
     }
 
@@ -100,3 +104,8 @@ let iconOff = NSImage(named: NSImage.Name(rawValue: "icon-off"))
     }
 }
 
+extension AppDelegate: NSPopoverDelegate {
+    func popoverShouldDetach(_ popover: NSPopover) -> Bool {
+        return true
+    }
+}

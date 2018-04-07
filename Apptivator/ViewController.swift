@@ -67,7 +67,7 @@ class ViewController: NSViewController {
 
         toggleWindowShortcut.associatedUserDefaultsKey = toggleWindowShortcutKey
         toggleWindowShortcut.shortcutValueChange = { (_: MASShortcutView?) in
-            MASShortcutBinder.shared().bindShortcut(withDefaultsKey: toggleWindowShortcutKey, toAction: { self.appDelegate.togglePreferencesWindow() })
+            MASShortcutBinder.shared().bindShortcut(withDefaultsKey: toggleWindowShortcutKey, toAction: { self.appDelegate.togglePreferencesPopover() })
         }
         toggleWindowShortcut.shortcutValueChange(toggleWindowShortcut)
     }
@@ -86,9 +86,8 @@ class ViewController: NSViewController {
     }
 
     @IBAction func onRemoveClick(_ sender: NSButton) {
-        let selected = tableView.selectedRow
-        if selected >= 0 {
-            let entry = state.entries.remove(at: selected)
+        for index in tableView.selectedRowIndexes.sorted(by: { $0 > $1 }) {
+            let entry = state.entries.remove(at: index)
             MASShortcutBinder.shared().breakBinding(withDefaultsKey: entry.key)
             tableView.reloadData()
         }

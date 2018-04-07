@@ -89,7 +89,14 @@ class ApplicationEntry: CustomDebugStringConvertible {
         let key = "Shortcut::\(url.absoluteString)".replacingOccurrences(of: ".", with: "_")
         self.key = key
         self.shortcutCell = MASShortcutView()
+
+        // Clear any previously saved key from defaults - MASShortcut automatically saves them there
+        // but we don't want that functionality: if an item A is added with shortcut X, then deleted,
+        // and item B is added with shortcut X, if the item A is added again, it will have the
+        // shortcut X (so, two will have the same shortcut - not what we want).
+        UserDefaults.standard.removeObject(forKey: key)
         self.shortcutCell.associatedUserDefaultsKey = key
+
         // Watch MASShortcutView.isRecording for changes.
         self.recordingWatcher = self.shortcutCell.observe(\.isRecording) { shortcutCell, _ in
             state.currentlyRecording = shortcutCell.isRecording
