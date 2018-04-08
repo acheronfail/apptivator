@@ -17,10 +17,10 @@
         <customObject id="Voe-Tx-rLC" customClass="AppDelegate" customModule="Apptivator" customModuleProvider="target">
             <connections>
                 <outlet property="popover" destination="WQx-Ab-Sa5" id="IcZ-o3-X9j"/>
-                <outlet property="viewController" destination="goT-YD-soK" id="pWf-s8-gZe"/>
+                <outlet property="popoverViewController" destination="goT-YD-soK" id="pWf-s8-gZe"/>
             </connections>
         </customObject>
-        <viewController id="goT-YD-soK" customClass="ViewController" customModule="Apptivator" customModuleProvider="target">
+        <viewController id="goT-YD-soK" customClass="PopoverViewController" customModule="Apptivator" customModuleProvider="target">
             <connections>
                 <outlet property="addButton" destination="Z53-PH-wbI" id="x6P-Uw-dhO"/>
                 <outlet property="appDelegate" destination="Voe-Tx-rLC" id="k1C-Cb-LO9"/>

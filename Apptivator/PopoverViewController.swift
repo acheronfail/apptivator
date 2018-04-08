@@ -8,7 +8,7 @@ import LaunchAtLogin
 
 let toggleWindowShortcutKey = "__Apptivator_global_show__"
 
-class ViewController: NSViewController {
+class PopoverViewController: NSViewController {
 
     var addMenu: NSMenu = NSMenu()
     @IBOutlet weak var tableView: NSTableView!
@@ -152,7 +152,7 @@ class ViewController: NSViewController {
     }
 }
 
-extension ViewController: NSMenuDelegate {
+extension PopoverViewController: NSMenuDelegate {
     func menuDidClose(_ menu: NSMenu) {
         addMenu.item(at: 1)?.submenu?.removeAllItems()
     }
@@ -181,13 +181,13 @@ extension ViewController: NSMenuDelegate {
     }
 }
 
-extension ViewController: NSTableViewDataSource {
+extension PopoverViewController: NSTableViewDataSource {
     func numberOfRows(in tableView: NSTableView) -> Int {
         return state.entries.count
     }
 }
 
-extension ViewController: NSTableViewDelegate {
+extension PopoverViewController: NSTableViewDelegate {
     fileprivate enum CellIdentifiers {
         static let ApplicationCell = "ApplicationCellID"
         static let ShortcutCell = "ShortcutCellID"

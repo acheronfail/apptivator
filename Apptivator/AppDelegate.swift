@@ -18,7 +18,7 @@ let iconOff = NSImage(named: NSImage.Name(rawValue: "icon-off"))
 
 @NSApplicationMain class AppDelegate: NSObject, NSApplicationDelegate {
     @IBOutlet weak var popover: NSPopover!
-    @IBOutlet weak var viewController: ViewController!
+    @IBOutlet weak var popoverViewController: PopoverViewController!
 
     var contextMenu: NSMenu = NSMenu()
     var menuBarItem: NSStatusItem! = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
@@ -47,7 +47,7 @@ let iconOff = NSImage(named: NSImage.Name(rawValue: "icon-off"))
 
         state.loadFromDisk()
         enable(state.appIsEnabled)
-        viewController.reloadView()
+        popoverViewController.reloadView()
 
         // Check for accessibility permissions.
         if !UIElement.isProcessTrusted(withPrompt: true) {
@@ -74,6 +74,7 @@ let iconOff = NSImage(named: NSImage.Name(rawValue: "icon-off"))
         image?.size = NSSize(width: 16, height: 16)
     }
 
+    // TODO: have a way to swap these clicks
     @objc func onMenuClick(sender: NSStatusItem) {
         let event = NSApp.currentEvent!
         if event.type == .rightMouseUp {
@@ -107,7 +108,7 @@ let iconOff = NSImage(named: NSImage.Name(rawValue: "icon-off"))
             var xPosition = screenBounds.midX
             let screenFrame = NSScreen.main!.frame
             if abs(xPosition) > screenFrame.width {
-                xPosition = screenFrame.width - 1
+                xPosition = screenFrame.origin.x + screenFrame.width - 1
             }
 
             // Move the window to the coords, and activate the popover on the window.
