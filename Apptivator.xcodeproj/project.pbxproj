@@ -12,6 +12,7 @@
 		1537F5E1204C8D860056EE50 /* ApplicationEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1537F5E0204C8D860056EE50 /* ApplicationEntry.swift */; };
 		155D2C03204F61220087478B /* Credits.rtfd in Resources */ = {isa = PBXBuildFile; fileRef = 155D2C02204F61220087478B /* Credits.rtfd */; };
 		1561AED2207615AC00C69338 /* MixedCheckbox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1561AED1207615AC00C69338 /* MixedCheckbox.swift */; };
+		15B4E873207994AF0024FDE4 /* ApptivatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15B4E872207994AF0024FDE4 /* ApptivatorTests.swift */; };
 		15BB82A4204E512E0039B4E2 /* AXSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 15BB82A0204E512E0039B4E2 /* AXSwift.framework */; };
 		15BB82A5204E512E0039B4E2 /* AXSwift.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 15BB82A0204E512E0039B4E2 /* AXSwift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		15BB82A8204E512E0039B4E2 /* SwiftyJSON.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 15BB82A2204E512E0039B4E2 /* SwiftyJSON.framework */; };
@@ -24,6 +25,16 @@
 		B3B4C2C31E25894B009F8E4E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B3B4C2C21E25894B009F8E4E /* Assets.xcassets */; };
 		B3B4C2C61E25894B009F8E4E /* ApplicationWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = B3B4C2C41E25894B009F8E4E /* ApplicationWindow.xib */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		15B4E875207994AF0024FDE4 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = B3B4C2B51E25894B009F8E4E /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = B3B4C2BC1E25894B009F8E4E;
+			remoteInfo = Apptivator;
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
 		15BB82AC204E512E0039B4E2 /* Embed Frameworks */ = {
@@ -47,6 +58,9 @@
 		1537F5E0204C8D860056EE50 /* ApplicationEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApplicationEntry.swift; sourceTree = "<group>"; };
 		155D2C02204F61220087478B /* Credits.rtfd */ = {isa = PBXFileReference; lastKnownFileType = wrapper.rtfd; path = Credits.rtfd; sourceTree = "<group>"; };
 		1561AED1207615AC00C69338 /* MixedCheckbox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MixedCheckbox.swift; sourceTree = "<group>"; };
+		15B4E870207994AF0024FDE4 /* ApptivatorTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ApptivatorTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		15B4E872207994AF0024FDE4 /* ApptivatorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApptivatorTests.swift; sourceTree = "<group>"; };
+		15B4E874207994AF0024FDE4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		15BB82A0204E512E0039B4E2 /* AXSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AXSwift.framework; path = Carthage/Build/Mac/AXSwift.framework; sourceTree = "<group>"; };
 		15BB82A2204E512E0039B4E2 /* SwiftyJSON.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftyJSON.framework; path = Carthage/Build/Mac/SwiftyJSON.framework; sourceTree = "<group>"; };
 		15BB82A3204E512E0039B4E2 /* MASShortcut.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MASShortcut.framework; path = Carthage/Build/Mac/MASShortcut.framework; sourceTree = "<group>"; };
@@ -61,6 +75,13 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		15B4E86D207994AF0024FDE4 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		B3B4C2BA1E25894B009F8E4E /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -75,6 +96,22 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		15B4E871207994AF0024FDE4 /* ApptivatorTests */ = {
+			isa = PBXGroup;
+			children = (
+				15B4E872207994AF0024FDE4 /* ApptivatorTests.swift */,
+				15B4E874207994AF0024FDE4 /* Info.plist */,
+			);
+			path = ApptivatorTests;
+			sourceTree = "<group>";
+		};
+		15B4E87A2079952F0024FDE4 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		B3B4C2B41E25894B009F8E4E = {
 			isa = PBXGroup;
 			children = (
@@ -84,7 +121,9 @@
 				15BB82A2204E512E0039B4E2 /* SwiftyJSON.framework */,
 				15FF0CCC204A231800E04103 /* Bridging-Header.h */,
 				B3B4C2BF1E25894B009F8E4E /* Apptivator */,
+				15B4E871207994AF0024FDE4 /* ApptivatorTests */,
 				B3B4C2BE1E25894B009F8E4E /* Products */,
+				15B4E87A2079952F0024FDE4 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -92,6 +131,7 @@
 			isa = PBXGroup;
 			children = (
 				B3B4C2BD1E25894B009F8E4E /* Apptivator.app */,
+				15B4E870207994AF0024FDE4 /* ApptivatorTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -115,6 +155,24 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		15B4E86F207994AF0024FDE4 /* ApptivatorTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 15B4E877207994AF0024FDE4 /* Build configuration list for PBXNativeTarget "ApptivatorTests" */;
+			buildPhases = (
+				15B4E86C207994AF0024FDE4 /* Sources */,
+				15B4E86D207994AF0024FDE4 /* Frameworks */,
+				15B4E86E207994AF0024FDE4 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				15B4E876207994AF0024FDE4 /* PBXTargetDependency */,
+			);
+			name = ApptivatorTests;
+			productName = ApptivatorTests;
+			productReference = 15B4E870207994AF0024FDE4 /* ApptivatorTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 		B3B4C2BC1E25894B009F8E4E /* Apptivator */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = B3B4C2CA1E25894B009F8E4E /* Build configuration list for PBXNativeTarget "Apptivator" */;
@@ -140,10 +198,15 @@
 		B3B4C2B51E25894B009F8E4E /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastSwiftUpdateCheck = 0820;
+				LastSwiftUpdateCheck = 0930;
 				LastUpgradeCheck = 0930;
 				ORGANIZATIONNAME = "";
 				TargetAttributes = {
+					15B4E86F207994AF0024FDE4 = {
+						CreatedOnToolsVersion = 9.3;
+						ProvisioningStyle = Automatic;
+						TestTargetID = B3B4C2BC1E25894B009F8E4E;
+					};
 					B3B4C2BC1E25894B009F8E4E = {
 						CreatedOnToolsVersion = 8.2.1;
 						DevelopmentTeam = 8FUFLLHWE9;
@@ -166,11 +229,19 @@
 			projectRoot = "";
 			targets = (
 				B3B4C2BC1E25894B009F8E4E /* Apptivator */,
+				15B4E86F207994AF0024FDE4 /* ApptivatorTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		15B4E86E207994AF0024FDE4 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		B3B4C2BB1E25894B009F8E4E /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -200,6 +271,14 @@
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		15B4E86C207994AF0024FDE4 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				15B4E873207994AF0024FDE4 /* ApptivatorTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		B3B4C2B91E25894B009F8E4E /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -214,6 +293,14 @@
 		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXTargetDependency section */
+		15B4E876207994AF0024FDE4 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = B3B4C2BC1E25894B009F8E4E /* Apptivator */;
+			targetProxy = 15B4E875207994AF0024FDE4 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
 /* Begin PBXVariantGroup section */
 		B3B4C2C41E25894B009F8E4E /* ApplicationWindow.xib */ = {
 			isa = PBXVariantGroup;
@@ -226,6 +313,62 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		15B4E878207994AF0024FDE4 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_IDENTITY = "";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = "";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/Mac",
+				);
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				INFOPLIST_FILE = ApptivatorTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
+				PRODUCT_BUNDLE_IDENTIFIER = com.acheronfail.ApptivatorTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SWIFT_VERSION = 4.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Apptivator.app/Contents/MacOS/Apptivator";
+			};
+			name = Debug;
+		};
+		15B4E879207994AF0024FDE4 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_IDENTITY = "";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = "";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/Mac",
+				);
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				INFOPLIST_FILE = ApptivatorTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
+				PRODUCT_BUNDLE_IDENTIFIER = com.acheronfail.ApptivatorTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SWIFT_VERSION = 4.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Apptivator.app/Contents/MacOS/Apptivator";
+			};
+			name = Release;
+		};
 		B3B4C2C81E25894B009F8E4E /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -389,6 +532,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		15B4E877207994AF0024FDE4 /* Build configuration list for PBXNativeTarget "ApptivatorTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				15B4E878207994AF0024FDE4 /* Debug */,
+				15B4E879207994AF0024FDE4 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		B3B4C2B81E25894B009F8E4E /* Build configuration list for PBXProject "Apptivator" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

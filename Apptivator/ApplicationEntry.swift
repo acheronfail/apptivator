@@ -73,13 +73,6 @@ class ApplicationEntry: CustomDebugStringConvertible {
     var observer: Observer?
     private var recordingWatcher: NSKeyValueObservation
 
-    // Include a deinit block during development to ensure that these objects are cleaned up.
-    #if DEBUG
-    deinit {
-        print("\(self.name) entry deinitialised")
-    }
-    #endif
-
     init?(url: URL, config: [String:Bool]?) {
         self.url = url
         self.config = ApplicationConfig(withValues: config)
