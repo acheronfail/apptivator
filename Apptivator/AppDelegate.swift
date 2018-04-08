@@ -60,10 +60,6 @@ let iconOff = NSImage(named: NSImage.Name(rawValue: "icon-off"))
             alert.alertStyle = .warning
             alert.runModal()
         }
-
-        #if DEBUG
-        togglePreferencesPopover()
-        #endif
     }
 
     func applicationWillTerminate(_ aNotification: Notification) {

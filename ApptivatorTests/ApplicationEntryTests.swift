@@ -18,7 +18,7 @@ class ApplicationEntryTests: XCTestCase {
             deinit { deinitCalled!() }
         }
 
-        let expectation = XCTestExpectation(description: "deinit")
+        let expectation = self.expectation(description: "deinit")
 
         // Create entry within block so it goes out of scope afterwards.
         do {
@@ -26,11 +26,9 @@ class ApplicationEntryTests: XCTestCase {
             XCTAssert(entry != nil)
             XCTAssert(entry!.observer != nil)
             XCTAssert(entry!.shortcutCell.shortcutValueChange != nil)
-            entry!.deinitCalled = {
-                expectation.fulfill()
-            }
+            entry!.deinitCalled = { expectation.fulfill() }
         }
 
-        wait(for: [expectation], timeout: 0.0)
+        self.waitForExpectations(timeout: 0.0, handler: nil)
     }
 }
