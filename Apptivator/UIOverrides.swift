@@ -45,7 +45,13 @@ class MultiMenuItemController: NSViewController {
     @IBOutlet weak var titleTextField: NSTextField!
     @IBOutlet weak var detailTextField: NSTextField!
 
-    var watcher: NSKeyValueObservation?
+    static func viewFor(entry: ApplicationEntry) -> NSView {
+        let controller = MultiMenuItemController()
+        controller.title = entry.name
+        controller.image = entry.icon
+        controller.detail = entry.shortcutAsString
+        return controller.view
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()

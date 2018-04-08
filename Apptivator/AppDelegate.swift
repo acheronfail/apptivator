@@ -139,12 +139,8 @@ extension AppDelegate: NSMenuDelegate {
                 entry.createObserver(runningApp)
             }
             if entry.isActive {
-                let vc = MultiMenuItemController()
-                vc.title = entry.name
-                vc.image = entry.icon
-                vc.detail = entry.shortcutAsString
                 let menuItem = NSMenuItem(title: entry.name, action: nil, keyEquivalent: "")
-                menuItem.view = vc.view
+                menuItem.view = MultiMenuItemController.viewFor(entry: entry)
                 menuItem.representedObject = entry
                 contextMenu.addItem(menuItem)
             }
