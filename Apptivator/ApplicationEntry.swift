@@ -210,9 +210,13 @@ class ApplicationEntry: CustomDebugStringConvertible {
         }
     }
 
+    var isActive: Bool {
+        get { return self.observer != nil }
+    }
+
     var shortcutAsString: String {
-        let shortcutSequence = [self.shortcutCell.shortcutValue]
-        return shortcutSequence.compactMap({ $0 != nil ? "\($0!)" : nil }).joined(separator: " ")
+        let shortcutSequence = [self.shortcutCell.shortcutValue, self.shortcutCell.shortcutValue]
+        return shortcutSequence.compactMap({ $0 != nil ? "\($0!)" : nil }).joined(separator: ", ")
     }
 
     var asJSON: JSON {

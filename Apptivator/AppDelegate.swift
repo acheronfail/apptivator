@@ -33,6 +33,10 @@ let iconOff = NSImage(named: NSImage.Name(rawValue: "icon-off"))
         setupIcon(iconOff)
 
         popover.delegate = self
+        contextMenu.delegate = self
+        contextMenu.autoenablesItems = false
+        enabledIndicator.isEnabled = false
+
         invisibleWindow.alphaValue = 0
         invisibleWindow.hidesOnDeactivate = true
         invisibleWindow.collectionBehavior = .canJoinAllSpaces
@@ -40,13 +44,6 @@ let iconOff = NSImage(named: NSImage.Name(rawValue: "icon-off"))
         menuBarItem.image = iconOff
         menuBarItem.action = #selector(onMenuClick)
         menuBarItem.sendAction(on: [.leftMouseUp, .rightMouseUp])
-
-        contextMenu.addItem(enabledIndicator)
-        contextMenu.addItem(NSMenuItem(title: "Configure Shortcuts", action: #selector(togglePreferencesPopover), keyEquivalent: ""))
-        contextMenu.addItem(NSMenuItem.separator())
-        contextMenu.addItem(NSMenuItem(title: "About", action: #selector(showAboutPanel), keyEquivalent: ""))
-        contextMenu.addItem(NSMenuItem.separator())
-        contextMenu.addItem(NSMenuItem(title: "Quit \(appName)", action: #selector(quitApplication), keyEquivalent: ""))
 
         state.loadFromDisk()
         enable(state.appIsEnabled)
@@ -80,6 +77,7 @@ let iconOff = NSImage(named: NSImage.Name(rawValue: "icon-off"))
     @objc func onMenuClick(sender: NSStatusItem) {
         let event = NSApp.currentEvent!
         if event.type == .rightMouseUp {
+            buildContextMenu(state.entries)
             menuBarItem?.popUpMenu(contextMenu)
         } else if event.type == .leftMouseUp {
             enable(!state.appIsEnabled)
@@ -122,6 +120,42 @@ let iconOff = NSImage(named: NSImage.Name(rawValue: "icon-off"))
 
     @objc func quitApplication() {
         NSApplication.shared.terminate(self)
+    }
+}
+
+extension AppDelegate: NSMenuDelegate {
+    func buildContextMenu(_ entries: [ApplicationEntry]) {
+        contextMenu.addItem(enabledIndicator)
+        contextMenu.addItem(NSMenuItem(title: "Configure Shortcuts", action: #selector(togglePreferencesPopover), keyEquivalent: ""))
+        contextMenu.addItem(NSMenuItem.separator())
+        contextMenu.addItem(NSMenuItem(title: "About", action: #selector(showAboutPanel), keyEquivalent: ""))
+        contextMenu.addItem(NSMenuItem.separator())
+        contextMenu.addItem(NSMenuItem(title: "Active applications", action: nil, keyEquivalent: ""))
+        contextMenu.item(at: contextMenu.numberOfItems - 1)?.isEnabled = false
+
+        for entry in entries {
+            // Try and attach observer to app here if none is unattached.
+            if !entry.isActive, let runningApp = findRunningApp(withURL: entry.url) {
+                entry.createObserver(runningApp)
+            }
+            if entry.isActive {
+                let vc = MultiMenuItemController()
+                vc.title = entry.name
+                vc.image = entry.icon
+                vc.detail = entry.shortcutAsString
+                let menuItem = NSMenuItem(title: entry.name, action: nil, keyEquivalent: "")
+                menuItem.view = vc.view
+                menuItem.representedObject = entry
+                contextMenu.addItem(menuItem)
+            }
+        }
+
+        contextMenu.addItem(NSMenuItem.separator())
+        contextMenu.addItem(NSMenuItem(title: "Quit \(appName)", action: #selector(quitApplication), keyEquivalent: ""))
+    }
+
+    func menuDidClose(_ menu: NSMenu) {
+        contextMenu.removeAllItems()
     }
 }
 
