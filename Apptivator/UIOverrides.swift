@@ -14,14 +14,15 @@ class MixedCheckboxCell: NSButtonCell {
     }
 }
 
-// TODO: doc
+// This is a copy of an NSMenuItem that allows an image at the start, as well as allowing a custom
+// string where the "keyEquivalent" text would normally be (we want to be able to show key sequences
+// in the "keyEquivalent" text, which is normally unsupported).
 class MultiMenuItem: NSBox {
     override func awakeFromNib() {
         self.alphaValue = 0.5
     }
 
     override func draw(_ dirtyRect: NSRect) {
-        // WTF?
         self.alphaValue = self.enclosingMenuItem!.isHighlighted ? 0.5 : 1.0
         super.draw(dirtyRect)
     }
@@ -35,7 +36,7 @@ class MultiMenuItem: NSBox {
     }
 }
 
-// TODO: doc
+// A View Controller for the above view, to handle instantiation and management of the view easier.
 class MultiMenuItemController: NSViewController {
     var image: NSImage?
     var detail: String?
