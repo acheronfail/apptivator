@@ -1,15 +1,11 @@
 //
-//  ApptivatorTests.swift
+//  ApplicationEntryTests.swift
 //  ApptivatorTests
 //
 
 import XCTest
 
 @testable import Apptivator
-
-class AppDelegateTests: XCTestCase {}
-
-class ViewControllerTests: XCTestCase {}
 
 class ApplicationEntryTests: XCTestCase {
     func testEntryIsDeinitialised() {
@@ -34,5 +30,3 @@ class ApplicationEntryTests: XCTestCase {
         wait(for: [expectation], timeout: 0.0)
     }
 }
-
-class ApplicationStateTests: XCTestCase {}
