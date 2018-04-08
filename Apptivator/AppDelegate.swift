@@ -103,7 +103,7 @@ let iconOff = NSImage(named: NSImage.Name(rawValue: "icon-off"))
             let screenBounds = menuBarButton.window!.convertToScreen(buttonBounds)
 
             // Account for Bartender moving the menu bar item offscreen. If the midpoint doesn't
-            // seem to be on the screen, then place the popup in the top-right corner of the screen.
+            // seem to be on the main screen, then place the popup in the top-right corner.
             var xPosition = screenBounds.midX
             let screenFrame = NSScreen.main!.frame
             if abs(xPosition) > screenFrame.width {
