@@ -210,7 +210,7 @@ class ApplicationEntry: CustomDebugStringConvertible {
         }
     }
 
-    var asString: String {
+    var shortcutAsString: String {
         let shortcutSequence = [self.shortcutCell.shortcutValue]
         return shortcutSequence.compactMap({ $0 != nil ? "\($0!)" : nil }).joined(separator: " ")
     }
