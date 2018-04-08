@@ -8,7 +8,6 @@ import XCTest
 @testable import Apptivator
 
 class ApplicationEntryTests: XCTestCase {
-
     // Since ApplicationEntry instances have some closures associated with them, it's a good idea to
     // ensure that they're cleaned up once they go out of scope to prevent memory leaks.
     func testEntryIsDeinitialised() {

@@ -130,9 +130,8 @@ class ViewController: NSViewController {
         panel.directoryURL = NSURL.fileURL(withPath: "/Applications")
         panel.runModal()
 
-        if let url = panel.url {
-            addEntry(fromURL: url)
-        }
+        if let url = panel.url { addEntry(fromURL: url) }
+        if !appDelegate.popover.isShown { appDelegate.togglePreferencesPopover() }
     }
 
     func addEntry(fromURL url: URL) {
@@ -149,7 +148,6 @@ class ViewController: NSViewController {
         if let appEntry = ApplicationEntry(url: url, config: nil) {
             state.entries.append(appEntry)
             tableView.reloadData()
-            if !appDelegate.popover.isShown { appDelegate.togglePreferencesPopover() }
         }
     }
 }
