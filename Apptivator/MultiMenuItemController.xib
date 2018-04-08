@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="14109" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
     <dependencies>
-        <deployment identifier="macosx"/>
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="14109"/>
         <capability name="box content view" minToolsVersion="7.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -11,7 +10,7 @@
             <connections>
                 <outlet property="detailTextField" destination="WHM-qa-lRN" id="JYo-Yh-8jD"/>
                 <outlet property="imageView" destination="HcC-8A-c8j" id="56f-5Y-sml"/>
-                <outlet property="titleTextField" destination="eNI-tf-lSe" id="PUZ-lv-YPh"/>
+                <outlet property="labelTextField" destination="eNI-tf-lSe" id="PUZ-lv-YPh"/>
                 <outlet property="view" destination="NMc-ZS-Muw" id="JZY-ci-tH3"/>
                 <outlet property="wrapper" destination="NMc-ZS-Muw" id="jfb-Vp-nHE"/>
             </connections>
@@ -31,7 +30,7 @@
                             <constraint firstAttribute="height" constant="20" id="cyP-r0-99x"/>
                             <constraint firstAttribute="width" constant="20" id="yqa-zQ-krR"/>
                         </constraints>
-                        <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="IBLostImage" id="ySV-2r-yIL"/>
+                        <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="imageCell:ySV-2r-yIL:image" id="ySV-2r-yIL"/>
                     </imageView>
                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="eNI-tf-lSe">
                         <rect key="frame" x="26" y="1" width="40" height="18"/>
@@ -62,7 +61,7 @@
         </box>
     </objects>
     <resources>
-        <image name="IBLostImage" width="128" height="128">
+        <image name="imageCell:ySV-2r-yIL:image" width="128" height="128">
             <mutableData key="keyedArchiveRepresentation">
 YnBsaXN0MDDUAQIDBAUGaWpYJHZlcnNpb25YJG9iamVjdHNZJGFyY2hpdmVyVCR0b3ASAAGGoK8QGAcI
 ExQbICElJi0wNTg5PkFCRU9XW19jZlUkbnVsbNUJCgsMDQ4PEBESVk5TU2l6ZVYkY2xhc3NcTlNJbWFn

@@ -215,7 +215,7 @@ class ApplicationEntry: CustomDebugStringConvertible {
     }
 
     var shortcutAsString: String {
-        let shortcutSequence = [self.shortcutCell.shortcutValue, self.shortcutCell.shortcutValue]
+        let shortcutSequence = [self.shortcutCell.shortcutValue]
         return shortcutSequence.compactMap({ $0 != nil ? "\($0!)" : nil }).joined(separator: ", ")
     }
 
