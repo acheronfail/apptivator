@@ -33,6 +33,10 @@ Apptivator provides some neat options:
 * **Launch Apptivator at login**
 	- self-explanatory
 
+##### Extra Customisations
+
+In some versions of Apptivator there are experimental overrides that can be toggled via the Terminal (`defaults write ...`, etc). Look under the "Experimental Overrides" section at Apptivator -> About for more information.
+
 ## Questions/Concerns
 
 * **When I activate my app its window doesn't appear**
