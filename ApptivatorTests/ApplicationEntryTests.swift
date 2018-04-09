@@ -30,4 +30,18 @@ class ApplicationEntryTests: XCTestCase {
 
         self.waitForExpectations(timeout: 0.0, handler: nil)
     }
+
+    func testDoNotUseValueFromDefaults() {
+        let url = URL(fileURLWithPath: "/Applications/Xcode.app")
+        let key = ApplicationEntry.generateKey(for: url)
+
+        let shortcut = MASShortcut(keyCode: 120 /* F2 */, modifierFlags: 0)
+        let shortcutData = NSKeyedArchiver.archivedData(withRootObject: shortcut as Any)
+        UserDefaults.standard.set(shortcutData, forKey: key)
+
+        let entry = ApplicationEntry(url: url, config: nil)!
+        XCTAssert(entry.shortcutCell.shortcutValue == nil)
+
+        UserDefaults.standard.removeObject(forKey: key)
+    }
 }

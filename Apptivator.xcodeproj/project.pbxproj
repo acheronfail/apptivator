@@ -15,7 +15,7 @@
 		1561AED2207615AC00C69338 /* UIOverrides.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1561AED1207615AC00C69338 /* UIOverrides.swift */; };
 		159F304C2079A0E5000BD387 /* ApplicationEntryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 159F304B2079A0E5000BD387 /* ApplicationEntryTests.swift */; };
 		159F304E2079A111000BD387 /* AppDelegateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 159F304D2079A111000BD387 /* AppDelegateTests.swift */; };
-		159F30502079A12D000BD387 /* ViewControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 159F304F2079A12D000BD387 /* ViewControllerTests.swift */; };
+		159F30502079A12D000BD387 /* PopoverViewControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 159F304F2079A12D000BD387 /* PopoverViewControllerTests.swift */; };
 		159F30522079A147000BD387 /* ApplicationStateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 159F30512079A147000BD387 /* ApplicationStateTests.swift */; };
 		15BB82A4204E512E0039B4E2 /* AXSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 15BB82A0204E512E0039B4E2 /* AXSwift.framework */; };
 		15BB82A5204E512E0039B4E2 /* AXSwift.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 15BB82A0204E512E0039B4E2 /* AXSwift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -65,7 +65,7 @@
 		1561AED1207615AC00C69338 /* UIOverrides.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIOverrides.swift; sourceTree = "<group>"; };
 		159F304B2079A0E5000BD387 /* ApplicationEntryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApplicationEntryTests.swift; sourceTree = "<group>"; };
 		159F304D2079A111000BD387 /* AppDelegateTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegateTests.swift; sourceTree = "<group>"; };
-		159F304F2079A12D000BD387 /* ViewControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewControllerTests.swift; sourceTree = "<group>"; };
+		159F304F2079A12D000BD387 /* PopoverViewControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopoverViewControllerTests.swift; sourceTree = "<group>"; };
 		159F30512079A147000BD387 /* ApplicationStateTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApplicationStateTests.swift; sourceTree = "<group>"; };
 		15B4E870207994AF0024FDE4 /* ApptivatorTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ApptivatorTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		15B4E874207994AF0024FDE4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -108,7 +108,7 @@
 			isa = PBXGroup;
 			children = (
 				159F304D2079A111000BD387 /* AppDelegateTests.swift */,
-				159F304F2079A12D000BD387 /* ViewControllerTests.swift */,
+				159F304F2079A12D000BD387 /* PopoverViewControllerTests.swift */,
 				159F304B2079A0E5000BD387 /* ApplicationEntryTests.swift */,
 				159F30512079A147000BD387 /* ApplicationStateTests.swift */,
 				15B4E874207994AF0024FDE4 /* Info.plist */,
@@ -290,7 +290,7 @@
 			files = (
 				159F304E2079A111000BD387 /* AppDelegateTests.swift in Sources */,
 				159F30522079A147000BD387 /* ApplicationStateTests.swift in Sources */,
-				159F30502079A12D000BD387 /* ViewControllerTests.swift in Sources */,
+				159F30502079A12D000BD387 /* PopoverViewControllerTests.swift in Sources */,
 				159F304C2079A0E5000BD387 /* ApplicationEntryTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
