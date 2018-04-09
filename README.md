@@ -18,7 +18,7 @@ It's simple really. Once Apptivator is running you'll see an icon in your menuba
 
 In the menu, select an application (or exectuable) from the Finder (or optionally choose from running applications) and register a shortcut for it. From now on (as long as Apptivator is enabled) you can activate that application via the shortcut you set for it.
 
-#### Options
+### Options
 
 Apptivator provides some neat options:
 
@@ -33,9 +33,9 @@ Apptivator provides some neat options:
 * **Launch Apptivator at login**
 	- self-explanatory
 
-##### Extra Customisations
+#### Extra Customisations
 
-In some versions of Apptivator there are experimental overrides that can be toggled via the Terminal (`defaults write ...`, etc). Look under the "Experimental Overrides" section at Apptivator -> About for more information.
+In some versions of Apptivator there are experimental overrides that can be toggled via the Terminal (`defaults write ...`, etc). Look under the "Experimental Overrides" section at `Apptivator` -> `About` for more information.
 
 ## Questions/Concerns
 
