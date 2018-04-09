@@ -8,7 +8,7 @@ import LaunchAtLogin
 
 @objcMembers class ApplicationState: NSObject {
     // Location of our serialised application state.
-    let savePath = URL(fileURLWithPath: "\(NSHomeDirectory())/Library/Preferences/\(appName)/configuration.json")
+    let savePath: URL
 
     // User defaults - we use it to provide some experimental overrides that haven't made their way
     // into the UI, but are being considered.
@@ -30,30 +30,38 @@ import LaunchAtLogin
         set { _isEnabled = newValue }
     }
 
+    init(atPath url: URL) {
+        self.savePath = url
+    }
+
     // Loads the app state (JSON) from disk - if the file exists, otherwise it does nothing.
     func loadFromDisk() {
         do {
             let jsonString = try String(contentsOf: savePath, encoding: .utf8)
-            if let dataFromString = jsonString.data(using: .utf8, allowLossyConversion: false) {
-                let json = try JSON(data: dataFromString)
-                for (key, value):(String, JSON) in json {
-                    switch key {
-                    case "darkModeEnabled":
-                        darkModeEnabled = value.bool ?? false
-                    case "appIsEnabled":
-                        _isEnabled = value.bool ?? true
-                    case "entries":
-                        entries = ApplicationEntry.deserialiseList(fromJSON: value)
-                    default:
-                        print("unknown key '\(key)' encountered in json")
-                    }
-                }
-            }
+            try loadFromString(jsonString)
         } catch {
             // Ignore error when there's no file.
             let err = error as NSError
             if err.domain != NSCocoaErrorDomain && err.code != CocoaError.fileReadNoSuchFile.rawValue {
                 print("Unexpected error loading application state from disk: \(error)")
+            }
+        }
+    }
+
+    func loadFromString(_ jsonString: String) throws {
+        if let dataFromString = jsonString.data(using: .utf8, allowLossyConversion: false) {
+            let json = try JSON(data: dataFromString)
+            for (key, value):(String, JSON) in json {
+                switch key {
+                case "darkModeEnabled":
+                    darkModeEnabled = value.bool ?? false
+                case "appIsEnabled":
+                    _isEnabled = value.bool ?? true
+                case "entries":
+                    entries = ApplicationEntry.deserialiseList(fromJSON: value)
+                default:
+                    print("unknown key '\(key)' encountered in json")
+                }
             }
         }
     }

@@ -11,7 +11,7 @@ import MASShortcut
 // to attach listeners to it.
 let APP_LAUNCH_DELAY = 2.0
 
-struct ApplicationConfig {
+struct ApplicationConfig: Equatable {
     // When the app is active, should pressing the shortcut hide it?
     var hideWithShortcutWhenActive: Bool = false
     // When activating, move windows to the screen where the mouse is.
