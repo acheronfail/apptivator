@@ -75,9 +75,9 @@ let iconOff = NSImage(named: NSImage.Name(rawValue: "icon-off"))
     }
 
     @objc func onMenuClick(sender: NSStatusItem) {
-        let rightClickToggles = state.defaults.bool(forKey: "rightClickToggles")
-        let toggleEvent: NSEvent.EventType = rightClickToggles ? .rightMouseUp : .leftMouseUp
-        let dropdownEvent: NSEvent.EventType = rightClickToggles ? .leftMouseUp : .rightMouseUp
+        let leftClickToggles = state.defaults.bool(forKey: "leftClickToggles")
+        let toggleEvent: NSEvent.EventType = leftClickToggles ? .leftMouseUp : .rightMouseUp
+        let dropdownEvent: NSEvent.EventType = leftClickToggles ? .rightMouseUp : .leftMouseUp
 
         let event = NSApp.currentEvent!
         if event.type == dropdownEvent {
