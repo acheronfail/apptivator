@@ -10,10 +10,12 @@ import LaunchAtLogin
     // Location of our serialised application state.
     let savePath = URL(fileURLWithPath: "\(NSHomeDirectory())/Library/Preferences/\(appName)/configuration.json")
 
+    // User defaults - we use it to provide some experimental overrides that haven't made their way
+    // into the UI, but are being considered.
+    let defaults: UserDefaults = UserDefaults.standard
+
     // The list of application -> shortcut mappings.
     var entries: [ApplicationEntry] = []
-    // Whether or not the app is globally enabled.
-    var appIsEnabled = true
     // Toggle for dark mode.
     var darkModeEnabled = false
     // Don't fire any shortcuts if user is recording a new shortcut.
@@ -21,8 +23,11 @@ import LaunchAtLogin
     // Whether or not the app should launch after login.
     var launchAppAtLogin = LaunchAtLogin.isEnabled
 
-    func isEnabled() -> Bool {
-        return appIsEnabled && !currentlyRecording
+    // Whether or not the app is globally enabled.
+    private var _isEnabled = true
+    var isEnabled: Bool {
+        get { return _isEnabled && !currentlyRecording }
+        set { _isEnabled = newValue }
     }
 
     // Loads the app state (JSON) from disk - if the file exists, otherwise it does nothing.
@@ -36,7 +41,7 @@ import LaunchAtLogin
                     case "darkModeEnabled":
                         darkModeEnabled = value.bool ?? false
                     case "appIsEnabled":
-                        appIsEnabled = value.bool ?? true
+                        _isEnabled = value.bool ?? true
                     case "entries":
                         entries = ApplicationEntry.deserialiseList(fromJSON: value)
                     default:
@@ -56,7 +61,7 @@ import LaunchAtLogin
     // Saves the app state to disk, creating the parent directories if they don't already exist.
     func saveToDisk() {
         let json: JSON = [
-            "appIsEnabled": appIsEnabled,
+            "appIsEnabled": _isEnabled,
             "darkModeEnabled": darkModeEnabled,
             "entries": ApplicationEntry.serialiseList(entries: entries)
         ]

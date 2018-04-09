@@ -124,7 +124,7 @@ class ApplicationEntry: CustomDebugStringConvertible {
     }
 
     func enabled() -> Bool {
-        return state.isEnabled() && UIElement.isProcessTrusted(withPrompt: true)
+        return state.isEnabled && UIElement.isProcessTrusted(withPrompt: true)
     }
 
     // Where the magic happens!

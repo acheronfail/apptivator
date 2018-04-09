@@ -46,7 +46,7 @@ let iconOff = NSImage(named: NSImage.Name(rawValue: "icon-off"))
         menuBarItem.sendAction(on: [.leftMouseUp, .rightMouseUp])
 
         state.loadFromDisk()
-        enable(state.appIsEnabled)
+        enable(state.isEnabled)
         popoverViewController.reloadView()
 
         // Check for accessibility permissions.
@@ -64,7 +64,7 @@ let iconOff = NSImage(named: NSImage.Name(rawValue: "icon-off"))
     }
 
     func enable(_ flag: Bool) {
-        state.appIsEnabled = flag
+        state.isEnabled = flag
         menuBarItem?.image = flag ? iconOn : iconOff
         enabledIndicator.title = flag ? ENABLED_INDICATOR_ON : ENABLED_INDICATOR_OFF
     }
@@ -74,14 +74,17 @@ let iconOff = NSImage(named: NSImage.Name(rawValue: "icon-off"))
         image?.size = NSSize(width: 16, height: 16)
     }
 
-    // TODO: have a way to swap these clicks
     @objc func onMenuClick(sender: NSStatusItem) {
+        let rightClickToggles = state.defaults.bool(forKey: "rightClickToggles")
+        let toggleEvent: NSEvent.EventType = rightClickToggles ? .rightMouseUp : .leftMouseUp
+        let dropdownEvent: NSEvent.EventType = rightClickToggles ? .leftMouseUp : .rightMouseUp
+
         let event = NSApp.currentEvent!
-        if event.type == .rightMouseUp {
+        if event.type == dropdownEvent {
             buildContextMenu(state.entries)
             menuBarItem?.popUpMenu(contextMenu)
-        } else if event.type == .leftMouseUp {
-            enable(!state.appIsEnabled)
+        } else if event.type == toggleEvent {
+            enable(!state.isEnabled)
         }
     }
 
@@ -103,12 +106,17 @@ let iconOff = NSImage(named: NSImage.Name(rawValue: "icon-off"))
             let buttonBounds = menuBarButton.convert(menuBarButton.bounds, to: nil)
             let screenBounds = menuBarButton.window!.convertToScreen(buttonBounds)
 
-            // Account for Bartender moving the menu bar item offscreen. If the midpoint doesn't
-            // seem to be on the main screen, then place the popup in the top-right corner.
-            var xPosition = screenBounds.midX
-            let screenFrame = NSScreen.main!.frame
-            if abs(xPosition) > screenFrame.width {
-                xPosition = screenFrame.origin.x + screenFrame.width - 1
+            var xPosition: CGFloat
+            if state.defaults.bool(forKey: "showPopoverOnScreenWithMouse"), let screen = getScreenWithMouse() {
+                xPosition = screen.frame.origin.x + screen.frame.width - 1
+            } else {
+                // Account for Bartender moving the menu bar item offscreen. If the midpoint doesn't
+                // seem to be on the main screen, then place the popover in the top-right corner.
+                let screenFrame = NSScreen.main!.frame
+                xPosition = screenBounds.midX
+                if abs(xPosition) > screenFrame.width {
+                    xPosition = screenFrame.origin.x + screenFrame.width - 1
+                }
             }
 
             // Move the window to the coords, and activate the popover on the window.
