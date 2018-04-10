@@ -23,13 +23,13 @@ let ICON_OFF = NSImage(named: NSImage.Name(rawValue: "icon-off"))
     @IBOutlet weak var popover: NSPopover!
     @IBOutlet weak var popoverViewController: PopoverViewController!
 
-    var contextMenu: NSMenu = NSMenu()
-    var menuBarItem: NSStatusItem! = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
-    let enabledIndicator = NSMenuItem(title: ENABLED_INDICATOR_OFF, action: nil, keyEquivalent: "")
+    private var contextMenu: NSMenu = NSMenu()
+    private var menuBarItem: NSStatusItem! = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
+    private let enabledIndicator = NSMenuItem(title: ENABLED_INDICATOR_OFF, action: nil, keyEquivalent: "")
 
     // The window must be at least 1x1 pixel in order for it to be drawn on the screen.
     // See @togglePreferencesPopover for why an invisible window exists.
-    let invisibleWindow = NSWindow(contentRect: NSMakeRect(0, 0, 1, 1), styleMask: .borderless, backing: .buffered, defer: false)
+    private let invisibleWindow = NSWindow(contentRect: NSMakeRect(0, 0, 1, 1), styleMask: .borderless, backing: .buffered, defer: false)
 
     func applicationDidFinishLaunching(_ aNotification: Notification) {
         setupIcon(ICON_ON)

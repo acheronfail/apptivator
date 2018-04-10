@@ -10,7 +10,7 @@ let toggleWindowShortcutKey = "__Apptivator_global_show__"
 
 class PopoverViewController: NSViewController {
 
-    var addMenu: NSMenu = NSMenu()
+    private var addMenu: NSMenu = NSMenu()
     @IBOutlet weak var tableView: NSTableView!
     @IBOutlet weak var addButton: NSButton!
     @IBOutlet weak var removeButton: NSButton!
@@ -18,7 +18,7 @@ class PopoverViewController: NSViewController {
     @IBOutlet weak var boxWrapper: NSBox!
     @IBOutlet weak var bannerImage: NSImageView!
     @IBOutlet weak var toggleWindowShortcut: MASShortcutView!
-    var toggleWindowShortcutWatcher: NSKeyValueObservation!
+    private var toggleWindowShortcutWatcher: NSKeyValueObservation!
 
     // Local configuration values.
     @IBOutlet weak var hideWithShortcutWhenActive: NSButton!

@@ -162,7 +162,7 @@ class ApplicationEntry: CustomDebugStringConvertible {
     }
 
     // Move all the application's windows to the screen where the mouse currently lies.
-    func showOnScreenWithMouse(_ runningApp: NSRunningApplication) {
+    private func showOnScreenWithMouse(_ runningApp: NSRunningApplication) {
         if let destScreen = getScreenWithMouse(), let app = Application(runningApp) {
             do {
                 for window in try app.windows()! {
@@ -191,7 +191,7 @@ class ApplicationEntry: CustomDebugStringConvertible {
 
     // The listener that receives the events of the given application. Wraps an instance of an
     // NSRunningApplication so we can use its methods.
-    func createListener(_ runningApp: NSRunningApplication) -> (Observer, UIElement, AXNotification) -> () {
+    private func createListener(_ runningApp: NSRunningApplication) -> (Observer, UIElement, AXNotification) -> () {
         return { [unowned self] (observer, element, event) in
             // Remove observer if the app is terminated.
             if runningApp.isTerminated {
