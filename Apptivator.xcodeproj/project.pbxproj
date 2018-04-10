@@ -11,6 +11,7 @@
 		151859FF204F35C6007CD792 /* LaunchAtLogin.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 151859FD204F35C5007CD792 /* LaunchAtLogin.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		1537F5E1204C8D860056EE50 /* ApplicationEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1537F5E0204C8D860056EE50 /* ApplicationEntry.swift */; };
 		15492101207A399F00E45BBC /* MultiMenuItemController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 154920FF207A399F00E45BBC /* MultiMenuItemController.xib */; };
+		15492103207B53AE00E45BBC /* Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15492102207B53AE00E45BBC /* Util.swift */; };
 		155D2C03204F61220087478B /* Credits.rtfd in Resources */ = {isa = PBXBuildFile; fileRef = 155D2C02204F61220087478B /* Credits.rtfd */; };
 		1561AED2207615AC00C69338 /* UIOverrides.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1561AED1207615AC00C69338 /* UIOverrides.swift */; };
 		159F304C2079A0E5000BD387 /* ApplicationEntryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 159F304B2079A0E5000BD387 /* ApplicationEntryTests.swift */; };
@@ -61,6 +62,7 @@
 		151859FD204F35C5007CD792 /* LaunchAtLogin.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = LaunchAtLogin.framework; path = Carthage/Build/Mac/LaunchAtLogin.framework; sourceTree = "<group>"; };
 		1537F5E0204C8D860056EE50 /* ApplicationEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApplicationEntry.swift; sourceTree = "<group>"; };
 		154920FF207A399F00E45BBC /* MultiMenuItemController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MultiMenuItemController.xib; sourceTree = "<group>"; };
+		15492102207B53AE00E45BBC /* Util.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Util.swift; sourceTree = "<group>"; };
 		155D2C02204F61220087478B /* Credits.rtfd */ = {isa = PBXFileReference; lastKnownFileType = wrapper.rtfd; path = Credits.rtfd; sourceTree = "<group>"; };
 		1561AED1207615AC00C69338 /* UIOverrides.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIOverrides.swift; sourceTree = "<group>"; };
 		159F304B2079A0E5000BD387 /* ApplicationEntryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApplicationEntryTests.swift; sourceTree = "<group>"; };
@@ -116,13 +118,6 @@
 			path = ApptivatorTests;
 			sourceTree = "<group>";
 		};
-		15B4E87A2079952F0024FDE4 /* Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = Frameworks;
-			sourceTree = "<group>";
-		};
 		B3B4C2B41E25894B009F8E4E = {
 			isa = PBXGroup;
 			children = (
@@ -134,7 +129,6 @@
 				B3B4C2BF1E25894B009F8E4E /* Apptivator */,
 				15B4E871207994AF0024FDE4 /* ApptivatorTests */,
 				B3B4C2BE1E25894B009F8E4E /* Products */,
-				15B4E87A2079952F0024FDE4 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -155,6 +149,7 @@
 				1537F5E0204C8D860056EE50 /* ApplicationEntry.swift */,
 				15FC8CC7204E2E2C000B5E1E /* ApplicationState.swift */,
 				1561AED1207615AC00C69338 /* UIOverrides.swift */,
+				15492102207B53AE00E45BBC /* Util.swift */,
 				B3B4C2C21E25894B009F8E4E /* Assets.xcassets */,
 				B3B4C2C41E25894B009F8E4E /* PreferencesPopover.xib */,
 				154920FF207A399F00E45BBC /* MultiMenuItemController.xib */,
@@ -300,6 +295,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				15F39F3C204CB72D00847CD5 /* PopoverViewController.swift in Sources */,
+				15492103207B53AE00E45BBC /* Util.swift in Sources */,
 				B3B4C2C11E25894B009F8E4E /* AppDelegate.swift in Sources */,
 				1561AED2207615AC00C69338 /* UIOverrides.swift in Sources */,
 				15FC8CC8204E2E2C000B5E1E /* ApplicationState.swift in Sources */,

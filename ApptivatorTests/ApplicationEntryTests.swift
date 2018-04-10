@@ -4,6 +4,7 @@
 //
 
 import XCTest
+import SwiftyJSON
 
 @testable import Apptivator
 
@@ -18,15 +19,25 @@ class ApplicationEntryTests: XCTestCase {
         }
 
         let expectation = self.expectation(description: "deinit")
+        expectation.expectedFulfillmentCount = 2
 
-        // Create entry within block so it goes out of scope afterwards.
+        // Place tests within blocks so they go out of scope afterwards.
         do {
-            let entry = MockEntry(url: URL(fileURLWithPath: "/Applications/Xcode.app"), config: nil)
-            XCTAssert(entry != nil)
-            XCTAssert(entry!.observer != nil)
-            XCTAssert(entry!.shortcutCell.shortcutValueChange != nil)
-            entry!.deinitCalled = { expectation.fulfill() }
+            let entry = MockEntry(url: URL(fileURLWithPath: "/Applications/Xcode.app"), config: nil)!
+            XCTAssert(entry.isActive == true)
+            XCTAssert(entry.shortcutView.shortcutValueChange == nil)
+            entry.deinitCalled = { expectation.fulfill() }
+            entry.dealloc()
         }
+        do {
+            let data = "{\"url\":\"file:///Applications/Xcode.app\",\"keyCode\":120,\"modifierFlags\":0}".data(using: .utf8, allowLossyConversion: false)!
+            let entry = try MockEntry(json: try JSON(data: data))!
+            // TODO: need to ensure these are weak refs
+            weak var shortcut = MASShortcut(keyCode: 120 /* F2 */, modifierFlags: 0)
+            entry.shortcutView.shortcutValue = shortcut
+            entry.deinitCalled = { expectation.fulfill() }
+            entry.dealloc()
+        } catch { XCTFail(error.localizedDescription) }
 
         self.waitForExpectations(timeout: 0.0, handler: nil)
     }
@@ -40,8 +51,35 @@ class ApplicationEntryTests: XCTestCase {
         UserDefaults.standard.set(shortcutData, forKey: key)
 
         let entry = ApplicationEntry(url: url, config: nil)!
-        XCTAssert(entry.shortcutCell.shortcutValue == nil)
+        XCTAssert(entry.shortcutView.shortcutValue == nil)
 
         UserDefaults.standard.removeObject(forKey: key)
+    }
+
+    func testSerialisesAndDeserialises() {
+        do {
+            let entriesBefore = try [
+                "{\"url\":\"file:///Applications/Xcode.app\",\"config\":{\"showOnScreenWithMouse\":true}}",
+                "{\"url\":\"file:///Applications/Chess.app\",\"keyCode\":1,\"modifierFlags\":1179648}",
+                "{\"url\":\"file:///Applications/Calculator.app\",\"keyCode\":120,\"modifierFlags\":0}",
+                ].map({ try JSON(data: $0.data(using: .utf8, allowLossyConversion: false)!) })
+                .map({ try ApplicationEntry(json: $0)! })
+
+            let json = ApplicationEntry.serialiseList(entries: entriesBefore)
+            let entriesAfter = ApplicationEntry.deserialiseList(fromJSON: json)
+            for i in (0..<entriesBefore.count) {
+                let a = entriesBefore[i]
+                let b = entriesAfter[i]
+                XCTAssert(a.url == b.url)
+                XCTAssert(a.key == b.key)
+                XCTAssert(a.name == b.name)
+                XCTAssert(a.config == b.config)
+                XCTAssert(a.shortcutAsString == b.shortcutAsString)
+                a.dealloc()
+                b.dealloc()
+            }
+        } catch {
+            XCTFail(error.localizedDescription)
+        }
     }
 }

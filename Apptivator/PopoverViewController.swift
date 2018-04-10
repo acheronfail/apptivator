@@ -104,8 +104,7 @@ class PopoverViewController: NSViewController {
 
     @IBAction func onRemoveClick(_ sender: NSButton) {
         for index in tableView.selectedRowIndexes.sorted(by: { $0 > $1 }) {
-            let entry = state.entries.remove(at: index)
-            MASShortcutBinder.shared().breakBinding(withDefaultsKey: entry.key)
+            state.entries.remove(at: index).dealloc()
             tableView.reloadData()
         }
     }
@@ -254,7 +253,7 @@ extension PopoverViewController: NSTableViewDelegate {
 
         // Shortcut column:
         if tableColumn == tableView.tableColumns[1] {
-            return item.shortcutCell
+            return item.shortcutView
         }
 
         return nil

@@ -13,7 +13,7 @@ let APP_LAUNCH_DELAY = 2.0
 
 struct ApplicationConfig: Equatable {
     // When the app is active, should pressing the shortcut hide it?
-    var hideWithShortcutWhenActive: Bool = false
+    var hideWithShortcutWhenActive: Bool = true
     // When activating, move windows to the screen where the mouse is.
     var showOnScreenWithMouse: Bool = false
     // Should the app be automatically hidden once it loses focus?
@@ -63,36 +63,36 @@ struct ApplicationConfig: Equatable {
 // Represents an item in the Shortcut table of the app's window.
 // Each ApplicationEntry is simply a URL of an app mapped to a shortcut.
 class ApplicationEntry: CustomDebugStringConvertible {
-    let name: String
-    let key: String
-    let icon: NSImage
     let url: URL
-    let shortcutCell: MASShortcutView!
+    let key: String
+    let name: String
+    let icon: NSImage
+    let shortcutView: MASShortcutView!
 
     var config: ApplicationConfig
-    var observer: Observer?
-    private var recordingWatcher: NSKeyValueObservation
+    private var observer: Observer?
+    private var changeWatcher: NSKeyValueObservation!
+    private var recordingWatcher: NSKeyValueObservation!
+
+    var isActive: Bool {
+        return self.observer != nil
+    }
+
+    var isEnabled: Bool {
+        return state.isEnabled && UIElement.isProcessTrusted(withPrompt: true)
+    }
 
     init?(url: URL, config: [String:Bool]?) {
         self.url = url
         self.config = ApplicationConfig(withValues: config)
 
-        // The character "." cannot appear in the MASShortcutView.associatedUserDefaultsKey property.
-        // See: https://github.com/shpakovski/MASShortcut/issues/64
         let key = ApplicationEntry.generateKey(for: url)
         self.key = key
-        self.shortcutCell = MASShortcutView()
-
-        // Clear any previously saved key from defaults - MASShortcut automatically saves them there
-        // but we don't want that functionality: if an item A is added with shortcut X, then deleted,
-        // and item B is added with shortcut X, if the item A is added again, it will have the
-        // shortcut X (so, two will have the same shortcut - not what we want).
-        UserDefaults.standard.removeObject(forKey: key)
-        self.shortcutCell.associatedUserDefaultsKey = key
+        self.shortcutView = MASShortcutView()
 
         // Watch MASShortcutView.isRecording for changes.
-        self.recordingWatcher = self.shortcutCell.observe(\.isRecording) { shortcutCell, _ in
-            state.currentlyRecording = shortcutCell.isRecording
+        self.recordingWatcher = self.shortcutView.observe(\.isRecording) { shortcutView, _ in
+            state.currentlyRecording = shortcutView.isRecording
         }
 
         do {
@@ -103,9 +103,17 @@ class ApplicationEntry: CustomDebugStringConvertible {
             return nil
         }
 
-        self.shortcutCell.shortcutValueChange = { [unowned self] (view: MASShortcutView?) in
-            MASShortcutBinder.shared().bindShortcut(withDefaultsKey: self.key, toAction: self.apptivate)
+        self.changeWatcher = self.shortcutView.observe(\.shortcutValue, options: [.prior]) { [unowned self] shortcutView, x in
+            weak var shortcut = shortcutView.shortcutValue
+            if shortcut != nil {
+                if x.isPrior {
+                    MASShortcutMonitor.shared().unregisterShortcut(shortcut)
+                } else {
+                    MASShortcutMonitor.shared().register(shortcut, withAction: self.apptivate)
+                }
+            }
         }
+
         if let app = findRunningApp(withURL: url) {
             self.createObserver(app)
         }
@@ -119,17 +127,27 @@ class ApplicationEntry: CustomDebugStringConvertible {
         self.init(url: url, config: json["config"].dictionaryObject as? [String:Bool] ?? nil)
         if let keyCode = json["keyCode"].uInt, let modifierFlags = json["modifierFlags"].uInt {
             let shortcut = MASShortcut(keyCode: keyCode, modifierFlags: modifierFlags)
-            self.shortcutCell.shortcutValue = shortcut
+            self.shortcutView.shortcutValue = shortcut
         }
     }
 
-    func enabled() -> Bool {
-        return state.isEnabled && UIElement.isProcessTrusted(withPrompt: true)
+    // MASShortcutMonitor holds on to a reference to `self.shortcutView.shortcutValue`, so it won't
+    // be automatically released when it goes out of scope. In order for it to be released we need
+    // to make sure this reference is removed.
+    func dealloc() {
+        if let shortcut = self.shortcutView.shortcutValue {
+            print(CFGetRetainCount(shortcut))
+            MASShortcutMonitor.shared().unregisterShortcut(shortcut)
+        }
+    }
+
+    deinit {
+        print("deinit \(self.name)")
     }
 
     // Where the magic happens!
     func apptivate() {
-        if self.enabled() {
+        if self.isEnabled {
             if let runningApp = findRunningApp(withURL: self.url) {
                 if !runningApp.isActive {
                     if self.config.showOnScreenWithMouse { self.showOnScreenWithMouse(runningApp) }
@@ -192,7 +210,7 @@ class ApplicationEntry: CustomDebugStringConvertible {
             }
 
             // If enabled, respond to events.
-            if self.enabled() && (event == .applicationDeactivated && self.config.hideWhenDeactivated) {
+            if self.isEnabled && (event == .applicationDeactivated && self.config.hideWhenDeactivated) {
                 runningApp.hide()
             }
         }
@@ -210,13 +228,9 @@ class ApplicationEntry: CustomDebugStringConvertible {
         }
     }
 
-    var isActive: Bool {
-        get { return self.observer != nil }
-    }
-
     var shortcutAsString: String {
-        let shortcutSequence = [self.shortcutCell.shortcutValue]
-        return shortcutSequence.compactMap({ $0 != nil ? "\($0!)" : nil }).joined(separator: ", ")
+        let shortcutSequence = [self.shortcutView.shortcutValue]
+        return shortcutSequence.compactMap({ $0 != nil ? "\($0!)" : "nil" }).joined(separator: ", ")
     }
 
     var asJSON: JSON {
@@ -224,7 +238,7 @@ class ApplicationEntry: CustomDebugStringConvertible {
             "url": url.absoluteString,
             "config": self.config.asJSON
         ]
-        if let shortcut = shortcutCell.shortcutValue {
+        if let shortcut = shortcutView.shortcutValue {
             json["keyCode"].uInt = shortcut.keyCode
             json["modifierFlags"].uInt = shortcut.modifierFlags
         }
@@ -232,11 +246,16 @@ class ApplicationEntry: CustomDebugStringConvertible {
     }
 
     public var debugDescription: String {
-        return "AppEntry: \(name), Shortcut: \(shortcutCell.shortcutValue!)"
+        return "AppEntry: { \(name), Shortcut: \(String(describing: shortcutView.shortcutValue)) }"
     }
 
+    // The characters "." and " " cannot appear in the MASShortcutView.associatedUserDefaultsKey
+    // property. See: https://github.com/shpakovski/MASShortcut/issues/64
+    // and https://github.com/shpakovski/MASShortcut/blob/master/Framework/MASShortcutBinder.m#L44-L47
     static func generateKey(for url: URL) -> String {
-        return "Shortcut::\(url.absoluteString)".replacingOccurrences(of: ".", with: "_")
+        return "Shortcut::\(url.absoluteString)"
+            .replacingOccurrences(of: ".", with: "_")
+            .replacingOccurrences(of: " ", with: "_")
     }
 
     static func serialiseList(entries: [ApplicationEntry]) -> JSON {
@@ -254,107 +273,5 @@ class ApplicationEntry: CustomDebugStringConvertible {
         }
 
         return entries
-    }
-}
-
-// Launches the application at the given url. First tries to launch it as if it were a an
-// application bundle, and if that fails, it tries to run it as if it were an executable.
-func launchApplication(at url: URL) -> NSRunningApplication? {
-    do {
-        return try NSWorkspace.shared.launchApplication(at: url, options: [], configuration: [:])
-    } catch {
-        DispatchQueue.global(qos: .background).async {
-            do {
-                // Process.run() is a catchable form of Process.launch() but is only available on
-                // macOS 10.13 or later. On macOS 10.12 and below we have to launch the executable
-                // with "/usr/bin/env" instead, so it doesn't create a runtime exception and crash
-                // the app.
-                let process = Process()
-                if #available(OSX 10.13, *) {
-                    process.executableURL = url
-                    try process.run()
-                } else {
-                    process.launchPath = "/usr/bin/env"
-                    process.arguments = [url.path]
-                    process.launch()
-                }
-            } catch {
-                print("Could not launch application at \(url)\n\(error)\n")
-            }
-        }
-    }
-
-    return nil
-}
-
-// Find the running app at the given URL.
-func findRunningApp(withURL url: URL) -> NSRunningApplication? {
-    let runningApps = NSWorkspace.shared.runningApplications
-    if let i = runningApps.index(where: { $0.bundleURL?.path == url.path || $0.executableURL?.path == url.path }) {
-        return runningApps[i]
-    }
-    
-    return nil
-}
-
-// Returns the screen which contains the mouse cursor.
-func getScreenWithMouse() -> NSScreen? {
-    return NSScreen.screens.first { NSMouseInRect(NSEvent.mouseLocation, $0.frame, false) }
-}
-
-// Returns the screen that contains the given rect.
-func getScreenOfRect(_ rect: CGRect) -> NSScreen? {
-    return NSScreen.screens.first { screen in
-        var normalised = rect
-        normaliseCoordinates(ofRect: &normalised, inScreenFrame: screen.frame)
-        return screen.frame.contains(normalised)
-    }
-}
-
-// Translates a CGRect from one parent rect to another. This is used so when we move a window
-// from one screen to another, its ratio and size are proportional to the screen.
-func translate(rect: inout CGRect, fromScreenFrame source: CGRect, toScreenFrame dest: CGRect) {
-    let xRel = dest.width / source.width
-    let yRel = dest.height / source.height
-
-    let xDiff = dest.origin.x - source.origin.x
-    let yDiff = dest.origin.y - source.origin.y
-
-    rect.origin.x = (rect.origin.x + xDiff) * xRel
-    rect.origin.y = (rect.origin.y + yDiff) * yRel
-
-    rect.size.width *= xRel
-    rect.size.height *= yRel
-}
-
-// Clamps the given (inner) rect to the outer rect, basically the inner rect may not be larger
-// than the outer rect.
-func clamp(rect inner: inout CGRect, to outer: CGRect) {
-    if (inner.origin.x < outer.origin.x) {
-        inner.origin.x = outer.origin.x;
-    } else if ((inner.origin.x + inner.size.width) > (outer.origin.x + outer.size.width)) {
-        inner.origin.x = outer.origin.x + outer.size.width - inner.size.width;
-    }
-
-    if (inner.origin.y < outer.origin.y) {
-        inner.origin.y = outer.origin.y;
-    } else if ((inner.origin.y + inner.size.height) > (outer.origin.y + outer.size.height)) {
-        inner.origin.y = outer.origin.y + outer.size.height - inner.size.height;
-    }
-}
-
-func normaliseCoordinates(ofRect rect: inout CGRect, inScreenFrame frameOfScreen: CGRect) {
-    let frameOfScreenWithMenuBar = NSScreen.screens[0].frame
-    rect.origin.y = frameOfScreen.size.height - NSMaxY(rect) + (frameOfScreenWithMenuBar.size.height - frameOfScreen.size.height)
-}
-
-// Sets the rect of the given element. The "frame" attribute isn't writable, so we have to
-// use the "position" and "size" attributes instead.
-func setRect(ofElement element: UIElement, rect: CGRect) {
-    do {
-        try element.setAttribute(.position, value: rect.origin)
-        try element.setAttribute(.size, value: rect.size)
-    } catch {
-        print("Failed to set frame of UIElement: \(element), \(error)")
     }
 }
