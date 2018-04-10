@@ -76,6 +76,14 @@ class PopoverViewController: NSViewController {
         addMenu.item(at: 1)?.submenu = NSMenu()
 
         setupToggleWindowShortcut()
+        state.defaults.addObserver(self, forKeyPath: APPLE_INTERFACE_STYLE, options: [], context: nil)
+    }
+
+    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
+        if keyPath == APPLE_INTERFACE_STYLE && state.defaults.bool(forKey: "matchAppleInterfaceStyle") {
+            state.darkModeEnabled = appleInterfaceStyleIsDark()
+            reloadView()
+        }
     }
 
     override func viewWillDisappear() {

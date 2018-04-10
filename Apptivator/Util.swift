@@ -3,6 +3,8 @@
 //  Apptivator
 //
 
+let APPLE_INTERFACE_STYLE = "AppleInterfaceStyle"
+
 // Launches the application at the given url. First tries to launch it as if it were a an
 // application bundle, and if that fails, it tries to run it as if it were an executable.
 func launchApplication(at url: URL) -> NSRunningApplication? {
@@ -41,6 +43,10 @@ func findRunningApp(withURL url: URL) -> NSRunningApplication? {
     }
 
     return nil
+}
+
+func appleInterfaceStyleIsDark() -> Bool {
+    return UserDefaults.standard.string(forKey: APPLE_INTERFACE_STYLE) == "Dark"
 }
 
 // Returns the screen which contains the mouse cursor.

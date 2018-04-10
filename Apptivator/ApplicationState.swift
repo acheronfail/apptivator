@@ -17,7 +17,7 @@ import LaunchAtLogin
     // The list of application -> shortcut mappings.
     var entries: [ApplicationEntry] = []
     // Toggle for dark mode.
-    var darkModeEnabled = false
+    var darkModeEnabled = appleInterfaceStyleIsDark()
     // Don't fire any shortcuts if user is recording a new shortcut.
     private var currentlyRecording = false
     // Whether or not the app should launch after login.
@@ -66,6 +66,10 @@ import LaunchAtLogin
                 default:
                     print("unknown key '\(key)' encountered in json")
                 }
+            }
+
+            if state.defaults.bool(forKey: "matchAppleInterfaceStyle") {
+                darkModeEnabled = appleInterfaceStyleIsDark()
             }
         }
     }
