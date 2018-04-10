@@ -8,16 +8,13 @@ import XCTest
 @testable import Apptivator
 
 class ApplicationStateTests: XCTestCase {
-    func estSaveAndLoadToDisk() {
-        let path = temporaryFilePath()
+    func testSaveAndLoadToDisk() {
+        let path = getTemporaryFilePath()
 
         // Create a state and make changes to it.
         let a = ApplicationState(atPath: path)
         a.isEnabled = false
         a.darkModeEnabled = true
-        // TODO: FIXME: if we use "Xcode.app", then this crashes - maybe MASShortcut's fault?
-        // ^^ is it because two can't be used in the same test - are these run serially?
-        // ^^ underlying object not getting fully cleaned up?
         let entryOne = ApplicationEntry(url: URL(fileURLWithPath: "/Applications/Xcode.app"), config: nil)!
         entryOne.shortcutView.shortcutValue = MASShortcut(keyCode: 120 /* F2 */, modifierFlags: 0)
         let entryTwo = ApplicationEntry(url: URL(fileURLWithPath: "/Applications/Calculator.app"), config: nil)!
@@ -46,7 +43,7 @@ class ApplicationStateTests: XCTestCase {
         entryTwo.dealloc()
     }
 
-    func temporaryFilePath() -> URL {
+    func getTemporaryFilePath() -> URL {
         return URL(fileURLWithPath: (NSTemporaryDirectory() as String) + "config.json")
     }
 }

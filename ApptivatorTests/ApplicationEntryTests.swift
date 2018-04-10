@@ -57,29 +57,42 @@ class ApplicationEntryTests: XCTestCase {
     }
 
     func testSerialisesAndDeserialises() {
+        let entriesBefore = getSampleEntries()
+        let json = ApplicationEntry.serialiseList(entries: entriesBefore)
+        let entriesAfter = ApplicationEntry.deserialiseList(fromJSON: json)
+        for i in (0..<entriesBefore.count) {
+            let a = entriesBefore[i]
+            let b = entriesAfter[i]
+            XCTAssert(a.url == b.url)
+            XCTAssert(a.key == b.key)
+            XCTAssert(a.name == b.name)
+            XCTAssert(a.config == b.config)
+            XCTAssert(a.shortcutAsString == b.shortcutAsString)
+            a.dealloc()
+            b.dealloc()
+        }
+    }
+
+    func testShortcutStrings() {
+        let shortcutStrings = ["nil", "⇧⌘S", "F2"]
+        for (i, entry) in getSampleEntries().enumerated() {
+            XCTAssert(entry.shortcutAsString == shortcutStrings[i])
+        }
+    }
+
+    func getSampleEntries() -> [ApplicationEntry] {
         do {
-            let entriesBefore = try [
+            return try [
                 "{\"url\":\"file:///Applications/Xcode.app\",\"config\":{\"showOnScreenWithMouse\":true}}",
                 "{\"url\":\"file:///Applications/Chess.app\",\"keyCode\":1,\"modifierFlags\":1179648}",
                 "{\"url\":\"file:///Applications/Calculator.app\",\"keyCode\":120,\"modifierFlags\":0}",
-                ].map({ try JSON(data: $0.data(using: .utf8, allowLossyConversion: false)!) })
+            ]
+                .map({ try JSON(data: $0.data(using: .utf8, allowLossyConversion: false)!) })
                 .map({ try ApplicationEntry(json: $0)! })
-
-            let json = ApplicationEntry.serialiseList(entries: entriesBefore)
-            let entriesAfter = ApplicationEntry.deserialiseList(fromJSON: json)
-            for i in (0..<entriesBefore.count) {
-                let a = entriesBefore[i]
-                let b = entriesAfter[i]
-                XCTAssert(a.url == b.url)
-                XCTAssert(a.key == b.key)
-                XCTAssert(a.name == b.name)
-                XCTAssert(a.config == b.config)
-                XCTAssert(a.shortcutAsString == b.shortcutAsString)
-                a.dealloc()
-                b.dealloc()
-            }
         } catch {
             XCTFail(error.localizedDescription)
         }
+
+        return []
     }
 }

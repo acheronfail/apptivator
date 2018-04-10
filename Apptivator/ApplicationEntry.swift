@@ -230,7 +230,8 @@ class ApplicationEntry: CustomDebugStringConvertible {
 
     var shortcutAsString: String {
         let shortcutSequence = [self.shortcutView.shortcutValue]
-        return shortcutSequence.compactMap({ $0 != nil ? "\($0!)" : "nil" }).joined(separator: ", ")
+        let str = shortcutSequence.compactMap({ $0 != nil ? "\($0!)" : nil }).joined(separator: ", ")
+        return str.count > 0 ? str : "nil"
     }
 
     var asJSON: JSON {
