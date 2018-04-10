@@ -10,7 +10,7 @@ let APP_NAME = Bundle.main.infoDictionary![kCFBundleNameKey as String] as! Strin
 #if DEBUG
 let CFG_PATH = URL(fileURLWithPath: "\(NSTemporaryDirectory())\(APP_NAME)-\(UUID().uuidString).json")
 #else
-let CFG_PATH = URL(fileURLWithPath: "\(NSHomeDirectory())/Library/Preferences/\(appName)/configuration.json")
+let CFG_PATH = URL(fileURLWithPath: "\(NSHomeDirectory())/Library/Preferences/\(APP_NAME)/configuration.json")
 #endif
 let state = ApplicationState(atPath: CFG_PATH)
 
