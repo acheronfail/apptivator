@@ -27,7 +27,7 @@ class ApplicationEntryTests: XCTestCase {
             XCTAssert(entry.isActive == true)
             XCTAssert(entry.shortcutView.shortcutValueChange == nil)
             entry.deinitCalled = { expectation.fulfill() }
-            entry.dealloc()
+            entry.unregister()
         }
         do {
             let data = "{\"url\":\"file:///Applications/Xcode.app\",\"keyCode\":120,\"modifierFlags\":0}".data(using: .utf8, allowLossyConversion: false)!
@@ -36,7 +36,7 @@ class ApplicationEntryTests: XCTestCase {
             weak var shortcut = MASShortcut(keyCode: 120 /* F2 */, modifierFlags: 0)
             entry.shortcutView.shortcutValue = shortcut
             entry.deinitCalled = { expectation.fulfill() }
-            entry.dealloc()
+            entry.unregister()
         } catch { XCTFail(error.localizedDescription) }
 
         self.waitForExpectations(timeout: 0.0, handler: nil)
@@ -68,8 +68,8 @@ class ApplicationEntryTests: XCTestCase {
             XCTAssert(a.name == b.name)
             XCTAssert(a.config == b.config)
             XCTAssert(a.shortcutAsString == b.shortcutAsString)
-            a.dealloc()
-            b.dealloc()
+            a.unregister()
+            b.unregister()
         }
     }
 

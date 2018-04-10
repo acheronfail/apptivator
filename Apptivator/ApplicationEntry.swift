@@ -89,11 +89,7 @@ class ApplicationEntry: CustomDebugStringConvertible {
         let key = ApplicationEntry.generateKey(for: url)
         self.key = key
         self.shortcutView = MASShortcutView()
-
-        // Watch MASShortcutView.isRecording for changes.
-        self.recordingWatcher = self.shortcutView.observe(\.isRecording) { shortcutView, _ in
-            state.currentlyRecording = shortcutView.isRecording
-        }
+        self.recordingWatcher = self.shortcutView.observe(\.isRecording, changeHandler: state.onRecordingChange)
 
         do {
             let properties = try (url as NSURL).resourceValues(forKeys: [.localizedNameKey, .effectiveIconKey])
@@ -134,7 +130,7 @@ class ApplicationEntry: CustomDebugStringConvertible {
     // MASShortcutMonitor holds on to a reference to `self.shortcutView.shortcutValue`, so it won't
     // be automatically released when it goes out of scope. In order for it to be released we need
     // to make sure this reference is removed.
-    func dealloc() {
+    func unregister() {
         if let shortcut = self.shortcutView.shortcutValue {
             print(CFGetRetainCount(shortcut))
             MASShortcutMonitor.shared().unregisterShortcut(shortcut)

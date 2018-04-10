@@ -39,8 +39,8 @@ class ApplicationStateTests: XCTestCase {
             XCTAssert(a.entries[i].name == b.entries[i].name)
         }
 
-        entryOne.dealloc()
-        entryTwo.dealloc()
+        entryOne.unregister()
+        entryTwo.unregister()
     }
 
     func getTemporaryFilePath() -> URL {

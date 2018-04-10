@@ -277,7 +277,7 @@ CA
                                             </textFieldCell>
                                         </textField>
                                         <customView fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Pkw-YC-fI1" customClass="MASShortcutView">
-                                            <rect key="frame" x="287" y="0.0" width="163" height="19"/>
+                                            <rect key="frame" x="287" y="-3" width="163" height="25"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                         </customView>
                                     </subviews>

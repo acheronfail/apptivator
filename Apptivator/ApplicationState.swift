@@ -19,9 +19,9 @@ import LaunchAtLogin
     // Toggle for dark mode.
     var darkModeEnabled = false
     // Don't fire any shortcuts if user is recording a new shortcut.
-    var currentlyRecording = false
+    private var currentlyRecording = false
     // Whether or not the app should launch after login.
-    var launchAppAtLogin = LaunchAtLogin.isEnabled
+    private var launchAppAtLogin = LaunchAtLogin.isEnabled
 
     // Whether or not the app is globally enabled.
     private var _isEnabled = true
@@ -32,6 +32,10 @@ import LaunchAtLogin
 
     init(atPath url: URL) {
         self.savePath = url
+    }
+
+    func onRecordingChange<Value>(_ view: MASShortcutView, _ change: NSKeyValueObservedChange<Value>) {
+        currentlyRecording = view.isRecording
     }
 
     // Loads the app state (JSON) from disk - if the file exists, otherwise it does nothing.

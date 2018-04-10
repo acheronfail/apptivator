@@ -18,6 +18,7 @@ class PopoverViewController: NSViewController {
     @IBOutlet weak var boxWrapper: NSBox!
     @IBOutlet weak var bannerImage: NSImageView!
     @IBOutlet weak var toggleWindowShortcut: MASShortcutView!
+    var toggleWindowShortcutWatcher: NSKeyValueObservation!
 
     // Local configuration values.
     @IBOutlet weak var hideWithShortcutWhenActive: NSButton!
@@ -74,15 +75,28 @@ class PopoverViewController: NSViewController {
         addMenu.addItem(NSMenuItem(title: "Choose from Running Applications", action: nil, keyEquivalent: ""))
         addMenu.item(at: 1)?.submenu = NSMenu()
 
-        toggleWindowShortcut.associatedUserDefaultsKey = toggleWindowShortcutKey
-        toggleWindowShortcut.shortcutValueChange = { (_: MASShortcutView?) in
-            MASShortcutBinder.shared().bindShortcut(withDefaultsKey: toggleWindowShortcutKey, toAction: { self.appDelegate.togglePreferencesPopover() })
-        }
-        toggleWindowShortcut.shortcutValueChange(toggleWindowShortcut)
+        setupToggleWindowShortcut()
     }
 
     override func viewWillDisappear() {
         state.saveToDisk()
+    }
+
+    func setupToggleWindowShortcut() {
+        var isRecording = false
+
+        toggleWindowShortcut.style = MASShortcutViewStyleTexturedRect
+        toggleWindowShortcut.associatedUserDefaultsKey = toggleWindowShortcutKey
+
+        toggleWindowShortcutWatcher = toggleWindowShortcut.observe(\.isRecording) { _, _ in
+            isRecording = self.toggleWindowShortcut.isRecording
+        }
+        toggleWindowShortcut.shortcutValueChange = { _ in
+            MASShortcutBinder.shared().bindShortcut(withDefaultsKey: toggleWindowShortcutKey, toAction: {
+                if !isRecording { self.appDelegate.togglePreferencesPopover() }
+            })
+        }
+        toggleWindowShortcut.shortcutValueChange(nil)
     }
 
     func toggleDarkMode(_ flag: Bool) {
@@ -104,7 +118,7 @@ class PopoverViewController: NSViewController {
 
     @IBAction func onRemoveClick(_ sender: NSButton) {
         for index in tableView.selectedRowIndexes.sorted(by: { $0 > $1 }) {
-            state.entries.remove(at: index).dealloc()
+            state.entries.remove(at: index).unregister()
             tableView.reloadData()
         }
     }
