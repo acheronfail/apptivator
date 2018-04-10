@@ -6,16 +6,18 @@
 import SwiftyJSON
 
 // Global application state.
-let appName = Bundle.main.infoDictionary![kCFBundleNameKey as String] as! String
-let cfgPath = URL(fileURLWithPath: "\(NSHomeDirectory())/Library/Preferences/\(appName)/configuration.json")
-let state = ApplicationState(atPath: cfgPath)
+let APP_NAME = Bundle.main.infoDictionary![kCFBundleNameKey as String] as! String
+#if DEBUG
+let CFG_PATH = URL(fileURLWithPath: "\(NSTemporaryDirectory())\(APP_NAME)-\(UUID().uuidString).json")
+#else
+let CFG_PATH = URL(fileURLWithPath: "\(NSHomeDirectory())/Library/Preferences/\(appName)/configuration.json")
+#endif
+let state = ApplicationState(atPath: CFG_PATH)
 
-let ENABLED_INDICATOR_ON = "\(appName): on"
-let ENABLED_INDICATOR_OFF = "\(appName): off"
-
-// Menu bar item icons.
-let iconOn = NSImage(named: NSImage.Name(rawValue: "icon-on"))
-let iconOff = NSImage(named: NSImage.Name(rawValue: "icon-off"))
+let ENABLED_INDICATOR_ON = "\(APP_NAME): on"
+let ENABLED_INDICATOR_OFF = "\(APP_NAME): off"
+let ICON_ON = NSImage(named: NSImage.Name(rawValue: "icon-on"))
+let ICON_OFF = NSImage(named: NSImage.Name(rawValue: "icon-off"))
 
 @NSApplicationMain class AppDelegate: NSObject, NSApplicationDelegate {
     @IBOutlet weak var popover: NSPopover!
@@ -30,8 +32,8 @@ let iconOff = NSImage(named: NSImage.Name(rawValue: "icon-off"))
     let invisibleWindow = NSWindow(contentRect: NSMakeRect(0, 0, 1, 1), styleMask: .borderless, backing: .buffered, defer: false)
 
     func applicationDidFinishLaunching(_ aNotification: Notification) {
-        setupIcon(iconOn)
-        setupIcon(iconOff)
+        setupIcon(ICON_ON)
+        setupIcon(ICON_OFF)
 
         popover.delegate = self
         contextMenu.delegate = self
@@ -42,7 +44,7 @@ let iconOff = NSImage(named: NSImage.Name(rawValue: "icon-off"))
         invisibleWindow.hidesOnDeactivate = true
         invisibleWindow.collectionBehavior = .canJoinAllSpaces
 
-        menuBarItem.image = iconOff
+        menuBarItem.image = ICON_OFF
         menuBarItem.action = #selector(onMenuClick)
         menuBarItem.sendAction(on: [.leftMouseUp, .rightMouseUp])
 
@@ -54,7 +56,7 @@ let iconOff = NSImage(named: NSImage.Name(rawValue: "icon-off"))
         if !UIElement.isProcessTrusted(withPrompt: true) {
             let alert = NSAlert()
             alert.messageText = "Action Required"
-            alert.informativeText = "\(appName) requires access to the accessibility API in order to hide/show other application's windows.\n\nPlease open System Preferences and allow \(appName) access.\n\nSystem Preferences -> Security & Privacy -> Privacy"
+            alert.informativeText = "\(APP_NAME) requires access to the accessibility API in order to hide/show other application's windows.\n\nPlease open System Preferences and allow \(APP_NAME) access.\n\nSystem Preferences -> Security & Privacy -> Privacy"
             alert.alertStyle = .warning
             alert.runModal()
         }
@@ -66,7 +68,7 @@ let iconOff = NSImage(named: NSImage.Name(rawValue: "icon-off"))
 
     func enable(_ flag: Bool) {
         state.isEnabled = flag
-        menuBarItem?.image = flag ? iconOn : iconOff
+        menuBarItem?.image = flag ? ICON_ON : ICON_OFF
         enabledIndicator.title = flag ? ENABLED_INDICATOR_ON : ENABLED_INDICATOR_OFF
     }
 
@@ -157,7 +159,7 @@ extension AppDelegate: NSMenuDelegate {
         }
 
         contextMenu.addItem(NSMenuItem.separator())
-        contextMenu.addItem(NSMenuItem(title: "Quit \(appName)", action: #selector(quitApplication), keyEquivalent: ""))
+        contextMenu.addItem(NSMenuItem(title: "Quit \(APP_NAME)", action: #selector(quitApplication), keyEquivalent: ""))
     }
 
     func menuDidClose(_ menu: NSMenu) {

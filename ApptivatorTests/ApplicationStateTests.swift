@@ -44,6 +44,6 @@ class ApplicationStateTests: XCTestCase {
     }
 
     func getTemporaryFilePath() -> URL {
-        return URL(fileURLWithPath: (NSTemporaryDirectory() as String) + "config.json")
+        return URL(fileURLWithPath: "\(NSTemporaryDirectory())config.json")
     }
 }

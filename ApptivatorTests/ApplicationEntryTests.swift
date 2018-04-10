@@ -9,8 +9,29 @@ import SwiftyJSON
 @testable import Apptivator
 
 class ApplicationEntryTests: XCTestCase {
+    func testMustBeValidFilePath() {
+        let entry = ApplicationEntry(url: URL(fileURLWithPath: "/file/does/not/exist.app"), config: nil)
+        XCTAssert(entry == nil)
+    }
+
+    func testRegistersShortcutsPropertly() {
+        let entry = ApplicationEntry(url: URL(fileURLWithPath: "/Applications/Xcode.app"), config: nil)!
+        let a = MASShortcut(keyCode: 120 /* F2 */, modifierFlags: 0)
+        let b = MASShortcut(keyCode: 1 /* ⇧⌘S */, modifierFlags: 1179648)
+        entry.shortcutView.shortcutValue = a
+        XCTAssert(MASShortcutMonitor.shared().isShortcutRegistered(a) == true)
+        XCTAssert(MASShortcutMonitor.shared().isShortcutRegistered(b) == false)
+        entry.shortcutView.shortcutValue = b
+        XCTAssert(MASShortcutMonitor.shared().isShortcutRegistered(a) == false)
+        XCTAssert(MASShortcutMonitor.shared().isShortcutRegistered(b) == true)
+        entry.shortcutView.shortcutValue = nil
+        XCTAssert(MASShortcutMonitor.shared().isShortcutRegistered(a) == false)
+        XCTAssert(MASShortcutMonitor.shared().isShortcutRegistered(b) == false)
+    }
+
     // Since ApplicationEntry instances have some closures associated with them, it's a good idea to
     // ensure that they're cleaned up once they go out of scope to prevent memory leaks.
+    // MASShortcutMonitor also retains some strong references to their `shortcutValue`s.
     func testEntryIsDeinitialised() {
         // Add a hook into the instance's `deinit` block.
         class MockEntry: ApplicationEntry {

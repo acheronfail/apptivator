@@ -100,8 +100,7 @@ class ApplicationEntry: CustomDebugStringConvertible {
         }
 
         self.changeWatcher = self.shortcutView.observe(\.shortcutValue, options: [.prior]) { [unowned self] shortcutView, x in
-            weak var shortcut = shortcutView.shortcutValue
-            if shortcut != nil {
+            if let shortcut = shortcutView.shortcutValue {
                 if x.isPrior {
                     MASShortcutMonitor.shared().unregisterShortcut(shortcut)
                 } else {
