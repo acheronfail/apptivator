@@ -32,9 +32,6 @@ class ApplicationEntryTests: XCTestCase {
         do {
             let data = "{\"url\":\"file:///Applications/Xcode.app\",\"keyCode\":120,\"modifierFlags\":0}".data(using: .utf8, allowLossyConversion: false)!
             let entry = try MockEntry(json: try JSON(data: data))!
-            // TODO: need to ensure these are weak refs
-            weak var shortcut = MASShortcut(keyCode: 120 /* F2 */, modifierFlags: 0)
-            entry.shortcutView.shortcutValue = shortcut
             entry.deinitCalled = { expectation.fulfill() }
             entry.unregister()
         } catch { XCTFail(error.localizedDescription) }

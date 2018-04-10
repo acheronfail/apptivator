@@ -132,13 +132,8 @@ class ApplicationEntry: CustomDebugStringConvertible {
     // to make sure this reference is removed.
     func unregister() {
         if let shortcut = self.shortcutView.shortcutValue {
-            print(CFGetRetainCount(shortcut))
             MASShortcutMonitor.shared().unregisterShortcut(shortcut)
         }
-    }
-
-    deinit {
-        print("deinit \(self.name)")
     }
 
     // Where the magic happens!
