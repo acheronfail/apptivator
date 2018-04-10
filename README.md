@@ -18,6 +18,8 @@ It's simple really. Once Apptivator is running you'll see an icon in your menuba
 
 In the menu, select an application (or exectuable) from the Finder (or optionally choose from running applications) and register a shortcut for it. From now on (as long as Apptivator is enabled) you can activate that application via the shortcut you set for it.
 
+If you want your applications to appear on every space, I recommend allowing the application to appear on all spaces (This can be done by right-clicking on the icon in the dock and selecting -> `Options` -> `All Desktops`).
+
 ### Options
 
 Apptivator provides some neat options:
