@@ -48,6 +48,7 @@ class MultiMenuItemController: NSViewController {
     var label: String?
     var detail: String?
 
+    // FIXME: clicking on the icon swallows the mouse event, so `mouseUp` isn't called.
     @IBOutlet var wrapper: NSBox!
     @IBOutlet weak var imageView: NSImageView!
     @IBOutlet weak var labelTextField: NSTextField!
@@ -68,6 +69,7 @@ class MultiMenuItemController: NSViewController {
         self.labelTextField!.stringValue = label ?? ""
         self.detailTextField!.stringValue = detail ?? ""
         self.sizeToFit()
+        self.view.autoresizingMask = [.width]
     }
 
     // Resize the menu item to fit all its children.
