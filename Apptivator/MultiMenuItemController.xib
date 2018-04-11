@@ -3,63 +3,58 @@
     <dependencies>
         <deployment identifier="macosx"/>
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="14109"/>
-        <capability name="box content view" minToolsVersion="7.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="MultiMenuItemController" customModule="Apptivator" customModuleProvider="target">
             <connections>
-                <outlet property="detailTextField" destination="WHM-qa-lRN" id="JYo-Yh-8jD"/>
-                <outlet property="imageView" destination="HcC-8A-c8j" id="56f-5Y-sml"/>
-                <outlet property="labelTextField" destination="eNI-tf-lSe" id="PUZ-lv-YPh"/>
-                <outlet property="view" destination="NMc-ZS-Muw" id="JZY-ci-tH3"/>
-                <outlet property="wrapper" destination="NMc-ZS-Muw" id="jfb-Vp-nHE"/>
+                <outlet property="detailTextField" destination="WHM-qa-lRN" id="sWt-WE-xLb"/>
+                <outlet property="imageView" destination="HcC-8A-c8j" id="zZt-Rh-9aB"/>
+                <outlet property="labelTextField" destination="eNI-tf-lSe" id="kDs-zD-ma7"/>
+                <outlet property="view" destination="f35-UQ-Qwj" id="J1I-tg-Lua"/>
             </connections>
         </customObject>
         <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
         <customObject id="-3" userLabel="Application" customClass="NSObject"/>
-        <box autoresizesSubviews="NO" boxType="custom" borderType="none" borderWidth="0.0" title="Box" titlePosition="noTitle" id="NMc-ZS-Muw" customClass="MultiMenuItem" customModule="Apptivator" customModuleProvider="target">
+        <customView id="f35-UQ-Qwj" customClass="MultiMenuItem" customModule="Apptivator" customModuleProvider="target">
             <rect key="frame" x="0.0" y="0.0" width="200" height="20"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-            <view key="contentView" id="bbf-Ke-uGl">
-                <rect key="frame" x="0.0" y="0.0" width="200" height="20"/>
-                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                <subviews>
-                    <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="HcC-8A-c8j">
-                        <rect key="frame" x="4" y="0.0" width="20" height="20"/>
-                        <constraints>
-                            <constraint firstAttribute="height" constant="20" id="cyP-r0-99x"/>
-                            <constraint firstAttribute="width" constant="20" id="yqa-zQ-krR"/>
-                        </constraints>
-                        <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="imageCell:ySV-2r-yIL:image" id="ySV-2r-yIL"/>
-                    </imageView>
-                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="eNI-tf-lSe">
-                        <rect key="frame" x="26" y="1" width="40" height="18"/>
-                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Label" usesSingleLineMode="YES" id="LzT-yD-agv">
-                            <font key="font" metaFont="menuBar"/>
-                            <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
-                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                        </textFieldCell>
-                    </textField>
-                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="WHM-qa-lRN">
-                        <rect key="frame" x="152" y="1" width="40" height="18"/>
-                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="Label" id="3l2-8L-3v6">
-                            <font key="font" metaFont="menuBar"/>
-                            <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
-                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                        </textFieldCell>
-                    </textField>
-                </subviews>
-                <constraints>
-                    <constraint firstAttribute="trailing" secondItem="WHM-qa-lRN" secondAttribute="trailing" constant="10" id="Rit-Jh-2vq"/>
-                    <constraint firstItem="HcC-8A-c8j" firstAttribute="leading" secondItem="bbf-Ke-uGl" secondAttribute="leading" constant="4" id="Tau-0N-Kj8"/>
-                    <constraint firstItem="eNI-tf-lSe" firstAttribute="centerY" secondItem="bbf-Ke-uGl" secondAttribute="centerY" id="XiR-3Y-X9j"/>
-                    <constraint firstItem="HcC-8A-c8j" firstAttribute="centerY" secondItem="bbf-Ke-uGl" secondAttribute="centerY" id="d5j-Il-n8H"/>
-                    <constraint firstItem="eNI-tf-lSe" firstAttribute="leading" secondItem="HcC-8A-c8j" secondAttribute="trailing" constant="4" id="i9i-aE-yl6"/>
-                    <constraint firstItem="WHM-qa-lRN" firstAttribute="centerY" secondItem="bbf-Ke-uGl" secondAttribute="centerY" id="lWt-Oc-Rfc"/>
-                </constraints>
-            </view>
-        </box>
+            <subviews>
+                <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="HcC-8A-c8j">
+                    <rect key="frame" x="4" y="0.0" width="20" height="20"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="20" id="cyP-r0-99x"/>
+                        <constraint firstAttribute="width" constant="20" id="yqa-zQ-krR"/>
+                    </constraints>
+                    <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="imageCell:ySV-2r-yIL:image" id="ySV-2r-yIL"/>
+                </imageView>
+                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="eNI-tf-lSe">
+                    <rect key="frame" x="26" y="1" width="40" height="18"/>
+                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Label" usesSingleLineMode="YES" id="LzT-yD-agv">
+                        <font key="font" metaFont="menuBar"/>
+                        <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                </textField>
+                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="WHM-qa-lRN">
+                    <rect key="frame" x="152" y="1" width="40" height="18"/>
+                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="Label" id="3l2-8L-3v6">
+                        <font key="font" metaFont="menuBar"/>
+                        <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                </textField>
+            </subviews>
+            <constraints>
+                <constraint firstItem="HcC-8A-c8j" firstAttribute="centerY" secondItem="f35-UQ-Qwj" secondAttribute="centerY" id="Hr3-8F-0El"/>
+                <constraint firstItem="WHM-qa-lRN" firstAttribute="centerY" secondItem="f35-UQ-Qwj" secondAttribute="centerY" id="Ir6-lC-ZyL"/>
+                <constraint firstItem="eNI-tf-lSe" firstAttribute="leading" secondItem="HcC-8A-c8j" secondAttribute="trailing" constant="4" id="NFY-ou-9Qu"/>
+                <constraint firstItem="HcC-8A-c8j" firstAttribute="leading" secondItem="f35-UQ-Qwj" secondAttribute="leading" constant="4" id="Qht-wj-PTS"/>
+                <constraint firstItem="eNI-tf-lSe" firstAttribute="centerY" secondItem="f35-UQ-Qwj" secondAttribute="centerY" id="hQW-Wx-ibX"/>
+                <constraint firstAttribute="trailing" secondItem="WHM-qa-lRN" secondAttribute="trailing" constant="10" id="mqO-zH-3l7"/>
+            </constraints>
+            <point key="canvasLocation" x="51" y="291"/>
+        </customView>
     </objects>
     <resources>
         <image name="imageCell:ySV-2r-yIL:image" width="128" height="128">

@@ -17,25 +17,45 @@ class MixedCheckboxCell: NSButtonCell {
 // This is a copy of an NSMenuItem that allows an image at the start, as well as allowing a custom
 // string where the "keyEquivalent" text would normally be (we want to be able to show key sequences
 // in the "keyEquivalent" text, which is normally unsupported).
-class MultiMenuItem: NSBox {
+//
+// Also, getting the native "highlight" background on an NSMenuItem with a custom view is
+// unnecesarily difficult, so here we just have a simple alpha-highlight. See:
+// https://stackoverflow.com/q/26851306/5552584
+// https://stackoverflow.com/q/6054331/5552584
+// https://stackoverflow.com/q/30617085/5552584
+class MultiMenuItem: NSView {
+    var mouseDownInside = false
+    var trackingArea : NSTrackingArea?
+
     override func awakeFromNib() {
         self.alphaValue = 0.5
     }
 
-    // Getting the native "highlight" background on an NSMenuItem with a custom view is unnecesarily
-    // difficult, so just have a simple alpha-highlight. See:
-    // https://stackoverflow.com/q/26851306/5552584
-    // https://stackoverflow.com/q/6054331/5552584
-    // https://stackoverflow.com/q/30617085/5552584
-    override func draw(_ dirtyRect: NSRect) {
-        self.alphaValue = self.enclosingMenuItem!.isHighlighted ? 0.5 : 1.0
-        super.draw(dirtyRect)
+    override func updateTrackingAreas() {
+        if trackingArea != nil { self.removeTrackingArea(trackingArea!) }
+        let options: NSTrackingArea.Options = [.activeInActiveApp, .mouseEnteredAndExited, .enabledDuringMouseDrag]
+        trackingArea = NSTrackingArea(rect: self.bounds, options: options, owner: self, userInfo: nil)
+        self.addTrackingArea(trackingArea!)
     }
 
-    // Simulate a click on the menu item.
+    override func mouseEntered(with event: NSEvent) {
+        self.alphaValue = 1.0
+    }
+
+    override func mouseExited(with event: NSEvent) {
+        self.alphaValue = 0.5
+        mouseDownInside = false
+    }
+
+    // FIXME: for some reason `mouseDown` and `mouseUp` don't always get fired when clicking on the
+    // image view - this may be a bug since the directly subclassing NSImageView and listening there
+    // also doesn't help.
+    override func mouseDown(with event: NSEvent) {
+        mouseDownInside = true
+    }
+
     override func mouseUp(with event: NSEvent) {
-        super.mouseUp(with: event)
-        if let menuItem = self.enclosingMenuItem {
+        if mouseDownInside, let menuItem = self.enclosingMenuItem {
             menuItem.menu?.cancelTracking()
             (menuItem.representedObject as? ApplicationEntry)?.apptivate()
         }
@@ -48,8 +68,6 @@ class MultiMenuItemController: NSViewController {
     var label: String?
     var detail: String?
 
-    // FIXME: clicking on the icon swallows the mouse event, so `mouseUp` isn't called.
-    @IBOutlet var wrapper: NSBox!
     @IBOutlet weak var imageView: NSImageView!
     @IBOutlet weak var labelTextField: NSTextField!
     @IBOutlet weak var detailTextField: NSTextField!
