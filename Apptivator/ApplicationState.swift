@@ -94,4 +94,13 @@ import LaunchAtLogin
             print("Unexpected error saving application state to disk: \(error)")
         }
     }
+
+    // When running tests, use a temporary config file.
+    static func defaultConfigurationPath() -> URL {
+        if ProcessInfo.processInfo.environment["TEST"] != nil {
+            return URL(fileURLWithPath: "\(NSTemporaryDirectory())\(APP_NAME)-\(UUID().uuidString).json")
+        }
+
+        return URL(fileURLWithPath: "\(NSHomeDirectory())/Library/Preferences/\(APP_NAME)/configuration.json")
+    }
 }

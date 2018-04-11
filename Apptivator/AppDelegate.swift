@@ -7,11 +7,7 @@ import SwiftyJSON
 
 // Global application state.
 let APP_NAME = Bundle.main.infoDictionary![kCFBundleNameKey as String] as! String
-#if DEBUG
-let CFG_PATH = URL(fileURLWithPath: "\(NSTemporaryDirectory())\(APP_NAME)-\(UUID().uuidString).json")
-#else
-let CFG_PATH = URL(fileURLWithPath: "\(NSHomeDirectory())/Library/Preferences/\(APP_NAME)/configuration.json")
-#endif
+let CFG_PATH = ApplicationState.defaultConfigurationPath()
 let state = ApplicationState(atPath: CFG_PATH)
 
 let ENABLED_INDICATOR_ON = "\(APP_NAME): on"
