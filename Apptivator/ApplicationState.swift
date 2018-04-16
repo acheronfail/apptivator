@@ -13,6 +13,10 @@ import LaunchAtLogin
     // User defaults - we use it to provide some experimental overrides that haven't made their way
     // into the UI, but are being considered.
     let defaults: UserDefaults = UserDefaults.standard
+    // TODO: doc
+    var timer: Timer?
+    // TODO: doc
+    var monitor: MASShortcutMonitor! = MASShortcutMonitor.shared()
 
     // The list of application -> shortcut mappings.
     var entries: [ApplicationEntry] = []
@@ -32,6 +36,111 @@ import LaunchAtLogin
 
     init(atPath url: URL) {
         self.savePath = url
+
+        defaults.register(defaults: [
+            "leftClickToggles": false,
+            // TODO: add to about
+            "sequentialShortcutDelay": 0.5,
+            "matchAppleInterfaceStyle": false,
+            "showPopoverOnScreenWithMouse": false
+        ])
+
+        // TODO: add option in for this?
+        MASShortcutValidator.shared().allowAnyShortcutWithOptionModifier = true
+    }
+
+    // TODO: doc
+    private func keyFired(_ i: Int, _ entry: ApplicationEntry, _ shortcut: MASShortcut) {
+        if self.currentlyRecording { return }
+        if i > 0 { self.timer?.invalidate() }
+
+        // TODO: to stop this being hit at the wrong time, maybe sequences shouldn't contain
+        // subsets of other sequences..?
+        // TODO: if this is hit, then we should return early
+        // TODO: see self.isSequenceRegistered
+        if i == entry.sequence.count {
+            entry.apptivate()
+            self.registerShortcuts(atIndex: 0, last: nil)
+        } else {
+            let last = (shortcut.keyCode, shortcut.modifierFlags)
+            self.registerShortcuts(atIndex: i, last: last)
+        }
+    }
+
+    // TODO: doc
+    // Should be called whenever a shortcut changes value
+    func registerShortcuts() {
+        self.registerShortcuts(atIndex: 0, last: nil)
+    }
+
+    // Unregister all previously registered application shortcuts. We can't just use
+    // monitor.unregisterAllShortcuts() since that unregisters *all* bindings (even those bound
+    // with MASShortcutBinder).
+    func unregisterShortcuts() {
+        self.entries.forEach({ entry in
+            entry.sequence.forEach({ shortcutView in
+                if monitor.isShortcutRegistered(shortcutView.shortcutValue) {
+                    monitor.unregisterShortcut(shortcutView.shortcutValue)
+                }
+            })
+        })
+    }
+
+    // TODO: doc
+    // TODO: doc - probably shouldn't be called, but need it for tests
+    func registerShortcuts(atIndex index: Int, last: (UInt, UInt)?) {
+        self.unregisterShortcuts()
+
+        // Bind new shortcuts.
+        self.entries.forEach({ entry in
+            if index < entry.sequence.count {
+                let shortcut = entry.sequence[index].shortcutValue!
+                // If this is the first shortcut (index = 0), then bind all the first shortcut keys.
+                if index == 0 {
+                    if !monitor.isShortcutRegistered(shortcut) {
+                        monitor.register(shortcut, withAction: { self.keyFired(1, entry, shortcut) })
+                    }
+                    return
+                }
+
+                // If this is a sequential shortcut (index > 0), then only bind the next shortcuts
+                // whose previous shortcut was hit.
+                let (lastKeyCode, lastModifierFlags) = last!
+                let prev = entry.sequence[index - 1].shortcutValue!
+                if prev.keyCode == lastKeyCode && prev.modifierFlags == lastModifierFlags {
+                    if !monitor.isShortcutRegistered(shortcut) {
+                        monitor.register(shortcut, withAction: { self.keyFired(index + 1, entry, shortcut) })
+                    }
+                }
+            }
+        })
+
+        // If this is a sequential shortcut, then start a timer to reset back to the initial state
+        // if no other shortcuts were hit.
+        if index > 0 {
+            let interval = TimeInterval(defaults.float(forKey: "sequentialShortcutDelay"))
+            self.timer = Timer.scheduledTimer(withTimeInterval: interval, repeats: false) { _ in
+                self.timer = nil
+                self.registerShortcuts(atIndex: 0, last: nil)
+            }
+        }
+    }
+
+    // TODO: this
+    // TODO: don't compare entry against itself (set A.app, conflicts with A.app)
+    func checkForConflictingSequence(_ otherSequence: [MASShortcutView], excluding otherEntry: ApplicationEntry?) -> ApplicationEntry? {
+        return self.entries.first(where: { entry in
+            if entry.sequence.count == 0 || entry === otherEntry { return false }
+            var wasConflict = true
+            for (a, b) in zip(otherSequence, entry.sequence) {
+                if a.shortcutValue != b.shortcutValue {
+                    wasConflict = false
+                    break
+                }
+            }
+
+            return wasConflict
+        })
     }
 
     func onRecordingChange<Value>(_ view: MASShortcutView, _ change: NSKeyValueObservedChange<Value>) {
@@ -50,6 +159,8 @@ import LaunchAtLogin
                 print("Unexpected error loading application state from disk: \(error)")
             }
         }
+
+        registerShortcuts()
     }
 
     func loadFromString(_ jsonString: String) throws {

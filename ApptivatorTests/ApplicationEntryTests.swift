@@ -14,21 +14,6 @@ class ApplicationEntryTests: XCTestCase {
         XCTAssert(entry == nil)
     }
 
-    func testRegistersShortcutsPropertly() {
-        let entry = ApplicationEntry(url: URL(fileURLWithPath: "/Applications/Xcode.app"), config: nil)!
-        let a = MASShortcut(keyCode: 120 /* F2 */, modifierFlags: 0)
-        let b = MASShortcut(keyCode: 1 /* ⇧⌘S */, modifierFlags: 1179648)
-        entry.shortcutView.shortcutValue = a
-        XCTAssert(MASShortcutMonitor.shared().isShortcutRegistered(a) == true)
-        XCTAssert(MASShortcutMonitor.shared().isShortcutRegistered(b) == false)
-        entry.shortcutView.shortcutValue = b
-        XCTAssert(MASShortcutMonitor.shared().isShortcutRegistered(a) == false)
-        XCTAssert(MASShortcutMonitor.shared().isShortcutRegistered(b) == true)
-        entry.shortcutView.shortcutValue = nil
-        XCTAssert(MASShortcutMonitor.shared().isShortcutRegistered(a) == false)
-        XCTAssert(MASShortcutMonitor.shared().isShortcutRegistered(b) == false)
-    }
-
     // Since ApplicationEntry instances have some closures associated with them, it's a good idea to
     // ensure that they're cleaned up once they go out of scope to prevent memory leaks.
     // MASShortcutMonitor also retains some strong references to their `shortcutValue`s.
@@ -46,32 +31,15 @@ class ApplicationEntryTests: XCTestCase {
         do {
             let entry = MockEntry(url: URL(fileURLWithPath: "/Applications/Xcode.app"), config: nil)!
             XCTAssert(entry.isActive == true)
-            XCTAssert(entry.shortcutView.shortcutValueChange == nil)
             entry.deinitCalled = { expectation.fulfill() }
-            entry.unregister()
         }
         do {
             let data = "{\"url\":\"file:///Applications/Xcode.app\",\"keyCode\":120,\"modifierFlags\":0}".data(using: .utf8, allowLossyConversion: false)!
             let entry = try MockEntry(json: try JSON(data: data))!
             entry.deinitCalled = { expectation.fulfill() }
-            entry.unregister()
         } catch { XCTFail(error.localizedDescription) }
 
         self.waitForExpectations(timeout: 0.0, handler: nil)
-    }
-
-    func testDoesNotUseValueFromDefaults() {
-        let url = URL(fileURLWithPath: "/Applications/Xcode.app")
-        let key = ApplicationEntry.generateKey(for: url)
-
-        let shortcut = MASShortcut(keyCode: 120 /* F2 */, modifierFlags: 0)
-        let shortcutData = NSKeyedArchiver.archivedData(withRootObject: shortcut as Any)
-        UserDefaults.standard.set(shortcutData, forKey: key)
-
-        let entry = ApplicationEntry(url: url, config: nil)!
-        XCTAssert(entry.shortcutView.shortcutValue == nil)
-
-        UserDefaults.standard.removeObject(forKey: key)
     }
 
     func testSerialisesAndDeserialises() {
@@ -85,16 +53,16 @@ class ApplicationEntryTests: XCTestCase {
             XCTAssert(a.key == b.key)
             XCTAssert(a.name == b.name)
             XCTAssert(a.config == b.config)
-            XCTAssert(a.shortcutAsString == b.shortcutAsString)
-            a.unregister()
-            b.unregister()
+            XCTAssert(a.shortcutString == b.shortcutString)
         }
     }
 
     func testShortcutStrings() {
         let shortcutStrings = ["nil", "⇧⌘S", "F2"]
+        // TODO: zip ?
         for (i, entry) in getSampleEntries().enumerated() {
-            XCTAssert(entry.shortcutAsString == shortcutStrings[i])
+            let str = entry.shortcutString ?? "nil"
+            XCTAssert(str == shortcutStrings[i], "\(str) != \(shortcutStrings[i])")
         }
     }
 
@@ -102,8 +70,8 @@ class ApplicationEntryTests: XCTestCase {
         do {
             return try [
                 "{\"url\":\"file:///Applications/Xcode.app\",\"config\":{\"showOnScreenWithMouse\":true}}",
-                "{\"url\":\"file:///Applications/Chess.app\",\"keyCode\":1,\"modifierFlags\":1179648}",
-                "{\"url\":\"file:///Applications/Calculator.app\",\"keyCode\":120,\"modifierFlags\":0}",
+                "{\"url\":\"file:///Applications/Chess.app\",\"sequence\":[{\"keyCode\":1,\"modifierFlags\":1179648}]}",
+                "{\"url\":\"file:///Applications/Calculator.app\",\"sequence\":[{\"keyCode\":120,\"modifierFlags\":0}]}",
             ]
                 .map({ try JSON(data: $0.data(using: .utf8, allowLossyConversion: false)!) })
                 .map({ try ApplicationEntry(json: $0)! })

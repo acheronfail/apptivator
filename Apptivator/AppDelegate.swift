@@ -143,9 +143,7 @@ extension AppDelegate: NSMenuDelegate {
 
         for entry in entries {
             // Try and attach observer to app here if none is unattached.
-            if !entry.isActive, let runningApp = findRunningApp(withURL: entry.url) {
-                entry.createObserver(runningApp)
-            }
+            if !entry.isActive { entry.createObserver(findRunningApp(withURL: entry.url)) }
             if entry.isActive {
                 let menuItem = NSMenuItem(title: entry.name, action: nil, keyEquivalent: "")
                 menuItem.view = MultiMenuItemController.viewFor(entry: entry)

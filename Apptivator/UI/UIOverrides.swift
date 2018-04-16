@@ -14,6 +14,10 @@ class MixedCheckboxCell: NSButtonCell {
     }
 }
 
+class ShortcutButton: NSButton {
+    var index: Int?
+}
+
 // This is a copy of an NSMenuItem that allows an image at the start, as well as allowing a custom
 // string where the "keyEquivalent" text would normally be (we want to be able to show key sequences
 // in the "keyEquivalent" text, which is normally unsupported).
@@ -77,7 +81,7 @@ class MultiMenuItemController: NSViewController {
         let controller = MultiMenuItemController()
         controller.label = entry.name
         controller.image = entry.icon
-        controller.detail = entry.shortcutAsString
+        controller.detail = entry.shortcutString
         return controller.view
     }
 
