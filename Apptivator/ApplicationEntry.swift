@@ -67,19 +67,22 @@ class ApplicationEntry: CustomDebugStringConvertible {
     let key: String
     let name: String
     let icon: NSImage
-    let shortcutView: MASShortcutView!
 
     var config: ApplicationConfig
     private var observer: Observer?
-    private var changeWatcher: NSKeyValueObservation!
-    private var recordingWatcher: NSKeyValueObservation!
 
-    var isActive: Bool {
-        return self.observer != nil
-    }
-
-    var isEnabled: Bool {
-        return state.isEnabled && UIElement.isProcessTrusted(withPrompt: true)
+    var isActive: Bool { return self.observer != nil }
+    var isEnabled: Bool { return state.isEnabled && UIElement.isProcessTrusted(withPrompt: true) }
+    var sequence: [MASShortcutView] = [] {
+        didSet {
+            // Unregister old shortcuts if any of them are registered. `state.registerShortcuts()` will
+            // unregister all other shortcuts anyway, so this doesn't affect anything.
+            oldValue.forEach({ shortcutView in
+                if state.monitor.isShortcutRegistered(shortcutView.shortcutValue) {
+                    state.monitor.unregisterShortcut(shortcutView.shortcutValue)
+                }
+            })
+        }
     }
 
     init?(url: URL, config: [String:Bool]?) {
@@ -88,8 +91,6 @@ class ApplicationEntry: CustomDebugStringConvertible {
 
         let key = ApplicationEntry.generateKey(for: url)
         self.key = key
-        self.shortcutView = MASShortcutView()
-        self.recordingWatcher = self.shortcutView.observe(\.isRecording, changeHandler: state.onRecordingChange)
 
         do {
             let properties = try (url as NSURL).resourceValues(forKeys: [.localizedNameKey, .effectiveIconKey])
@@ -99,19 +100,7 @@ class ApplicationEntry: CustomDebugStringConvertible {
             return nil
         }
 
-        self.changeWatcher = self.shortcutView.observe(\.shortcutValue, options: [.prior]) { [unowned self] shortcutView, x in
-            if let shortcut = shortcutView.shortcutValue {
-                if x.isPrior {
-                    MASShortcutMonitor.shared().unregisterShortcut(shortcut)
-                } else {
-                    MASShortcutMonitor.shared().register(shortcut, withAction: self.apptivate)
-                }
-            }
-        }
-
-        if let app = findRunningApp(withURL: url) {
-            self.createObserver(app)
-        }
+        self.createObserver(findRunningApp(withURL: self.url))
     }
 
     convenience init?(json: JSON) throws {
@@ -120,19 +109,16 @@ class ApplicationEntry: CustomDebugStringConvertible {
         }
 
         self.init(url: url, config: json["config"].dictionaryObject as? [String:Bool] ?? nil)
-        if let keyCode = json["keyCode"].uInt, let modifierFlags = json["modifierFlags"].uInt {
-            let shortcut = MASShortcut(keyCode: keyCode, modifierFlags: modifierFlags)
-            self.shortcutView.shortcutValue = shortcut
-        }
-    }
 
-    // MASShortcutMonitor holds on to a reference to `self.shortcutView.shortcutValue`, so it won't
-    // be automatically released when it goes out of scope. In order for it to be released we need
-    // to make sure this reference is removed.
-    func unregister() {
-        if let shortcut = self.shortcutView.shortcutValue {
-            MASShortcutMonitor.shared().unregisterShortcut(shortcut)
+        var sequence: [MASShortcutView] = []
+        for (_, value):(String, JSON) in json["sequence"] {
+            if let keyCode = value["keyCode"].uInt, let modifierFlags = value["modifierFlags"].uInt {
+                let shortcutView = MASShortcutView()
+                shortcutView.shortcutValue = MASShortcut(keyCode: keyCode, modifierFlags: modifierFlags)
+                sequence.append(shortcutView)
+            }
         }
+        self.sequence = sequence
     }
 
     // Where the magic happens!
@@ -154,8 +140,7 @@ class ApplicationEntry: CustomDebugStringConvertible {
                 // TODO: there's probably a better way of doing this.
                 var runningApp = launchApplication(at: self.url)
                 DispatchQueue.main.asyncAfter(deadline: .now() + APP_LAUNCH_DELAY) {
-                    if runningApp == nil { runningApp = findRunningApp(withURL: self.url) }
-                    if runningApp != nil { self.createObserver(runningApp!) }
+                    self.createObserver(findRunningApp(withURL: self.url))
                 }
             }
         }
@@ -207,10 +192,10 @@ class ApplicationEntry: CustomDebugStringConvertible {
     }
 
     // Creates an observer (if one doesn't already exist) to watch certain events on each ApplicationEntry.
-    func createObserver(_ runningApp: NSRunningApplication) {
-        guard observer == nil, let app = Application(runningApp) else { return }
+    func createObserver(_ runningApp: NSRunningApplication?) {
+        guard observer == nil, runningApp != nil, let app = Application(runningApp!) else { return }
 
-        observer = app.createObserver(createListener(runningApp))
+        observer = app.createObserver(createListener(runningApp!))
         do {
             try observer?.addNotification(.applicationDeactivated, forElement: app)
         } catch {
@@ -218,26 +203,30 @@ class ApplicationEntry: CustomDebugStringConvertible {
         }
     }
 
-    var shortcutAsString: String {
-        let shortcutSequence = [self.shortcutView.shortcutValue]
-        let str = shortcutSequence.compactMap({ $0 != nil ? "\($0!)" : nil }).joined(separator: ", ")
-        return str.count > 0 ? str : "nil"
+    var shortcutString: String? {
+        let str = sequence
+            .compactMap({ $0.shortcutValue != nil ? "\($0.shortcutValue.description)" : nil })
+            .joined(separator: ", ")
+        return str.count > 0 ? str : nil
     }
 
     var asJSON: JSON {
-        var json: JSON = [
+        return [
             "url": url.absoluteString,
-            "config": self.config.asJSON
-        ]
-        if let shortcut = shortcutView.shortcutValue {
-            json["keyCode"].uInt = shortcut.keyCode
-            json["modifierFlags"].uInt = shortcut.modifierFlags
-        }
-        return json
+            "config": config.asJSON,
+            "sequence": sequence.map({ shortcutView in
+                var json: JSON = [:]
+                if let shortcut = shortcutView.shortcutValue {
+                    json["keyCode"].uInt = shortcut.keyCode
+                    json["modifierFlags"].uInt = shortcut.modifierFlags
+                }
+                return json
+            }) as [JSON]
+        ] as JSON
     }
 
     public var debugDescription: String {
-        return "AppEntry: { \(name), Shortcut: \(String(describing: shortcutView.shortcutValue)) }"
+        return "AppEntry: { \(name), Shortcut: \(shortcutString ?? "nil") }"
     }
 
     // The characters "." and " " cannot appear in the MASShortcutView.associatedUserDefaultsKey

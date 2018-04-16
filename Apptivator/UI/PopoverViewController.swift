@@ -11,6 +11,8 @@ let toggleWindowShortcutKey = "__Apptivator_global_show__"
 class PopoverViewController: NSViewController {
 
     private var addMenu: NSMenu = NSMenu()
+    @IBOutlet weak var clipView: NSClipView!
+    @IBOutlet weak var scrollView: NSScrollView!
     @IBOutlet weak var tableView: NSTableView!
     @IBOutlet weak var addButton: NSButton!
     @IBOutlet weak var removeButton: NSButton!
@@ -20,7 +22,8 @@ class PopoverViewController: NSViewController {
     @IBOutlet weak var toggleWindowShortcut: MASShortcutView!
     private var toggleWindowShortcutWatcher: NSKeyValueObservation!
 
-    // Local configuration values.
+    // Local configuration properties.
+    var sequenceEditor: SequenceViewController?
     @IBOutlet weak var hideWithShortcutWhenActive: NSButton!
     @IBOutlet weak var showOnScreenWithMouse: NSButton!
     @IBOutlet weak var hideWhenDeactivated: NSButton!
@@ -62,6 +65,11 @@ class PopoverViewController: NSViewController {
         }
     }
 
+    @IBAction func onShortcutClick(_ sender: Any) {
+        if let button = sender as? ShortcutButton, let index = button.index {
+            showSequenceEditor(for: state.entries[index])
+        }
+    }
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -87,21 +95,43 @@ class PopoverViewController: NSViewController {
     }
 
     override func viewWillDisappear() {
+        sequenceEditor?.slideOutAndRemove()
         state.saveToDisk()
     }
 
-    func setupToggleWindowShortcut() {
-        var isRecording = false
+    var isSequenceEditorActive: Bool {
+        get { return sequenceEditor != nil }
+    }
 
+    func showSequenceEditor(for entry: ApplicationEntry) {
+        if !isSequenceEditorActive {
+            sequenceEditor = SequenceViewController()
+            sequenceEditor!.entry = entry
+            sequenceEditor!.slideInAndAdd(to: clipView)
+
+            sequenceEditor!.afterAdded = {
+                state.unregisterShortcuts()
+                self.removeButton.isEnabled = true
+            }
+            sequenceEditor!.beforeRemoved = {
+                self.removeButton.isEnabled = self.tableView.selectedRowIndexes.count > 0
+                self.reloadView()
+            }
+            sequenceEditor!.afterRemoved = {
+                state.registerShortcuts()
+                self.sequenceEditor = nil
+            }
+        }
+    }
+
+    func setupToggleWindowShortcut() {
         toggleWindowShortcut.style = MASShortcutViewStyleTexturedRect
         toggleWindowShortcut.associatedUserDefaultsKey = toggleWindowShortcutKey
 
-        toggleWindowShortcutWatcher = toggleWindowShortcut.observe(\.isRecording) { _, _ in
-            isRecording = self.toggleWindowShortcut.isRecording
-        }
+        toggleWindowShortcutWatcher = toggleWindowShortcut.observe(\.isRecording, changeHandler: state.onRecordingChange)
         toggleWindowShortcut.shortcutValueChange = { _ in
             MASShortcutBinder.shared().bindShortcut(withDefaultsKey: toggleWindowShortcutKey, toAction: {
-                if !isRecording { self.appDelegate.togglePreferencesPopover() }
+                if state.isEnabled { self.appDelegate.togglePreferencesPopover() }
             })
         }
         toggleWindowShortcut.shortcutValueChange(nil)
@@ -111,6 +141,7 @@ class PopoverViewController: NSViewController {
         appDelegate.popover.appearance = NSAppearance.init(named: flag ? .vibrantDark : .aqua)
         boxWrapper.isTransparent = flag
         tableView.reloadData()
+        sequenceEditor?.tableView.reloadData()
     }
 
     func reloadView() {
@@ -121,13 +152,22 @@ class PopoverViewController: NSViewController {
     }
 
     @IBAction func onAddClick(_ sender: NSButton) {
-        addMenu.popUp(positioning: addMenu.item(at: 0), at: NSEvent.mouseLocation, in: nil)
+        if isSequenceEditorActive {
+            sequenceEditor!.addShortcut()
+        } else {
+            addMenu.popUp(positioning: addMenu.item(at: 0), at: NSEvent.mouseLocation, in: nil)
+        }
     }
 
     @IBAction func onRemoveClick(_ sender: NSButton) {
-        for index in tableView.selectedRowIndexes.sorted(by: { $0 > $1 }) {
-            state.entries.remove(at: index).unregister()
-            tableView.reloadData()
+        if isSequenceEditorActive {
+            sequenceEditor!.removeShortcut()
+        } else {
+            for index in tableView.selectedRowIndexes.sorted(by: { $0 > $1 }) {
+                state.entries.remove(at: index)
+                state.registerShortcuts()
+                tableView.reloadData()
+            }
         }
     }
     
@@ -210,8 +250,8 @@ extension PopoverViewController: NSTableViewDataSource {
 
 extension PopoverViewController: NSTableViewDelegate {
     fileprivate enum CellIdentifiers {
-        static let ApplicationCell = "ApplicationCellID"
-        static let ShortcutCell = "ShortcutCellID"
+        static let ApplicationCell = "ApplicationCell"
+        static let ShortcutCell = "ShortcutCell"
     }
 
     func tableViewSelectionDidChange(_ notification: Notification) {
@@ -275,7 +315,14 @@ extension PopoverViewController: NSTableViewDelegate {
 
         // Shortcut column:
         if tableColumn == tableView.tableColumns[1] {
-            return item.shortcutView
+            if let cell = tableView.makeView(withIdentifier: .init(CellIdentifiers.ShortcutCell), owner: nil) as? NSTableCellView {
+                if let button = cell.subviews.first as? ShortcutButton {
+                    button.index = row
+                    button.title = item.shortcutString ?? "click to configure"
+                    button.action = #selector(onShortcutClick(_:))
+                }
+                return cell
+            }
         }
 
         return nil

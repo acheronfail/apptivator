@@ -14,10 +14,13 @@
 		15492103207B53AE00E45BBC /* Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15492102207B53AE00E45BBC /* Util.swift */; };
 		155D2C03204F61220087478B /* Credits.rtfd in Resources */ = {isa = PBXBuildFile; fileRef = 155D2C02204F61220087478B /* Credits.rtfd */; };
 		1561AED2207615AC00C69338 /* UIOverrides.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1561AED1207615AC00C69338 /* UIOverrides.swift */; };
+		159ED109207E379D005489ED /* SequenceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 159ED107207E379D005489ED /* SequenceViewController.swift */; };
+		159ED10A207E379D005489ED /* SequenceViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 159ED108207E379D005489ED /* SequenceViewController.xib */; };
 		159F304C2079A0E5000BD387 /* ApplicationEntryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 159F304B2079A0E5000BD387 /* ApplicationEntryTests.swift */; };
 		159F304E2079A111000BD387 /* AppDelegateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 159F304D2079A111000BD387 /* AppDelegateTests.swift */; };
 		159F30502079A12D000BD387 /* PopoverViewControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 159F304F2079A12D000BD387 /* PopoverViewControllerTests.swift */; };
 		159F30522079A147000BD387 /* ApplicationStateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 159F30512079A147000BD387 /* ApplicationStateTests.swift */; };
+		15A8D9722083624600D55A9B /* Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15A8D9712083624600D55A9B /* Helpers.swift */; };
 		15BB82A4204E512E0039B4E2 /* AXSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 15BB82A0204E512E0039B4E2 /* AXSwift.framework */; };
 		15BB82A5204E512E0039B4E2 /* AXSwift.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 15BB82A0204E512E0039B4E2 /* AXSwift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		15BB82A8204E512E0039B4E2 /* SwiftyJSON.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 15BB82A2204E512E0039B4E2 /* SwiftyJSON.framework */; };
@@ -65,10 +68,13 @@
 		15492102207B53AE00E45BBC /* Util.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Util.swift; sourceTree = "<group>"; };
 		155D2C02204F61220087478B /* Credits.rtfd */ = {isa = PBXFileReference; lastKnownFileType = wrapper.rtfd; path = Credits.rtfd; sourceTree = "<group>"; };
 		1561AED1207615AC00C69338 /* UIOverrides.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIOverrides.swift; sourceTree = "<group>"; };
+		159ED107207E379D005489ED /* SequenceViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SequenceViewController.swift; sourceTree = "<group>"; };
+		159ED108207E379D005489ED /* SequenceViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SequenceViewController.xib; sourceTree = "<group>"; };
 		159F304B2079A0E5000BD387 /* ApplicationEntryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApplicationEntryTests.swift; sourceTree = "<group>"; };
 		159F304D2079A111000BD387 /* AppDelegateTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegateTests.swift; sourceTree = "<group>"; };
 		159F304F2079A12D000BD387 /* PopoverViewControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopoverViewControllerTests.swift; sourceTree = "<group>"; };
 		159F30512079A147000BD387 /* ApplicationStateTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApplicationStateTests.swift; sourceTree = "<group>"; };
+		15A8D9712083624600D55A9B /* Helpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Helpers.swift; sourceTree = "<group>"; };
 		15B4E870207994AF0024FDE4 /* ApptivatorTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ApptivatorTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		15B4E874207994AF0024FDE4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		15BB82A0204E512E0039B4E2 /* AXSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AXSwift.framework; path = Carthage/Build/Mac/AXSwift.framework; sourceTree = "<group>"; };
@@ -106,6 +112,19 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		159ED10B207EB2EF005489ED /* UI */ = {
+			isa = PBXGroup;
+			children = (
+				15F39F3B204CB72D00847CD5 /* PopoverViewController.swift */,
+				159ED107207E379D005489ED /* SequenceViewController.swift */,
+				1561AED1207615AC00C69338 /* UIOverrides.swift */,
+				B3B4C2C41E25894B009F8E4E /* PreferencesPopover.xib */,
+				159ED108207E379D005489ED /* SequenceViewController.xib */,
+				154920FF207A399F00E45BBC /* MultiMenuItemController.xib */,
+			);
+			path = UI;
+			sourceTree = "<group>";
+		};
 		15B4E871207994AF0024FDE4 /* ApptivatorTests */ = {
 			isa = PBXGroup;
 			children = (
@@ -113,6 +132,7 @@
 				159F304F2079A12D000BD387 /* PopoverViewControllerTests.swift */,
 				159F304B2079A0E5000BD387 /* ApplicationEntryTests.swift */,
 				159F30512079A147000BD387 /* ApplicationStateTests.swift */,
+				15A8D9712083624600D55A9B /* Helpers.swift */,
 				15B4E874207994AF0024FDE4 /* Info.plist */,
 			);
 			path = ApptivatorTests;
@@ -144,15 +164,12 @@
 		B3B4C2BF1E25894B009F8E4E /* Apptivator */ = {
 			isa = PBXGroup;
 			children = (
+				159ED10B207EB2EF005489ED /* UI */,
 				B3B4C2C01E25894B009F8E4E /* AppDelegate.swift */,
-				15F39F3B204CB72D00847CD5 /* PopoverViewController.swift */,
 				1537F5E0204C8D860056EE50 /* ApplicationEntry.swift */,
 				15FC8CC7204E2E2C000B5E1E /* ApplicationState.swift */,
-				1561AED1207615AC00C69338 /* UIOverrides.swift */,
 				15492102207B53AE00E45BBC /* Util.swift */,
 				B3B4C2C21E25894B009F8E4E /* Assets.xcassets */,
-				B3B4C2C41E25894B009F8E4E /* PreferencesPopover.xib */,
-				154920FF207A399F00E45BBC /* MultiMenuItemController.xib */,
 				155D2C02204F61220087478B /* Credits.rtfd */,
 				B3B4C2C71E25894B009F8E4E /* Info.plist */,
 			);
@@ -256,6 +273,7 @@
 				B3B4C2C31E25894B009F8E4E /* Assets.xcassets in Resources */,
 				155D2C03204F61220087478B /* Credits.rtfd in Resources */,
 				B3B4C2C61E25894B009F8E4E /* PreferencesPopover.xib in Resources */,
+				159ED10A207E379D005489ED /* SequenceViewController.xib in Resources */,
 				15492101207A399F00E45BBC /* MultiMenuItemController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -286,6 +304,7 @@
 				159F304E2079A111000BD387 /* AppDelegateTests.swift in Sources */,
 				159F30522079A147000BD387 /* ApplicationStateTests.swift in Sources */,
 				159F30502079A12D000BD387 /* PopoverViewControllerTests.swift in Sources */,
+				15A8D9722083624600D55A9B /* Helpers.swift in Sources */,
 				159F304C2079A0E5000BD387 /* ApplicationEntryTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -300,6 +319,7 @@
 				1561AED2207615AC00C69338 /* UIOverrides.swift in Sources */,
 				15FC8CC8204E2E2C000B5E1E /* ApplicationState.swift in Sources */,
 				1537F5E1204C8D860056EE50 /* ApplicationEntry.swift in Sources */,
+				159ED109207E379D005489ED /* SequenceViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
