@@ -94,6 +94,7 @@ class PopoverViewController: NSViewController {
         }
     }
 
+    // TODO: turn off any currentlyRecording artefacts, etc
     override func viewWillDisappear() {
         sequenceEditor?.slideOutAndRemove()
         state.saveToDisk()
@@ -106,28 +107,30 @@ class PopoverViewController: NSViewController {
     func showSequenceEditor(for entry: ApplicationEntry) {
         if !isSequenceEditorActive {
             sequenceEditor = SequenceViewController()
-            sequenceEditor!.entry = entry
-            sequenceEditor!.slideInAndAdd(to: clipView)
-
-            sequenceEditor!.afterAdded = {
+            sequenceEditor!.beforeAdded = {
                 state.unregisterShortcuts()
-                self.removeButton.isEnabled = true
+                self.addButton.isEnabled = false
+                self.removeButton.isEnabled = false
+                self.tableView.selectRowIndexes([], byExtendingSelection: false)
             }
             sequenceEditor!.beforeRemoved = {
+                state.registerShortcuts()
+                self.addButton.isEnabled = true
                 self.removeButton.isEnabled = self.tableView.selectedRowIndexes.count > 0
                 self.reloadView()
             }
             sequenceEditor!.afterRemoved = {
-                state.registerShortcuts()
                 self.sequenceEditor = nil
             }
+
+            sequenceEditor!.entry = entry
+            sequenceEditor!.slideInAndAdd(to: clipView)
         }
     }
 
     func setupToggleWindowShortcut() {
         toggleWindowShortcut.style = MASShortcutViewStyleTexturedRect
         toggleWindowShortcut.associatedUserDefaultsKey = toggleWindowShortcutKey
-
         toggleWindowShortcutWatcher = toggleWindowShortcut.observe(\.isRecording, changeHandler: state.onRecordingChange)
         toggleWindowShortcut.shortcutValueChange = { _ in
             MASShortcutBinder.shared().bindShortcut(withDefaultsKey: toggleWindowShortcutKey, toAction: {
@@ -152,22 +155,16 @@ class PopoverViewController: NSViewController {
     }
 
     @IBAction func onAddClick(_ sender: NSButton) {
-        if isSequenceEditorActive {
-            sequenceEditor!.addShortcut()
-        } else {
-            addMenu.popUp(positioning: addMenu.item(at: 0), at: NSEvent.mouseLocation, in: nil)
-        }
+        guard !isSequenceEditorActive else { return }
+        addMenu.popUp(positioning: addMenu.item(at: 0), at: NSEvent.mouseLocation, in: nil)
     }
 
     @IBAction func onRemoveClick(_ sender: NSButton) {
-        if isSequenceEditorActive {
-            sequenceEditor!.removeShortcut()
-        } else {
-            for index in tableView.selectedRowIndexes.sorted(by: { $0 > $1 }) {
-                state.entries.remove(at: index)
-                state.registerShortcuts()
-                tableView.reloadData()
-            }
+        guard !isSequenceEditorActive else { return }
+        for index in tableView.selectedRowIndexes.sorted(by: { $0 > $1 }) {
+            state.entries.remove(at: index)
+            state.registerShortcuts()
+            tableView.reloadData()
         }
     }
     

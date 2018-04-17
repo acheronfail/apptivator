@@ -110,3 +110,13 @@ func setRect(ofElement element: UIElement, rect: CGRect) {
         print("Failed to set frame of UIElement: \(element), \(error)")
     }
 }
+
+// A simple helper to run animations with the same context configration.
+func runAnimation(_ f: (NSAnimationContext) -> Void, done: (() -> Void)?) {
+    NSAnimationContext.runAnimationGroup({ context in
+        context.duration = 0.5
+        context.timingFunction = .init(name: kCAMediaTimingFunctionEaseInEaseOut)
+        context.allowsImplicitAnimation = true
+        f(context)
+    }, completionHandler: done)
+}

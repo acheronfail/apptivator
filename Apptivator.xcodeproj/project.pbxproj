@@ -116,10 +116,10 @@
 			isa = PBXGroup;
 			children = (
 				15F39F3B204CB72D00847CD5 /* PopoverViewController.swift */,
-				159ED107207E379D005489ED /* SequenceViewController.swift */,
-				1561AED1207615AC00C69338 /* UIOverrides.swift */,
 				B3B4C2C41E25894B009F8E4E /* PreferencesPopover.xib */,
+				159ED107207E379D005489ED /* SequenceViewController.swift */,
 				159ED108207E379D005489ED /* SequenceViewController.xib */,
+				1561AED1207615AC00C69338 /* UIOverrides.swift */,
 				154920FF207A399F00E45BBC /* MultiMenuItemController.xib */,
 			);
 			path = UI;
