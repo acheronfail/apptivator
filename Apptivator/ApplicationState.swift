@@ -28,6 +28,12 @@ import LaunchAtLogin
     private var launchAppAtLogin = LaunchAtLogin.isEnabled
     // Don't fire any shortcuts if user is recording a new shortcut.
     private var currentlyRecording = false
+    // This is intentionally public and prefixed with "_" because *it should not be used*, except as
+    // a workaround for a limitation of MASShortcut. See https://github.com/acheronfail/apptivator/pull/32
+    var _currentlyRecording: Bool {
+        get { return currentlyRecording }
+        set { currentlyRecording = newValue }
+    }
 
     // Whether or not the app is globally enabled.
     private var _isEnabled = true
