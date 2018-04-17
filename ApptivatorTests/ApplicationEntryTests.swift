@@ -59,7 +59,6 @@ class ApplicationEntryTests: XCTestCase {
 
     func testShortcutStrings() {
         let shortcutStrings = ["nil", "⇧⌘S", "F2"]
-        // TODO: zip ?
         for (i, entry) in getSampleEntries().enumerated() {
             let str = entry.shortcutString ?? "nil"
             XCTAssert(str == shortcutStrings[i], "\(str) != \(shortcutStrings[i])")

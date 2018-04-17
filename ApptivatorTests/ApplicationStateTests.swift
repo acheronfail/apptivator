@@ -32,7 +32,7 @@ class ApplicationStateTests: XCTestCase {
         ]
         for (i, pair) in sequences.enumerated() {
             let (shouldConflict, sequence) = pair
-            let didConflict = state.checkForConflictingSequence(sequence) != nil
+            let didConflict = state.checkForConflictingSequence(sequence, excluding: nil) != nil
             XCTAssert(didConflict == shouldConflict, "Incorrect assertion at index: \(i)")
         }
     }
