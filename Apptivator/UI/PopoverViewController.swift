@@ -97,6 +97,9 @@ class PopoverViewController: NSViewController {
     override func viewWillDisappear() {
         sequenceEditor?.slideOutAndRemove()
         state.saveToDisk()
+        // Override currentlyRecording state when popover disappears. This is to handle when there
+        // are errors recording shortcuts. See https://github.com/acheronfail/apptivator/pull/32
+        state._currentlyRecording = false
     }
 
     var isSequenceEditorActive: Bool {
