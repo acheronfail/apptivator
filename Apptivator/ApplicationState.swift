@@ -127,8 +127,8 @@ import LaunchAtLogin
     }
 
     // TODO: this
-    // TODO: don't compare entry against itself (set A.app, conflicts with A.app)
     func checkForConflictingSequence(_ otherSequence: [MASShortcutView], excluding otherEntry: ApplicationEntry?) -> ApplicationEntry? {
+        if otherSequence.count == 0 { return nil }
         return self.entries.first(where: { entry in
             if entry.sequence.count == 0 || entry === otherEntry { return false }
             var wasConflict = true
