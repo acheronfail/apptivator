@@ -42,7 +42,7 @@
 \pard\pardeftab720\qc\partightenfactor0
 
 \b \cf2 showPopoverOnScreenWithMouse: 
-\i\b0 Bool\
+\i\b0 Bool = false\
 \pard\pardeftab720\qc\partightenfactor0
 
 \i0 \cf2 Makes the popover view (the configure shortcuts panel) always popup in the top-right corner of the monitor which contains the mouse. \
@@ -52,17 +52,29 @@
 \b \cf0 \kerning1\expnd0\expndtw0 leftClickToggles
 \b0 \cf2 \expnd0\expndtw0\kerning0
 : 
-\i \cf0 \kerning1\expnd0\expndtw0 Bool\
+\i \cf0 \kerning1\expnd0\expndtw0 Bool = false\
 \pard\pardeftab720\qc\partightenfactor0
 
 \i0 \cf2 \expnd0\expndtw0\kerning0
 Swaps the left and right click buttons when clicking on the menu bar icon. So left-clicking will enable/disable Apptivator, and right-clicking will open the dropdown menu.\
 \
+\pard\pardeftab720\qc\partightenfactor0
 
 \b \cf0 \kerning1\expnd0\expndtw0 matchAppleInterfaceStyle
 \b0 \cf2 \expnd0\expndtw0\kerning0
 : 
-\i \cf0 \kerning1\expnd0\expndtw0 Bool
+\i \cf0 \kerning1\expnd0\expndtw0 Bool = false
 \i0 \cf2 \expnd0\expndtw0\kerning0
 \
-Enabling this will make Apptivator automatically switch between light/dark mode to match the menubar and dock.}
+Enabling this will make Apptivator automatically switch between light/dark mode to match the menubar and dock.\
+\
+\pard\pardeftab720\qc\partightenfactor0
+
+\b \cf0 \kerning1\expnd0\expndtw0 sequentialShortcutDelay
+\b0 \cf2 \expnd0\expndtw0\kerning0
+: 
+\i \cf0 \kerning1\expnd0\expndtw0 Float = 0.5
+\i0 \cf2 \expnd0\expndtw0\kerning0
+\
+How long (in seconds) Apptivator should wait for the next shortcut in a sequence, before resetting back to its initial state.\
+Set this to a higher value to have more time to press the shortcuts.}

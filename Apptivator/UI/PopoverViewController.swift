@@ -94,7 +94,6 @@ class PopoverViewController: NSViewController {
         }
     }
 
-    // TODO: turn off any currentlyRecording artefacts, etc
     override func viewWillDisappear() {
         sequenceEditor?.slideOutAndRemove()
         state.saveToDisk()
