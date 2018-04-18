@@ -35,7 +35,7 @@ let ICON_OFF = setupMenuBarIcon(NSImage(named: NSImage.Name(rawValue: "icon-off"
             RotatingLogFileConfiguration(minimumSeverity: minimumSeverity, daysToKeep: 7, directoryPath: LOG_PATH.path)
         ]
         #if DEBUG
-        logConfigurations.append(XcodeLogConfiguration())
+        logConfigurations.append(XcodeLogConfiguration(minimumSeverity: .debug))
         #endif
         Log.enable(configuration: logConfigurations)
         state.loadFromDisk()

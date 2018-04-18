@@ -139,6 +139,7 @@ class ApplicationEntry: CustomDebugStringConvertible {
                 // create an observer to watch it for events. We have to wait since we cannot
                 // start observing an application if it hasn't fully launched.
                 // TODO: there's probably a better way of doing this.
+                let _ = launchApplication(at: self.url)
                 DispatchQueue.main.asyncAfter(deadline: .now() + APP_LAUNCH_DELAY) {
                     self.createObserver(findRunningApp(withURL: self.url))
                 }
