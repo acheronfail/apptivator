@@ -3,10 +3,17 @@
 //  Apptivator
 //
 
+let SEQUENCE_DETAIL_NO_SHORTCUT = "There must be at least one shortcut in a sequence."
 let SEQUENCE_DETAIL_TEXT = """
-Your app will be activated after hitting the sequences in order.
-With a certain delay.
+To use a seqeunce, press the first shortcut (and release it), then press the next, and so on, until \
+you activate the application.
 """
+
+enum UIStates {
+    case Okay
+    case NoShortcuts
+    case ConflictingShortcuts
+}
 
 class SequenceViewController: NSViewController {
     // View animation lifecycle hooks.
@@ -16,6 +23,7 @@ class SequenceViewController: NSViewController {
     var afterRemoved: (() -> Void)?
 
     var referenceView: NSView!
+    var defaultTextColor: NSColor!
 
     var list: [(MASShortcutView, NSKeyValueObservation)] = []
     var listAsSequence: [MASShortcutView] {
@@ -23,7 +31,7 @@ class SequenceViewController: NSViewController {
         get { return list.compactMap({ $0.0.shortcutValue != nil ? $0.0 : nil }) }
     }
     var entry: ApplicationEntry! {
-        // Copy the entry's sequence (adding another shortcut on at the end).
+        // Copy the entry's sequence.
         didSet {
             list = entry.sequence.map({
                 newShortcut(withKeyCode: $0.shortcutValue.keyCode, modifierFlags: $0.shortcutValue.modifierFlags)
@@ -61,8 +69,11 @@ class SequenceViewController: NSViewController {
 
         imageView.image = entry.icon
 
-        titleTextField.stringValue = "Editing sequence for \(entry.name)"
+        titleTextField.stringValue = entry.name
         detailTextField.stringValue = SEQUENCE_DETAIL_TEXT
+        defaultTextColor = detailTextField.textColor
+
+        updateList(self)
     }
 
     // This should be the only way to create shortcuts to add to the editable list. Each shortcut is
@@ -73,13 +84,13 @@ class SequenceViewController: NSViewController {
         if keyCode != nil && modifierFlags != nil {
             view.shortcutValue = MASShortcut(keyCode: keyCode!, modifierFlags: modifierFlags!)
         }
-        view.shortcutValueChange = onChange
+        view.shortcutValueChange = updateList
         let watcher = view.observe(\.isRecording, changeHandler: state.onRecordingChange)
         return (view, watcher)
     }
 
     // Whenever a shortcut's value changes, update the list.
-    func onChange(_ view: MASShortcutView?) {
+    func updateList(_ sender: Any?) {
         // Remove nil entries from list (except last).
         for (i, _) in list.enumerated().reversed() {
             if list.count > 1 && list[i].0.shortcutValue == nil {
@@ -95,15 +106,12 @@ class SequenceViewController: NSViewController {
         // Check for any conflicting entries.
         let sequence = listAsSequence
         if sequence.count == 0 {
-            saveButton.isEnabled = false
+            updateUIWith(reason: .NoShortcuts, nil)
         } else {
             if let conflictingEntry = state.checkForConflictingSequence(sequence, excluding: entry) {
-                showConflictingEntry(conflictingEntry)
-                saveButton.isEnabled = false
+                updateUIWith(reason: .ConflictingShortcuts, conflictingEntry)
             } else {
-                detailTextField.textColor = .black
-                detailTextField.stringValue = SEQUENCE_DETAIL_TEXT
-                saveButton.isEnabled = true
+                updateUIWith(reason: .Okay, nil)
             }
         }
 
@@ -113,14 +121,28 @@ class SequenceViewController: NSViewController {
     // Update the view with information regarding a conflicting entry. Entries' sequences conflict
     // when you cannot fully type sequence A without first calling sequence B (this makes it
     // impossible to call sequence A, and is therefore forbidden).
-    func showConflictingEntry(_ conflictingEntry: ApplicationEntry) {
-        // TODO: a nicer attributed string ?
-        detailTextField.textColor = .red
-        detailTextField.stringValue = """
-        Current sequence conflicts with:
-        \(conflictingEntry.name)'s
-        Sequence: "\(conflictingEntry.shortcutString!)"
-        """
+    func updateUIWith(reason: UIStates, _ conflictingEntry: ApplicationEntry?) {
+        switch reason {
+        case .ConflictingShortcuts:
+            assert(conflictingEntry != nil, "conflictingEntry must be != nil")
+            saveButton.isEnabled = false
+            detailTextField.textColor = .red
+
+            let boldAttribute = [NSAttributedStringKey.font: NSFont.boldSystemFont(ofSize: 11)]
+            let attrString = NSMutableAttributedString(string: "Current sequence conflicts with:\n")
+            attrString.append(NSAttributedString(string: conflictingEntry!.name, attributes: boldAttribute))
+            attrString.append(NSAttributedString(string: ", which has the sequence:\n"))
+            attrString.append(NSAttributedString(string: conflictingEntry!.shortcutString!, attributes: boldAttribute))
+            detailTextField.attributedStringValue = attrString
+        case .NoShortcuts:
+            saveButton.isEnabled = false
+            detailTextField.textColor = .red
+            detailTextField.stringValue = SEQUENCE_DETAIL_NO_SHORTCUT
+        case .Okay:
+            saveButton.isEnabled = true
+            detailTextField.textColor = defaultTextColor
+            detailTextField.stringValue = SEQUENCE_DETAIL_TEXT
+        }
     }
 
     // Animate entering the view, making it the size of `referenceView` and sliding over the top

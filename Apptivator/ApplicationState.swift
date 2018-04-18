@@ -140,7 +140,7 @@ import LaunchAtLogin
 
     // This checks the given sequences to see if it conflicts with another sequence. Shortcut
     // sequences must have unique prefixes, so that each one can be distinguished from another.
-    // See `SequenceViewController.showConflictingEntry()`.
+    // See `SequenceViewController.updateUIWith()`.
     func checkForConflictingSequence(_ otherSequence: [MASShortcutView], excluding otherEntry: ApplicationEntry?) -> ApplicationEntry? {
         // It doesn't make sense to call this function with an empty sequence.
         assert(otherSequence.count > 0, "tried to check sequence with count == 0")
