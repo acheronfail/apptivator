@@ -20,6 +20,13 @@
 */
 @property(assign) BOOL allowAnyShortcutWithOptionModifier;
 
+/**
+ Set to `YES` if you want to accept any shortcut whatsoever.
+
+ `NO` by default, since this will override several shortcuts/keys used by the system.
+ */
+@property(assign) BOOL allowAnyShortcut;
+
 + (instancetype) sharedValidator;
 
 - (BOOL) isShortcutValid: (MASShortcut*) shortcut;

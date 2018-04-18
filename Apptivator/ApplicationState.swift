@@ -52,9 +52,10 @@ import LaunchAtLogin
             "showPopoverOnScreenWithMouse": false
         ])
 
-        // Allow more shortcuts than normal.
-        // NOTE: allowing *even more* shortcuts would require a change to the MASShortcut Framework.
-        MASShortcutValidator.shared().allowAnyShortcutWithOptionModifier = true
+        // Allow all shortcuts.
+        // NOTE: this feature comes from a custom fork of MASShortcut.
+        // See https://github.com/acheronfail/MASShortcut/tree/custom
+        MASShortcutValidator.shared().allowAnyShortcut = true
     }
 
     // Disable all shortcuts when the user is recording a shortcut.

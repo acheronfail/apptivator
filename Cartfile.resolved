@@ -1,4 +1,4 @@
 github "SwiftyJSON/SwiftyJSON" "4.0.0"
-github "shpakovski/MASShortcut" "2.3.6"
+github "acheronfail/MASShortcut" "2.3.6-custom"
 github "sindresorhus/LaunchAtLogin" "v2.0.0"
 github "tmandry/AXSwift" "0.2.1"

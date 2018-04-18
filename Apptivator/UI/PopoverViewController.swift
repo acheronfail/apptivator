@@ -131,7 +131,7 @@ class PopoverViewController: NSViewController {
     }
 
     func setupToggleWindowShortcut() {
-        toggleWindowShortcut.style = MASShortcutViewStyleTexturedRect
+        toggleWindowShortcut.style = .texturedRect
         toggleWindowShortcut.associatedUserDefaultsKey = toggleWindowShortcutKey
         toggleWindowShortcutWatcher = toggleWindowShortcut.observe(\.isRecording, changeHandler: state.onRecordingChange)
         toggleWindowShortcut.shortcutValueChange = { _ in

@@ -15,6 +15,8 @@
 
 - (BOOL) isShortcutValid: (MASShortcut*) shortcut
 {
+    if (_allowAnyShortcut) return YES;
+
     NSUInteger keyCode = [shortcut keyCode];
     NSUInteger modifiers = [shortcut modifierFlags];
 
