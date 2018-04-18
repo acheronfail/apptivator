@@ -3,6 +3,8 @@
 //  Apptivator
 //
 
+import CleanroomLogger
+
 let APPLE_INTERFACE_STYLE = "AppleInterfaceStyle"
 
 // Launches the application at the given url. First tries to launch it as if it were a an
@@ -27,7 +29,7 @@ func launchApplication(at url: URL) -> NSRunningApplication? {
                     process.launch()
                 }
             } catch {
-                print("Could not launch application at \(url)\n\(error)\n")
+                Log.error?.message("Could not launch application at \(url): \(error)")
             }
         }
     }
@@ -107,7 +109,7 @@ func setRect(ofElement element: UIElement, rect: CGRect) {
         try element.setAttribute(.position, value: rect.origin)
         try element.setAttribute(.size, value: rect.size)
     } catch {
-        print("Failed to set frame of UIElement: \(element), \(error)")
+        Log.error?.message("Failed to set frame of UIElement: \(element), \(error)")
     }
 }
 
@@ -119,4 +121,11 @@ func runAnimation(_ f: (NSAnimationContext) -> Void, done: (() -> Void)?) {
         context.allowsImplicitAnimation = true
         f(context)
     }, completionHandler: done)
+}
+
+// Make menu bar images templates with 16x16 dimensions.
+func setupMenuBarIcon(_ image: NSImage?) -> NSImage? {
+    image?.isTemplate = true
+    image?.size = NSSize(width: 16, height: 16)
+    return image
 }

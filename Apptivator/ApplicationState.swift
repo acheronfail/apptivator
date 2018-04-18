@@ -6,6 +6,7 @@
 import SwiftyJSON
 import MASShortcut
 import LaunchAtLogin
+import CleanroomLogger
 
 @objcMembers class ApplicationState: NSObject {
     // Location of our serialised application state.
@@ -56,6 +57,8 @@ import LaunchAtLogin
         // NOTE: this feature comes from a custom fork of MASShortcut.
         // See https://github.com/acheronfail/MASShortcut/tree/custom
         MASShortcutValidator.shared().allowAnyShortcut = true
+
+        Log.info?.message("ApplicationState initialised at \(url.path)")
     }
 
     // Disable all shortcuts when the user is recording a shortcut.
@@ -85,6 +88,7 @@ import LaunchAtLogin
     // Only register the shortcuts that are expected. Ideally this should be a private function, but
     // we need to expose it here s in order to write tests for its behaviour.
     func registerShortcuts(atIndex index: Int, last: (UInt, UInt)?) {
+        Log.debug?.message("Registering sequence at index: \(index), last: \(String(describing: last)).")
         self.unregisterShortcuts()
 
         // Bind new shortcuts.
@@ -118,6 +122,7 @@ import LaunchAtLogin
             self.timer = Timer.scheduledTimer(withTimeInterval: interval, repeats: false) { _ in
                 self.timer = nil
                 self.registerShortcuts(atIndex: 0, last: nil)
+                Log.debug?.message("Resetting shortcut state.")
             }
         }
     }
@@ -132,6 +137,7 @@ import LaunchAtLogin
         if i == entry.sequence.count {
             entry.apptivate()
             self.registerShortcuts(atIndex: 0, last: nil)
+            Log.debug?.message("Apptivating \(entry.name).")
         } else {
             // Advance shortcut state with last shortcut and the number of shortcuts hit.
             let last = (shortcut.keyCode, shortcut.modifierFlags)
@@ -169,7 +175,7 @@ import LaunchAtLogin
             // Ignore error when there's no file.
             let err = error as NSError
             if err.domain != NSCocoaErrorDomain && err.code != CocoaError.fileReadNoSuchFile.rawValue {
-                print("Unexpected error loading application state from disk: \(error)")
+                Log.error?.message("Unexpected error loading application state from disk: \(error)")
             }
         }
 
@@ -188,13 +194,15 @@ import LaunchAtLogin
                 case "entries":
                     entries = ApplicationEntry.deserialiseList(fromJSON: value)
                 default:
-                    print("unknown key '\(key)' encountered in json")
+                    Log.warning?.message("unknown key '\(key)' encountered in json")
                 }
             }
 
             if state.defaults.bool(forKey: "matchAppleInterfaceStyle") {
                 darkModeEnabled = appleInterfaceStyleIsDark()
             }
+
+            Log.info?.message("Loaded config from disk")
         }
     }
 
@@ -210,21 +218,45 @@ import LaunchAtLogin
                 let configDir = savePath.deletingLastPathComponent()
                 try FileManager.default.createDirectory(atPath: configDir.path, withIntermediateDirectories: true, attributes: nil)
                 try jsonString.write(to: savePath, atomically: false, encoding: .utf8)
-                print("Saved config to disk")
+                Log.info?.message("Saved config to disk")
             } else {
-                print("Could not serialise config")
+                Log.error?.message("Could not serialise config")
             }
         } catch {
-            print("Unexpected error saving application state to disk: \(error)")
+            Log.error?.message("Unexpected error saving application state to disk: \(error)")
         }
+    }
+
+    // When running tests, use a temporary logging path.
+    static func defaultLogPath() -> URL {
+        var url: URL
+        if ProcessInfo.processInfo.environment["TEST"] != nil {
+            url = URL(fileURLWithPath: "\(NSTemporaryDirectory())\(APP_NAME)-\(UUID().uuidString)-logs/")
+        } else {
+            url = URL(fileURLWithPath: "\(NSHomeDirectory())/Library/Preferences/\(APP_NAME)/logs")
+        }
+
+        // Create directory if it doesn't already exist.
+        do {
+            try FileManager.default.createDirectory(at: url, withIntermediateDirectories: true, attributes: nil)
+        } catch {
+            Log.error?.message("Unexpected error creating log directory: \(error)")
+        }
+
+        Log.info?.message("Default Log Path: \(url.path)")
+        return url
     }
 
     // When running tests, use a temporary config file.
     static func defaultConfigurationPath() -> URL {
+        var url: URL
         if ProcessInfo.processInfo.environment["TEST"] != nil {
-            return URL(fileURLWithPath: "\(NSTemporaryDirectory())\(APP_NAME)-\(UUID().uuidString).json")
+            url = URL(fileURLWithPath: "\(NSTemporaryDirectory())\(APP_NAME)-\(UUID().uuidString).json")
+        } else {
+            url = URL(fileURLWithPath: "\(NSHomeDirectory())/Library/Preferences/\(APP_NAME)/configuration.json")
         }
 
-        return URL(fileURLWithPath: "\(NSHomeDirectory())/Library/Preferences/\(APP_NAME)/configuration.json")
+        Log.info?.message("Default Config Path: \(url.path)")
+        return url
     }
 }

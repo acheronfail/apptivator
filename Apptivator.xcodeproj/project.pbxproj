@@ -10,6 +10,8 @@
 		151859FE204F35C5007CD792 /* LaunchAtLogin.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 151859FD204F35C5007CD792 /* LaunchAtLogin.framework */; };
 		151859FF204F35C6007CD792 /* LaunchAtLogin.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 151859FD204F35C5007CD792 /* LaunchAtLogin.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		1537F5E1204C8D860056EE50 /* ApplicationEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1537F5E0204C8D860056EE50 /* ApplicationEntry.swift */; };
+		1547AC99208738310088701F /* CleanroomLogger.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1547AC972087382D0088701F /* CleanroomLogger.framework */; };
+		1547AC9A208738310088701F /* CleanroomLogger.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 1547AC972087382D0088701F /* CleanroomLogger.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		15492101207A399F00E45BBC /* MultiMenuItemController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 154920FF207A399F00E45BBC /* MultiMenuItemController.xib */; };
 		15492103207B53AE00E45BBC /* Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15492102207B53AE00E45BBC /* Util.swift */; };
 		155D2C03204F61220087478B /* Credits.rtfd in Resources */ = {isa = PBXBuildFile; fileRef = 155D2C02204F61220087478B /* Credits.rtfd */; };
@@ -53,6 +55,7 @@
 			files = (
 				15BB82A5204E512E0039B4E2 /* AXSwift.framework in Embed Frameworks */,
 				151859FF204F35C6007CD792 /* LaunchAtLogin.framework in Embed Frameworks */,
+				1547AC9A208738310088701F /* CleanroomLogger.framework in Embed Frameworks */,
 				15BB82AB204E512E0039B4E2 /* MASShortcut.framework in Embed Frameworks */,
 				15BB82A9204E512E0039B4E2 /* SwiftyJSON.framework in Embed Frameworks */,
 			);
@@ -64,6 +67,7 @@
 /* Begin PBXFileReference section */
 		151859FD204F35C5007CD792 /* LaunchAtLogin.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = LaunchAtLogin.framework; path = Carthage/Build/Mac/LaunchAtLogin.framework; sourceTree = "<group>"; };
 		1537F5E0204C8D860056EE50 /* ApplicationEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApplicationEntry.swift; sourceTree = "<group>"; };
+		1547AC972087382D0088701F /* CleanroomLogger.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CleanroomLogger.framework; path = Carthage/Build/Mac/CleanroomLogger.framework; sourceTree = "<group>"; };
 		154920FF207A399F00E45BBC /* MultiMenuItemController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MultiMenuItemController.xib; sourceTree = "<group>"; };
 		15492102207B53AE00E45BBC /* Util.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Util.swift; sourceTree = "<group>"; };
 		155D2C02204F61220087478B /* Credits.rtfd */ = {isa = PBXFileReference; lastKnownFileType = wrapper.rtfd; path = Credits.rtfd; sourceTree = "<group>"; };
@@ -104,6 +108,7 @@
 			files = (
 				15BB82A4204E512E0039B4E2 /* AXSwift.framework in Frameworks */,
 				151859FE204F35C5007CD792 /* LaunchAtLogin.framework in Frameworks */,
+				1547AC99208738310088701F /* CleanroomLogger.framework in Frameworks */,
 				15BB82AA204E512E0039B4E2 /* MASShortcut.framework in Frameworks */,
 				15BB82A8204E512E0039B4E2 /* SwiftyJSON.framework in Frameworks */,
 			);
@@ -112,6 +117,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		1547AC962087382D0088701F /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				1547AC972087382D0088701F /* CleanroomLogger.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		159ED10B207EB2EF005489ED /* UI */ = {
 			isa = PBXGroup;
 			children = (
@@ -149,6 +162,7 @@
 				B3B4C2BF1E25894B009F8E4E /* Apptivator */,
 				15B4E871207994AF0024FDE4 /* ApptivatorTests */,
 				B3B4C2BE1E25894B009F8E4E /* Products */,
+				1547AC962087382D0088701F /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};

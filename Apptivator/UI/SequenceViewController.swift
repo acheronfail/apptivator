@@ -51,13 +51,13 @@ class SequenceViewController: NSViewController {
         let sequence = listAsSequence
 
         // This is a sanity check: the save button should never be enabled without a valid sequence.
-        assert(sequence.count > 0, "sequence.count must be > 0")
+        assert(sequence.count > 0, "sequence.count must be > 0.")
 
         if state.checkForConflictingSequence(sequence, excluding: self.entry) == nil {
             entry.sequence = sequence
             slideOutAndRemove()
         } else {
-            assertionFailure("tried to save with a conflicting sequence")
+            assertionFailure("Tried to save with a conflicting sequence.")
         }
     }
 

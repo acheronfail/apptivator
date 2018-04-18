@@ -4,16 +4,18 @@
 //
 
 import SwiftyJSON
+import CleanroomLogger
 
 // Global application state.
 let APP_NAME = Bundle.main.infoDictionary![kCFBundleNameKey as String] as! String
+let LOG_PATH = ApplicationState.defaultLogPath()
 let CFG_PATH = ApplicationState.defaultConfigurationPath()
 let state = ApplicationState(atPath: CFG_PATH)
 
 let ENABLED_INDICATOR_ON = "\(APP_NAME): on"
 let ENABLED_INDICATOR_OFF = "\(APP_NAME): off"
-let ICON_ON = NSImage(named: NSImage.Name(rawValue: "icon-on"))
-let ICON_OFF = NSImage(named: NSImage.Name(rawValue: "icon-off"))
+let ICON_ON = setupMenuBarIcon(NSImage(named: NSImage.Name(rawValue: "icon-on")))
+let ICON_OFF = setupMenuBarIcon(NSImage(named: NSImage.Name(rawValue: "icon-off")))
 
 @NSApplicationMain class AppDelegate: NSObject, NSApplicationDelegate {
     @IBOutlet weak var popover: NSPopover!
@@ -27,10 +29,19 @@ let ICON_OFF = NSImage(named: NSImage.Name(rawValue: "icon-off"))
     // See @togglePreferencesPopover for why an invisible window exists.
     private let invisibleWindow = NSWindow(contentRect: NSMakeRect(0, 0, 1, 1), styleMask: .borderless, backing: .buffered, defer: false)
 
-    func applicationDidFinishLaunching(_ aNotification: Notification) {
-        setupIcon(ICON_ON)
-        setupIcon(ICON_OFF)
+    func applicationWillFinishLaunching(_ notification: Notification) {
+        let minimumSeverity: LogSeverity = state.defaults.bool(forKey: "debugMode") ? .debug : .info
+        var logConfigurations: [LogConfiguration] = [
+            RotatingLogFileConfiguration(minimumSeverity: minimumSeverity, daysToKeep: 7, directoryPath: LOG_PATH.path)
+        ]
+        #if DEBUG
+        logConfigurations.append(XcodeLogConfiguration())
+        #endif
+        Log.enable(configuration: logConfigurations)
+        state.loadFromDisk()
+    }
 
+    func applicationDidFinishLaunching(_ aNotification: Notification) {
         popover.delegate = self
         contextMenu.delegate = self
         contextMenu.autoenablesItems = false
@@ -44,18 +55,20 @@ let ICON_OFF = NSImage(named: NSImage.Name(rawValue: "icon-off"))
         menuBarItem.action = #selector(onMenuClick)
         menuBarItem.sendAction(on: [.leftMouseUp, .rightMouseUp])
 
-        state.loadFromDisk()
         enable(state.isEnabled)
         popoverViewController.reloadView()
 
         // Check for accessibility permissions.
         if !UIElement.isProcessTrusted(withPrompt: true) {
+            Log.info?.message("Application does not have Accessibility Permissions, requesting...")
             let alert = NSAlert()
             alert.messageText = "Action Required"
             alert.informativeText = "\(APP_NAME) requires access to the accessibility API in order to hide/show other application's windows.\n\nPlease open System Preferences and allow \(APP_NAME) access.\n\nSystem Preferences -> Security & Privacy -> Privacy"
             alert.alertStyle = .warning
             alert.runModal()
         }
+
+        Log.info?.message("Sucessfully launched.")
     }
 
     func applicationWillTerminate(_ aNotification: Notification) {
@@ -66,11 +79,6 @@ let ICON_OFF = NSImage(named: NSImage.Name(rawValue: "icon-off"))
         state.isEnabled = flag
         menuBarItem?.image = flag ? ICON_ON : ICON_OFF
         enabledIndicator.title = flag ? ENABLED_INDICATOR_ON : ENABLED_INDICATOR_OFF
-    }
-
-    func setupIcon(_ image: NSImage?) {
-        image?.isTemplate = true
-        image?.size = NSSize(width: 16, height: 16)
     }
 
     @objc func onMenuClick(sender: NSStatusItem) {

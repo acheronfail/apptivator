@@ -14,6 +14,7 @@ class MixedCheckboxCell: NSButtonCell {
     }
 }
 
+// Just add an index property onto the button so we can know which table row it came from.
 class ShortcutButton: NSButton {
     var index: Int?
 }

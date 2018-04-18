@@ -6,6 +6,7 @@
 import AXSwift
 import SwiftyJSON
 import MASShortcut
+import CleanroomLogger
 
 // Amount of time (in seconds) to wait after launching an applicaton until attempting
 // to attach listeners to it.
@@ -164,11 +165,11 @@ class ApplicationEntry: CustomDebugStringConvertible {
                         // Move the window to the new destination.
                         if !frame.equalTo(prevFrame) { setRect(ofElement: window, rect: frame) }
                     } else {
-                        print("Failed to find screen of rect: \(prevFrame)")
+                        Log.error?.message("Failed to find screen of rect: \(prevFrame)")
                     }
                 }
             } catch {
-                print("Failed to move windows of \(app) (\(runningApp))")
+                Log.error?.message("Failed to move windows of \(app) (\(runningApp))")
             }
         }
     }
@@ -198,7 +199,7 @@ class ApplicationEntry: CustomDebugStringConvertible {
         do {
             try observer?.addNotification(.applicationDeactivated, forElement: app)
         } catch {
-            print("Failed to add observers to [\(app)]: \(error)")
+            Log.error?.message("Failed to add observers to [\(app)]: \(error)")
         }
     }
 
@@ -247,7 +248,7 @@ class ApplicationEntry: CustomDebugStringConvertible {
             do {
                 if let entry = try ApplicationEntry.init(json: entryJson) { entries.append(entry) }
             } catch {
-                print("Unexpected error deserialising ApplicationEntry: \(entryJson), \(error)")
+                Log.error?.message("Unexpected error deserialising ApplicationEntry: \(entryJson), \(error)")
             }
         }
 

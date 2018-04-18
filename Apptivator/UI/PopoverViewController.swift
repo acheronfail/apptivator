@@ -5,6 +5,7 @@
 
 import MASShortcut
 import LaunchAtLogin
+import CleanroomLogger
 
 let toggleWindowShortcutKey = "__Apptivator_global_show__"
 
@@ -60,7 +61,7 @@ class PopoverViewController: NSViewController {
                 state.darkModeEnabled = flag
                 toggleDarkMode(flag)
             default:
-                print("Unknown identifier encountered: \(identifier)")
+                Log.warning?.message("Unknown identifier encountered: \(identifier)")
             }
         }
     }
