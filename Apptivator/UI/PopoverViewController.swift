@@ -167,15 +167,13 @@ class PopoverViewController: NSViewController {
         for index in tableView.selectedRowIndexes.sorted(by: { $0 > $1 }) {
             state.entries.remove(at: index)
             state.registerShortcuts()
-            tableView.reloadData()
         }
+        tableView.selectRowIndexes([], byExtendingSelection: false)
+        tableView.reloadData()
     }
     
     @objc func chooseFromRunningApps(_ sender: NSMenuItem) {
-        guard let app = sender.representedObject else {
-            return
-        }
-
+        guard let app = sender.representedObject else { return }
         if let url = (app as! NSRunningApplication).bundleURL {
             addEntry(fromURL: url)
         } else if let url = (app as! NSRunningApplication).executableURL {
