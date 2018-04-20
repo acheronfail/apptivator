@@ -65,7 +65,6 @@ struct ApplicationConfig: Equatable {
 // Each ApplicationEntry is simply a URL of an app mapped to a shortcut.
 class ApplicationEntry: CustomDebugStringConvertible {
     let url: URL
-    let key: String
     let name: String
     let icon: NSImage
 
@@ -74,14 +73,14 @@ class ApplicationEntry: CustomDebugStringConvertible {
     private var observer: Observer?
 
     var isActive: Bool { return self.observer != nil }
-    var isEnabled: Bool { return state.isEnabled && UIElement.isProcessTrusted(withPrompt: true) }
+    var isEnabled: Bool { return ApplicationState.shared.isEnabled && UIElement.isProcessTrusted(withPrompt: true) }
     var sequence: [MASShortcutView] = [] {
         didSet {
             // Unregister old shortcuts if any of them are registered. `state.registerShortcuts()` will
             // unregister all other shortcuts anyway, so this can be called outside of the state.
             oldValue.forEach({ shortcutView in
-                if state.monitor.isShortcutRegistered(shortcutView.shortcutValue) {
-                    state.monitor.unregisterShortcut(shortcutView.shortcutValue)
+                if ApplicationState.shared.monitor.isShortcutRegistered(shortcutView.shortcutValue) {
+                    ApplicationState.shared.monitor.unregisterShortcut(shortcutView.shortcutValue)
                 }
             })
         }
@@ -90,9 +89,6 @@ class ApplicationEntry: CustomDebugStringConvertible {
     init?(url: URL, config: [String:Bool]?) {
         self.url = url
         self.config = ApplicationConfig(withValues: config)
-
-        let key = ApplicationEntry.generateKey(for: url)
-        self.key = key
 
         do {
             let properties = try (url as NSURL).resourceValues(forKeys: [.localizedNameKey, .effectiveIconKey])
@@ -193,19 +189,20 @@ class ApplicationEntry: CustomDebugStringConvertible {
         }
     }
 
-    // Called when the application quits. Cleans up our resources.
-    // This is also required so that `self.isActive()` returns an accurate value.
-    func onTerminated<Value>(_ runningApp: NSRunningApplication, _ change: NSKeyValueObservedChange<Value>) {
-        self.observer = nil
-        self.watcher = nil
-    }
-
     // Creates an observer (if one doesn't already exist) to watch certain events on each entry.
     // Also watches `runningApp.isTerminated` for when the application is quit.
     func createObserver(_ runningApp: NSRunningApplication?) {
         guard observer == nil, runningApp != nil, let app = Application(runningApp!) else { return }
 
-        watcher = runningApp?.observe(\.isTerminated, changeHandler: onTerminated)
+        // Called when the application quits. Cleans up our resources.
+        // This is also required so that `self.isActive()` returns an accurate value.
+        watcher = runningApp?.observe(\.isTerminated, changeHandler: { [unowned self] _, _ in
+            self.observer = nil
+            self.watcher = nil
+        })
+
+        // Start watching Accessibility API notifications so we know when the application is
+        // deactivated.
         observer = app.createObserver(createListener(runningApp!))
         do {
             try observer?.addNotification(.applicationDeactivated, forElement: app)
@@ -240,16 +237,7 @@ class ApplicationEntry: CustomDebugStringConvertible {
         return "AppEntry: { \(name), Shortcut: \(shortcutString ?? "nil") }"
     }
 
-    // The characters "." and " " cannot appear in the MASShortcutView.associatedUserDefaultsKey
-    // property. See: https://github.com/shpakovski/MASShortcut/issues/64
-    // and https://github.com/shpakovski/MASShortcut/blob/master/Framework/MASShortcutBinder.m#L44-L47
-    static func generateKey(for url: URL) -> String {
-        return "Shortcut::\(url.absoluteString)"
-            .replacingOccurrences(of: ".", with: "_")
-            .replacingOccurrences(of: " ", with: "_")
-    }
-
-    static func serialiseList(entries: [ApplicationEntry]) -> JSON {
+    static func serialiseList(entries: ArraySlice<ApplicationEntry>) -> JSON {
         return JSON(entries.map { $0.asJSON })
     }
 

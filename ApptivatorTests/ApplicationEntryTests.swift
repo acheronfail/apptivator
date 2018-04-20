@@ -24,35 +24,44 @@ class ApplicationEntryTests: XCTestCase {
             deinit { deinitCalled!() }
         }
 
+        resetState(withSampleEntries: false)
+
         let expectation = self.expectation(description: "deinit")
         expectation.expectedFulfillmentCount = 2
 
         // Place tests within blocks so they go out of scope afterwards.
 
-        do { // Simple init
-            let entry = MockEntry(url: URL(fileURLWithPath: "/Applications/Xcode.app"), config: nil)!
-            XCTAssert(entry.isActive == true)
-            entry.deinitCalled = { expectation.fulfill() }
-        }
-        do { // Init with shortcut
+        do {
+            // Simple init
+            let entryOne = MockEntry(url: URL(fileURLWithPath: "/Applications/Xcode.app"), config: nil)!
+            entryOne.deinitCalled = { expectation.fulfill() }
+            XCTAssert(entryOne.isActive == true)
+
+            // Init with shortcut
             let data = "{\"url\":\"file:///Applications/Xcode.app\",\"sequence\":[{\"keyCode\":120,\"modifierFlags\":0}]}"
                 .data(using: .utf8, allowLossyConversion: false)!
-            let entry = try MockEntry(json: try JSON(data: data))!
-            entry.deinitCalled = { expectation.fulfill() }
+            let entryTwo = try MockEntry(json: try JSON(data: data))!
+            entryTwo.deinitCalled = { expectation.fulfill() }
+
+            ApplicationState.shared.addEntry(entryOne)
+            ApplicationState.shared.addEntry(entryTwo)
+            while ApplicationState.shared.getEntries().count > 0 {
+                ApplicationState.shared.removeEntry(at: 0)
+            }
+            print(ApplicationState.shared.getEntries())
         } catch { XCTFail(error.localizedDescription) }
 
-        self.waitForExpectations(timeout: 0.0, handler: nil)
+        self.waitForExpectations(timeout: 0.5, handler: nil)
     }
 
     func testSerialisesAndDeserialises() {
         let entriesBefore = getSampleEntries()
-        let json = ApplicationEntry.serialiseList(entries: entriesBefore)
+        let json = ApplicationEntry.serialiseList(entries: entriesBefore[0..<entriesBefore.count])
         let entriesAfter = ApplicationEntry.deserialiseList(fromJSON: json)
         for i in (0..<entriesBefore.count) {
             let a = entriesBefore[i]
             let b = entriesAfter[i]
             XCTAssert(a.url == b.url)
-            XCTAssert(a.key == b.key)
             XCTAssert(a.name == b.name)
             XCTAssert(a.config == b.config)
             XCTAssert(a.shortcutString == b.shortcutString)

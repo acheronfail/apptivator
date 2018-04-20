@@ -44,7 +44,7 @@ class PopoverViewController: NSViewController {
     
     @IBAction func onLocalCheckboxChange(_ sender: NSButton) {
         for index in tableView.selectedRowIndexes {
-            let entry = state.getEntry(at: index)
+            let entry = ApplicationState.shared.getEntry(at: index)
             for button in getLocalConfigButtons() {
                 entry.config[button.identifier!.rawValue] = button.state == .on ? true : false
             }
@@ -58,7 +58,7 @@ class PopoverViewController: NSViewController {
             case "launchAppAtLogin":
                 LaunchAtLogin.isEnabled = flag
             case "enableDarkMode":
-                state.darkModeEnabled = flag
+                ApplicationState.shared.darkModeEnabled = flag
                 toggleDarkMode(flag)
             default:
                 Log.warning?.message("Unknown identifier encountered: \(identifier)")
@@ -68,7 +68,7 @@ class PopoverViewController: NSViewController {
 
     @IBAction func onShortcutClick(_ sender: Any) {
         if let button = sender as? ShortcutButton, let index = button.index {
-            showSequenceEditor(for: state.getEntry(at: index))
+            showSequenceEditor(for: ApplicationState.shared.getEntry(at: index))
         }
     }
     override func viewDidLoad() {
@@ -85,22 +85,22 @@ class PopoverViewController: NSViewController {
         addMenu.item(at: 1)?.submenu = NSMenu()
 
         setupToggleWindowShortcut()
-        state.defaults.addObserver(self, forKeyPath: APPLE_INTERFACE_STYLE, options: [], context: nil)
+        ApplicationState.shared.defaults.addObserver(self, forKeyPath: APPLE_INTERFACE_STYLE, options: [], context: nil)
     }
 
     override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
-        if keyPath == APPLE_INTERFACE_STYLE && state.defaults.bool(forKey: "matchAppleInterfaceStyle") {
-            state.darkModeEnabled = appleInterfaceStyleIsDark()
+        if keyPath == APPLE_INTERFACE_STYLE && ApplicationState.shared.defaults.bool(forKey: "matchAppleInterfaceStyle") {
+            ApplicationState.shared.darkModeEnabled = appleInterfaceStyleIsDark()
             reloadView()
         }
     }
 
     override func viewWillDisappear() {
         sequenceEditor?.slideOutAndRemove()
-        state.saveToDisk()
+        ApplicationState.shared.saveToDisk()
         // Override currentlyRecording state when popover disappears. This is to handle when there
         // are errors recording shortcuts. See https://github.com/acheronfail/apptivator/pull/32
-        state._currentlyRecording = false
+        ApplicationState.shared._currentlyRecording = false
     }
 
     var isSequenceEditorActive: Bool {
@@ -111,13 +111,13 @@ class PopoverViewController: NSViewController {
         if !isSequenceEditorActive {
             sequenceEditor = SequenceViewController()
             sequenceEditor!.beforeAdded = {
-                state.unregisterShortcuts()
+                ApplicationState.shared.unregisterShortcuts()
                 self.addButton.isEnabled = false
                 self.removeButton.isEnabled = false
                 self.tableView.selectRowIndexes([], byExtendingSelection: false)
             }
             sequenceEditor!.beforeRemoved = {
-                state.registerShortcuts()
+                ApplicationState.shared.registerShortcuts()
                 self.addButton.isEnabled = true
                 self.removeButton.isEnabled = self.tableView.selectedRowIndexes.count > 0
                 self.reloadView()
@@ -134,10 +134,10 @@ class PopoverViewController: NSViewController {
     func setupToggleWindowShortcut() {
         toggleWindowShortcut.style = .texturedRect
         toggleWindowShortcut.associatedUserDefaultsKey = toggleWindowShortcutKey
-        toggleWindowShortcutWatcher = toggleWindowShortcut.observe(\.isRecording, changeHandler: state.onRecordingChange)
+        toggleWindowShortcutWatcher = toggleWindowShortcut.observe(\.isRecording, changeHandler: ApplicationState.shared.onRecordingChange)
         toggleWindowShortcut.shortcutValueChange = { _ in
             MASShortcutBinder.shared().bindShortcut(withDefaultsKey: toggleWindowShortcutKey, toAction: {
-                if state.isEnabled { self.appDelegate.togglePreferencesPopover() }
+                if ApplicationState.shared.isEnabled { self.appDelegate.togglePreferencesPopover() }
             })
         }
         toggleWindowShortcut.shortcutValueChange(nil)
@@ -151,8 +151,9 @@ class PopoverViewController: NSViewController {
     }
 
     func reloadView() {
-        toggleDarkMode(state.darkModeEnabled)
-        enableDarkMode.state = state.darkModeEnabled ? .on : .off
+        let darkModeEnabled = ApplicationState.shared.darkModeEnabled
+        toggleDarkMode(darkModeEnabled)
+        enableDarkMode.state = darkModeEnabled ? .on : .off
         launchAppAtLogin.state = LaunchAtLogin.isEnabled ? .on : .off
         tableView.reloadData()
     }
@@ -165,7 +166,7 @@ class PopoverViewController: NSViewController {
     @IBAction func onRemoveClick(_ sender: NSButton) {
         guard !isSequenceEditorActive else { return }
         for index in tableView.selectedRowIndexes.sorted(by: { $0 > $1 }) {
-            state.removeEntry(at: index)
+            ApplicationState.shared.removeEntry(at: index)
         }
         tableView.selectRowIndexes([], byExtendingSelection: false)
         tableView.reloadData()
@@ -194,7 +195,7 @@ class PopoverViewController: NSViewController {
 
     func addEntry(fromURL url: URL) {
         // Check if the entry already exists.
-        if let entry = (state.getEntries().first { $0.url == url }) {
+        if let entry = (ApplicationState.shared.getEntries().first { $0.url == url }) {
             let alert = NSAlert()
             alert.messageText = "Duplicate Entry"
             alert.informativeText = "The application \"\(entry.name)\" has already been added. Please edit its entry in the list, or remove it to add it again."
@@ -204,7 +205,7 @@ class PopoverViewController: NSViewController {
         }
 
         if let appEntry = ApplicationEntry(url: url, config: nil) {
-            state.addEntry(appEntry)
+            ApplicationState.shared.addEntry(appEntry)
             tableView.reloadData()
         }
     }
@@ -241,7 +242,7 @@ extension PopoverViewController: NSMenuDelegate {
 
 extension PopoverViewController: NSTableViewDataSource {
     func numberOfRows(in tableView: NSTableView) -> Int {
-        return state.getEntries().count
+        return ApplicationState.shared.getEntries().count
     }
 }
 
@@ -268,7 +269,7 @@ extension PopoverViewController: NSTableViewDelegate {
         // Combine settings together: if one app has a flag on, and another off, then the checkbox
         // state will be `.mixed`.
         for index in selectedIndexes {
-            let entry = state.getEntry(at: index)
+            let entry = ApplicationState.shared.getEntry(at: index)
             for (i, tuple) in localConfig.enumerated() {
                 let (button, newState) = tuple
                 let entryValue = entry.config[button.identifier!.rawValue]!
@@ -290,15 +291,15 @@ extension PopoverViewController: NSTableViewDelegate {
 
     func tableView(_ tableView: NSTableView, sortDescriptorsDidChange oldDescriptors: [NSSortDescriptor]) {
         if tableView.sortDescriptors[0].ascending {
-            state.sortEntries(comparator: { $0.name.lowercased() < $1.name.lowercased() })
+            ApplicationState.shared.sortEntries(comparator: { $0.name.lowercased() < $1.name.lowercased() })
         } else {
-            state.sortEntries(comparator: { $0.name.lowercased() > $1.name.lowercased() })
+            ApplicationState.shared.sortEntries(comparator: { $0.name.lowercased() > $1.name.lowercased() })
         }
         tableView.reloadData()
     }
 
     func tableView(_ tableView: NSTableView, viewFor tableColumn: NSTableColumn?, row: Int) -> NSView? {
-        let item = state.getEntry(at: row)
+        let item = ApplicationState.shared.getEntry(at: row)
 
         // Application column:
         if tableColumn == tableView.tableColumns[0] {

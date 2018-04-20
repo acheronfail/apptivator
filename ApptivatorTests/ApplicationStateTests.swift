@@ -9,7 +9,7 @@ import XCTest
 
 class ApplicationStateTests: XCTestCase {
     func testSequencesDoNotConflict() {
-        let state = getTestState()
+        resetState(withSampleEntries: true)
         let sequences = [
             (true, [ // Conflicts with "Xcode.app"
                 shortcutView(withKeyCode: KEY_A, modifierFlags: CMD_SHIFT),
@@ -32,13 +32,13 @@ class ApplicationStateTests: XCTestCase {
         ]
         for (i, pair) in sequences.enumerated() {
             let (shouldConflict, sequence) = pair
-            let didConflict = state.checkForConflictingSequence(sequence, excluding: nil) != nil
+            let didConflict = ApplicationState.shared.checkForConflictingSequence(sequence, excluding: nil) != nil
             XCTAssert(didConflict == shouldConflict, "Incorrect assertion at index: \(i)")
         }
     }
 
     func testSequencesRegisterCorrectly() {
-        let s = getTestState()
+        resetState(withSampleEntries: true)
         var expected: [Bool]
         let shortcuts = [
             (KEY_A, CMD_SHIFT),
@@ -51,78 +51,95 @@ class ApplicationStateTests: XCTestCase {
         ]
 
         // Initial.
-        s.registerShortcuts(atIndex: 0, last: nil)
+        ApplicationState.shared.registerShortcuts(atIndex: 0, last: nil)
         expected = [true, false, false, true, false, false, true]
-        zip(shortcuts, expected).forEach({ XCTAssert(isShortcutRegistered(s, $0.0, $0.1) == $1) })
+        zip(shortcuts, expected).forEach({ XCTAssert(isShortcutRegistered($0.0, $0.1) == $1) })
 
         // Xcode shortcut #1.
-        s.registerShortcuts(atIndex: 1, last: (KEY_A, CMD_SHIFT))
+        ApplicationState.shared.registerShortcuts(atIndex: 1, last: (KEY_A, CMD_SHIFT))
         expected = [false, true, false, true, false, false, false]
-        zip(shortcuts, expected).forEach({ XCTAssert(isShortcutRegistered(s, $0.0, $0.1) == $1) })
+        zip(shortcuts, expected).forEach({ XCTAssert(isShortcutRegistered($0.0, $0.1) == $1) })
 
         // Xcode shortcut #2. This is when the sequence is complete, so this should never really be
         // called - it should reset at this point. Just check that no other shortcuts are registered.
-        s.registerShortcuts(atIndex: 2, last: (KEY_B, CMD_SHIFT))
+        ApplicationState.shared.registerShortcuts(atIndex: 2, last: (KEY_B, CMD_SHIFT))
         expected = [false, false, false, false, false, false, false]
-        zip(shortcuts, expected).forEach({ XCTAssert(isShortcutRegistered(s, $0.0, $0.1) == $1) })
+        zip(shortcuts, expected).forEach({ XCTAssert(isShortcutRegistered($0.0, $0.1) == $1) })
 
         // Initial, again.
-        s.registerShortcuts(atIndex: 0, last: nil)
+        ApplicationState.shared.registerShortcuts(atIndex: 0, last: nil)
         expected = [true, false, false, true, false, false, true]
-        zip(shortcuts, expected).forEach({ XCTAssert(isShortcutRegistered(s, $0.0, $0.1) == $1) })
+        zip(shortcuts, expected).forEach({ XCTAssert(isShortcutRegistered($0.0, $0.1) == $1) })
 
         // System Preferences.app shortcut #1.
-        s.registerShortcuts(atIndex: 1, last: (KEY_G, CMD_SHIFT))
+        ApplicationState.shared.registerShortcuts(atIndex: 1, last: (KEY_G, CMD_SHIFT))
         expected = [false, false, false, false, false, true, false]
-        zip(shortcuts, expected).forEach({ XCTAssert(isShortcutRegistered(s, $0.0, $0.1) == $1) })
+        zip(shortcuts, expected).forEach({ XCTAssert(isShortcutRegistered($0.0, $0.1) == $1) })
 
         // System Preferences.app shortcut #2.
-        s.registerShortcuts(atIndex: 2, last: (KEY_F, CMD_SHIFT))
+        ApplicationState.shared.registerShortcuts(atIndex: 2, last: (KEY_F, CMD_SHIFT))
         expected = [false, false, false, false, true, false, false]
-        zip(shortcuts, expected).forEach({ XCTAssert(isShortcutRegistered(s, $0.0, $0.1) == $1) })
+        zip(shortcuts, expected).forEach({ XCTAssert(isShortcutRegistered($0.0, $0.1) == $1) })
     }
 
     func testSaveAndLoadToDisk() {
-        let path = getTemporaryFilePath()
+        resetState(withSampleEntries: false)
 
-        // Create a state and make changes to it.
-        let a = ApplicationState(atPath: path)
-        a.isEnabled = false
-        a.darkModeEnabled = true
-        let entryOne = entry(atURL: URL(fileURLWithPath: "/Applications/Xcode.app"), sequence: [shortcutView(withKeyCode: 120, modifierFlags: 0)])
-        let entryTwo = ApplicationEntry(url: URL(fileURLWithPath: "/Applications/Calculator.app"), config: nil)!
-        entryTwo.config.launchIfNotRunning = true
-        entryTwo.config.hideWhenDeactivated = true
-        entryTwo.config.showOnScreenWithMouse = true
-        entryTwo.config.hideWithShortcutWhenActive = true
-        a.addEntry(entryOne)
-        a.addEntry(entryTwo)
-        // Write it to disk.
-        a.saveToDisk()
+        // Make changes to the state.
+        ApplicationState.shared.isEnabled = false
+        ApplicationState.shared.darkModeEnabled = true
+        ApplicationState.shared.addEntry(entry(atURL: URL(fileURLWithPath: "/Applications/Xcode.app"), sequence: [shortcutView(withKeyCode: 120, modifierFlags: 0)]))
+        ApplicationState.shared.addEntry(ApplicationEntry(url: URL(fileURLWithPath: "/Applications/Calculator.app"), config: nil)!)
 
-        // Create another state at the same path, and load it from disk.
-        let b = ApplicationState(atPath: path)
-        b.loadFromDisk()
+        // Write to disk.
+        ApplicationState.shared.saveToDisk()
+        // Save written json.
+        do {
+            let savePath = ApplicationState.shared.savePath
+            let newPath = URL(fileURLWithPath: savePath.path + ".backup")
+            if FileManager.default.fileExists(atPath: newPath.path) {
+                try FileManager.default.removeItem(at: newPath)
+            }
+            try FileManager.default.copyItem(at: savePath, to: newPath)
+
+            // Reset state (this clears the file).
+            resetState(withSampleEntries: false)
+
+            // Rewrite json.
+            if FileManager.default.fileExists(atPath: savePath.path) {
+                try FileManager.default.removeItem(at: savePath)
+            }
+            try FileManager.default.copyItem(at: newPath, to: savePath)
+        } catch {
+            XCTFail(error.localizedDescription)
+        }
+
+        // Reload from disk.
+        ApplicationState.shared.loadFromDisk()
 
         // Compare the two states for equality.
-        XCTAssert(a.isEnabled == b.isEnabled)
-        XCTAssert(a.getEntries().count == a.getEntries().count)
-        XCTAssert(a.darkModeEnabled == b.darkModeEnabled)
-        for i in (0..<a.getEntries().count) {
-            XCTAssert(a.getEntry(at: i).name == b.getEntry(at: i).name)
-        }
+        XCTAssert(ApplicationState.shared.darkModeEnabled == true)
+        XCTAssert(ApplicationState.shared.getEntries().count == 2)
     }
 
-    func isShortcutRegistered(_ state: ApplicationState, _ keyCode: UInt, _ modifierFlags: UInt) -> Bool {
-        return state.monitor.isShortcutRegistered(MASShortcut(keyCode: keyCode, modifierFlags: modifierFlags))
+    func isShortcutRegistered(_ keyCode: UInt, _ modifierFlags: UInt) -> Bool {
+        return ApplicationState.shared.monitor.isShortcutRegistered(MASShortcut(keyCode: keyCode, modifierFlags: modifierFlags))
     }
 
     func getTemporaryFilePath() -> URL {
         return URL(fileURLWithPath: "\(NSTemporaryDirectory())config.json")
     }
+}
 
-    func getTestState() -> ApplicationState {
-        let state = ApplicationState(atPath: getTemporaryFilePath())
+func resetState(withSampleEntries: Bool) {
+    // Clear the application state (write an empty file to load it from).
+    do {
+        try "{}".write(to: ApplicationState.shared.savePath, atomically: false, encoding: .utf8)
+    } catch {
+        XCTFail(error.localizedDescription)
+    }
+    ApplicationState.shared.loadFromDisk()
+    if withSampleEntries {
         [
             entry(atURL: URL(fileURLWithPath: "/Applications/Xcode.app"), sequence: [
                 shortcutView(withKeyCode: KEY_A, modifierFlags: CMD_SHIFT),
@@ -140,7 +157,6 @@ class ApplicationStateTests: XCTestCase {
                 shortcutView(withKeyCode: KEY_F, modifierFlags: CMD_SHIFT),
                 shortcutView(withKeyCode: KEY_E, modifierFlags: CMD_SHIFT)
             ])
-        ].forEach({ state.addEntry($0) })
-        return state
+        ].forEach({ ApplicationState.shared.addEntry($0) })
     }
 }

@@ -6,12 +6,6 @@
 import SwiftyJSON
 import CleanroomLogger
 
-// Global application state.
-let APP_NAME = Bundle.main.infoDictionary![kCFBundleNameKey as String] as! String
-let LOG_PATH = ApplicationState.defaultLogPath()
-let CFG_PATH = ApplicationState.defaultConfigurationPath()
-let state = ApplicationState(atPath: CFG_PATH)
-
 let ENABLED_INDICATOR_ON = "\(APP_NAME): on"
 let ENABLED_INDICATOR_OFF = "\(APP_NAME): off"
 let ICON_ON = setupMenuBarIcon(NSImage(named: NSImage.Name(rawValue: "icon-on")))
@@ -30,15 +24,15 @@ let ICON_OFF = setupMenuBarIcon(NSImage(named: NSImage.Name(rawValue: "icon-off"
     private let invisibleWindow = NSWindow(contentRect: NSMakeRect(0, 0, 1, 1), styleMask: .borderless, backing: .buffered, defer: false)
 
     func applicationWillFinishLaunching(_ notification: Notification) {
-        let minimumSeverity: LogSeverity = state.defaults.bool(forKey: "debugMode") ? .debug : .info
+        let minimumSeverity: LogSeverity = ApplicationState.shared.defaults.bool(forKey: "debugMode") ? .debug : .info
         var logConfigurations: [LogConfiguration] = [
-            RotatingLogFileConfiguration(minimumSeverity: minimumSeverity, daysToKeep: 7, directoryPath: LOG_PATH.path)
+            RotatingLogFileConfiguration(minimumSeverity: minimumSeverity, daysToKeep: 7, directoryPath: defaultLogPath().path)
         ]
         #if DEBUG
         logConfigurations.append(XcodeLogConfiguration(minimumSeverity: .debug))
         #endif
         Log.enable(configuration: logConfigurations)
-        state.loadFromDisk()
+        ApplicationState.shared.loadFromDisk()
     }
 
     func applicationDidFinishLaunching(_ aNotification: Notification) {
@@ -55,7 +49,7 @@ let ICON_OFF = setupMenuBarIcon(NSImage(named: NSImage.Name(rawValue: "icon-off"
         menuBarItem.action = #selector(onMenuClick)
         menuBarItem.sendAction(on: [.leftMouseUp, .rightMouseUp])
 
-        enable(state.isEnabled)
+        enable(ApplicationState.shared.isEnabled)
         popoverViewController.reloadView()
 
         // Check for accessibility permissions.
@@ -72,26 +66,26 @@ let ICON_OFF = setupMenuBarIcon(NSImage(named: NSImage.Name(rawValue: "icon-off"
     }
 
     func applicationWillTerminate(_ aNotification: Notification) {
-        state.saveToDisk()
+        ApplicationState.shared.saveToDisk()
     }
 
     func enable(_ flag: Bool) {
-        state.isEnabled = flag
+        ApplicationState.shared.isEnabled = flag
         menuBarItem?.image = flag ? ICON_ON : ICON_OFF
         enabledIndicator.title = flag ? ENABLED_INDICATOR_ON : ENABLED_INDICATOR_OFF
     }
 
     @objc func onMenuClick(sender: NSStatusItem) {
-        let leftClickToggles = state.defaults.bool(forKey: "leftClickToggles")
+        let leftClickToggles = ApplicationState.shared.defaults.bool(forKey: "leftClickToggles")
         let toggleEvent: NSEvent.EventType = leftClickToggles ? .leftMouseUp : .rightMouseUp
         let dropdownEvent: NSEvent.EventType = leftClickToggles ? .rightMouseUp : .leftMouseUp
 
         let event = NSApp.currentEvent!
         if event.type == dropdownEvent {
-            buildContextMenu(state.getEntries())
+            buildContextMenu(ApplicationState.shared.getEntries())
             menuBarItem?.popUpMenu(contextMenu)
         } else if event.type == toggleEvent {
-            enable(!state.isEnabled)
+            enable(!ApplicationState.shared.isEnabled)
         }
     }
 
@@ -114,7 +108,7 @@ let ICON_OFF = setupMenuBarIcon(NSImage(named: NSImage.Name(rawValue: "icon-off"
             let screenBounds = menuBarButton.window!.convertToScreen(buttonBounds)
 
             var xPosition: CGFloat
-            if state.defaults.bool(forKey: "showPopoverOnScreenWithMouse"), let screen = getScreenWithMouse() {
+            if ApplicationState.shared.defaults.bool(forKey: "showPopoverOnScreenWithMouse"), let screen = getScreenWithMouse() {
                 xPosition = screen.frame.origin.x + screen.frame.width - 1
             } else {
                 // Account for Bartender moving the menu bar item offscreen. If the midpoint doesn't

@@ -53,7 +53,7 @@ class SequenceViewController: NSViewController {
         // This is a sanity check: the save button should never be enabled without a valid sequence.
         assert(sequence.count > 0, "sequence.count must be > 0.")
 
-        if state.checkForConflictingSequence(sequence, excluding: self.entry) == nil {
+        if ApplicationState.shared.checkForConflictingSequence(sequence, excluding: self.entry) == nil {
             entry.sequence = sequence
             slideOutAndRemove()
         } else {
@@ -85,7 +85,7 @@ class SequenceViewController: NSViewController {
             view.shortcutValue = MASShortcut(keyCode: keyCode!, modifierFlags: modifierFlags!)
         }
         view.shortcutValueChange = updateList
-        let watcher = view.observe(\.isRecording, changeHandler: state.onRecordingChange)
+        let watcher = view.observe(\.isRecording, changeHandler: ApplicationState.shared.onRecordingChange)
         return (view, watcher)
     }
 
@@ -99,7 +99,7 @@ class SequenceViewController: NSViewController {
         }
 
         // Ensure there's always one more shortcut at the end of the list.
-        if list.last?.0.shortcutValue != nil && list.count < state.defaults.integer(forKey: "maxShortcutsInSequence") {
+        if list.last?.0.shortcutValue != nil && list.count < ApplicationState.shared.defaults.integer(forKey: "maxShortcutsInSequence") {
             list.append(newShortcut(withKeyCode: nil, modifierFlags: nil))
         }
 
@@ -108,7 +108,7 @@ class SequenceViewController: NSViewController {
         if sequence.count == 0 {
             updateUIWith(reason: .NoShortcuts, nil)
         } else {
-            if let conflictingEntry = state.checkForConflictingSequence(sequence, excluding: entry) {
+            if let conflictingEntry = ApplicationState.shared.checkForConflictingSequence(sequence, excluding: entry) {
                 updateUIWith(reason: .ConflictingShortcuts, conflictingEntry)
             } else {
                 updateUIWith(reason: .Okay, nil)
