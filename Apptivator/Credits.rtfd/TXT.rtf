@@ -68,6 +68,18 @@ Swaps the left and right click buttons when clicking on the menu bar icon. So le
 \
 Enabling this will make Apptivator automatically switch between light/dark mode to match the menubar and dock.\
 \
+\pard\pardeftab720\qc\partightenfactor0
+
+\b \cf0 \kerning1\expnd0\expndtw0 maxShortcutsInSequence
+\b0 \cf2 \expnd0\expndtw0\kerning0
+: 
+\i \cf0 \kerning1\expnd0\expndtw0 Int = 5
+\i0 \cf2 \expnd0\expndtw0\kerning0
+\
+The maximum amount of shortcuts allowed in a shortcut sequence. If you want more than 5 (not sure why you would) then you can increment this number.\
+Note that this only changes how many will appear when editing the sequence, any previously registered shortcuts longer than the maximum will not be changed.\
+\
+\pard\pardeftab720\qc\partightenfactor0
 
 \b \cf0 \kerning1\expnd0\expndtw0 sequentialShortcutDelay
 \b0 \cf2 \expnd0\expndtw0\kerning0
@@ -78,7 +90,6 @@ Enabling this will make Apptivator automatically switch between light/dark mode 
 How long (in seconds) Apptivator should wait for the next shortcut in a sequence, before resetting back to its initial state.\
 Set this to a higher value to have more time to press the shortcuts.\
 \
-\pard\pardeftab720\qc\partightenfactor0
 
 \b \cf0 \kerning1\expnd0\expndtw0 debugMode
 \b0 \cf2 \expnd0\expndtw0\kerning0

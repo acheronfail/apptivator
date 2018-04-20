@@ -29,26 +29,30 @@ class ShortcutButton: NSButton {
 // https://stackoverflow.com/q/6054331/5552584
 // https://stackoverflow.com/q/30617085/5552584
 class MultiMenuItem: NSView {
+    // Max width of the label and detail text fields.
+    static let maxLabelWidth: CGFloat = 200;
+    static let maxDetailWidth: CGFloat = 350;
+
     var mouseDownInside = false
     var trackingArea : NSTrackingArea?
 
     override func awakeFromNib() {
-        self.alphaValue = 0.5
+        alphaValue = 0.5
     }
 
     override func updateTrackingAreas() {
-        if trackingArea != nil { self.removeTrackingArea(trackingArea!) }
+        if trackingArea != nil { removeTrackingArea(trackingArea!) }
         let options: NSTrackingArea.Options = [.activeInActiveApp, .mouseEnteredAndExited, .enabledDuringMouseDrag]
-        trackingArea = NSTrackingArea(rect: self.bounds, options: options, owner: self, userInfo: nil)
-        self.addTrackingArea(trackingArea!)
+        trackingArea = NSTrackingArea(rect: bounds, options: options, owner: self, userInfo: nil)
+        addTrackingArea(trackingArea!)
     }
 
     override func mouseEntered(with event: NSEvent) {
-        self.alphaValue = 1.0
+        alphaValue = 1.0
     }
 
     override func mouseExited(with event: NSEvent) {
-        self.alphaValue = 0.5
+        alphaValue = 0.5
         mouseDownInside = false
     }
 
@@ -60,7 +64,7 @@ class MultiMenuItem: NSView {
     }
 
     override func mouseUp(with event: NSEvent) {
-        if mouseDownInside, let menuItem = self.enclosingMenuItem {
+        if mouseDownInside, let menuItem = enclosingMenuItem {
             menuItem.menu?.cancelTracking()
             (menuItem.representedObject as? ApplicationEntry)?.apptivate()
         }
@@ -88,18 +92,21 @@ class MultiMenuItemController: NSViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.imageView.image = image ?? nil
-        self.labelTextField!.stringValue = label ?? ""
-        self.detailTextField!.stringValue = detail ?? ""
-        self.sizeToFit()
-        self.view.autoresizingMask = [.width]
+        imageView.image = image ?? nil
+        labelTextField!.stringValue = label ?? ""
+        detailTextField!.stringValue = detail ?? ""
+        sizeToFit()
+        view.autoresizingMask = [.width]
     }
 
     // Resize the menu item to fit all its children.
+    // Clamp the widths of the text fields so they don't get comically large.
     func sizeToFit() {
-        self.labelTextField.sizeToFit()
-        self.detailTextField.sizeToFit()
+        labelTextField.preferredMaxLayoutWidth = MultiMenuItem.maxLabelWidth
+        detailTextField.preferredMaxLayoutWidth = MultiMenuItem.maxDetailWidth
+
         // 50 is the view's margins, its padding and the spacing between title & detail text.
-        self.view.frame.size.width = self.labelTextField.frame.width + self.detailTextField.frame.width + 50
+        view.frame.size.width = labelTextField.intrinsicContentSize.width +
+                                detailTextField.intrinsicContentSize.width + 50
     }
 }

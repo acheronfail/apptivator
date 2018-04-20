@@ -53,6 +53,7 @@ import CleanroomLogger
 
         defaults.register(defaults: [
             "leftClickToggles": false,
+            "maxShortcutsInSequence": 5,
             "sequentialShortcutDelay": 0.5,
             "matchAppleInterfaceStyle": false,
             "showPopoverOnScreenWithMouse": false

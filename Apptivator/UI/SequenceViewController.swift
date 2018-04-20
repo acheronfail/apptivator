@@ -99,7 +99,7 @@ class SequenceViewController: NSViewController {
         }
 
         // Ensure there's always one more shortcut at the end of the list.
-        if list.last?.0.shortcutValue != nil {
+        if list.last?.0.shortcutValue != nil && list.count < state.defaults.integer(forKey: "maxShortcutsInSequence") {
             list.append(newShortcut(withKeyCode: nil, modifierFlags: nil))
         }
 
