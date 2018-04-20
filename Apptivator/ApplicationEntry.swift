@@ -70,6 +70,7 @@ class ApplicationEntry: CustomDebugStringConvertible {
     let icon: NSImage
 
     var config: ApplicationConfig
+    private var watcher: NSKeyValueObservation?
     private var observer: Observer?
 
     var isActive: Bool { return self.observer != nil }
@@ -192,10 +193,19 @@ class ApplicationEntry: CustomDebugStringConvertible {
         }
     }
 
-    // Creates an observer (if one doesn't already exist) to watch certain events on each ApplicationEntry.
+    // Called when the application quits. Cleans up our resources.
+    // This is also required so that `self.isActive()` returns an accurate value.
+    func onTerminated<Value>(_ runningApp: NSRunningApplication, _ change: NSKeyValueObservedChange<Value>) {
+        self.observer = nil
+        self.watcher = nil
+    }
+
+    // Creates an observer (if one doesn't already exist) to watch certain events on each entry.
+    // Also watches `runningApp.isTerminated` for when the application is quit.
     func createObserver(_ runningApp: NSRunningApplication?) {
         guard observer == nil, runningApp != nil, let app = Application(runningApp!) else { return }
 
+        watcher = runningApp?.observe(\.isTerminated, changeHandler: onTerminated)
         observer = app.createObserver(createListener(runningApp!))
         do {
             try observer?.addNotification(.applicationDeactivated, forElement: app)
