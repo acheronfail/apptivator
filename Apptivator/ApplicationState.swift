@@ -8,6 +8,8 @@ import MASShortcut
 import LaunchAtLogin
 import CleanroomLogger
 
+// TODO: make this a singleton (like MASShortcutMonitor.shared()) to avoid issues.
+
 @objcMembers class ApplicationState: NSObject {
     // Location of our serialised application state.
     let savePath: URL
@@ -21,8 +23,6 @@ import CleanroomLogger
     // Easier access to the shared instance of MASShortcutMonitor.
     var monitor: MASShortcutMonitor! = MASShortcutMonitor.shared()
 
-    // The list of application -> shortcut mappings.
-    var entries: [ApplicationEntry] = []
     // Toggle for dark mode.
     var darkModeEnabled = appleInterfaceStyleIsDark()
     // Whether or not the app should launch after login.
@@ -43,6 +43,11 @@ import CleanroomLogger
         set { _isEnabled = newValue }
     }
 
+    // The list of application -> shortcut mappings. Made private because whenever we need to
+    // unregister an entry's shortcuts otherwise its reference count will always be > 0. So we
+    // provide helpers to manipulate this array.
+    private var entries: [ApplicationEntry] = []
+
     init(atPath url: URL) {
         self.savePath = url
 
@@ -59,6 +64,38 @@ import CleanroomLogger
         MASShortcutValidator.shared().allowAnyShortcut = true
 
         Log.info?.message("ApplicationState initialised at \(url.path)")
+    }
+
+    // Get a specific entry at the given index.
+    func getEntry(at index: Int) -> ApplicationEntry {
+        return entries[index]
+    }
+
+    // Return a slice of the entries array.
+    func getEntries() -> ArraySlice<ApplicationEntry> {
+        return entries[0..<entries.count]
+    }
+
+    // Add an entry.
+    func addEntry(_ entry: ApplicationEntry) {
+        entries.append(entry)
+        registerShortcuts()
+    }
+
+    // In order for an entry to be cleaned up by ARC, there must be no more references to it.
+    // MASShortcutMonitor keeps a reference to the `shortcutValue`, so unregister the shortcut here.
+    func removeEntry(at index: Int) {
+        let entry = entries.remove(at: index)
+        entry.sequence.forEach({ shortcutView in
+            if monitor.isShortcutRegistered(shortcutView.shortcutValue) {
+                monitor.unregisterShortcut(shortcutView.shortcutValue)
+            }
+        })
+        registerShortcuts()
+    }
+
+    func sortEntries(comparator: (ApplicationEntry, ApplicationEntry) -> Bool) {
+        entries.sort(by: comparator)
     }
 
     // Disable all shortcuts when the user is recording a shortcut.

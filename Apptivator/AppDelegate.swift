@@ -88,7 +88,7 @@ let ICON_OFF = setupMenuBarIcon(NSImage(named: NSImage.Name(rawValue: "icon-off"
 
         let event = NSApp.currentEvent!
         if event.type == dropdownEvent {
-            buildContextMenu(state.entries)
+            buildContextMenu(state.getEntries())
             menuBarItem?.popUpMenu(contextMenu)
         } else if event.type == toggleEvent {
             enable(!state.isEnabled)
@@ -140,7 +140,7 @@ let ICON_OFF = setupMenuBarIcon(NSImage(named: NSImage.Name(rawValue: "icon-off"
 }
 
 extension AppDelegate: NSMenuDelegate {
-    func buildContextMenu(_ entries: [ApplicationEntry]) {
+    func buildContextMenu(_ entries: ArraySlice<ApplicationEntry>) {
         contextMenu.addItem(enabledIndicator)
         contextMenu.addItem(NSMenuItem(title: "Configure Shortcuts", action: #selector(togglePreferencesPopover), keyEquivalent: ""))
         contextMenu.addItem(NSMenuItem.separator())

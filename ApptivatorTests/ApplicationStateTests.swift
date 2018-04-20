@@ -95,8 +95,8 @@ class ApplicationStateTests: XCTestCase {
         entryTwo.config.hideWhenDeactivated = true
         entryTwo.config.showOnScreenWithMouse = true
         entryTwo.config.hideWithShortcutWhenActive = true
-        a.entries.append(entryOne)
-        a.entries.append(entryTwo)
+        a.addEntry(entryOne)
+        a.addEntry(entryTwo)
         // Write it to disk.
         a.saveToDisk()
 
@@ -106,10 +106,10 @@ class ApplicationStateTests: XCTestCase {
 
         // Compare the two states for equality.
         XCTAssert(a.isEnabled == b.isEnabled)
-        XCTAssert(a.entries.count == a.entries.count)
+        XCTAssert(a.getEntries().count == a.getEntries().count)
         XCTAssert(a.darkModeEnabled == b.darkModeEnabled)
-        for i in (0..<a.entries.count) {
-            XCTAssert(a.entries[i].name == b.entries[i].name)
+        for i in (0..<a.getEntries().count) {
+            XCTAssert(a.getEntry(at: i).name == b.getEntry(at: i).name)
         }
     }
 
@@ -123,7 +123,7 @@ class ApplicationStateTests: XCTestCase {
 
     func getTestState() -> ApplicationState {
         let state = ApplicationState(atPath: getTemporaryFilePath())
-        state.entries.append(contentsOf: [
+        [
             entry(atURL: URL(fileURLWithPath: "/Applications/Xcode.app"), sequence: [
                 shortcutView(withKeyCode: KEY_A, modifierFlags: CMD_SHIFT),
                 shortcutView(withKeyCode: KEY_B, modifierFlags: CMD_SHIFT)
@@ -140,7 +140,7 @@ class ApplicationStateTests: XCTestCase {
                 shortcutView(withKeyCode: KEY_F, modifierFlags: CMD_SHIFT),
                 shortcutView(withKeyCode: KEY_E, modifierFlags: CMD_SHIFT)
             ])
-        ])
+        ].forEach({ state.addEntry($0) })
         return state
     }
 }

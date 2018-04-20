@@ -28,13 +28,15 @@ class ApplicationEntryTests: XCTestCase {
         expectation.expectedFulfillmentCount = 2
 
         // Place tests within blocks so they go out of scope afterwards.
-        do {
+
+        do { // Simple init
             let entry = MockEntry(url: URL(fileURLWithPath: "/Applications/Xcode.app"), config: nil)!
             XCTAssert(entry.isActive == true)
             entry.deinitCalled = { expectation.fulfill() }
         }
-        do {
-            let data = "{\"url\":\"file:///Applications/Xcode.app\",\"keyCode\":120,\"modifierFlags\":0}".data(using: .utf8, allowLossyConversion: false)!
+        do { // Init with shortcut
+            let data = "{\"url\":\"file:///Applications/Xcode.app\",\"sequence\":[{\"keyCode\":120,\"modifierFlags\":0}]}"
+                .data(using: .utf8, allowLossyConversion: false)!
             let entry = try MockEntry(json: try JSON(data: data))!
             entry.deinitCalled = { expectation.fulfill() }
         } catch { XCTFail(error.localizedDescription) }

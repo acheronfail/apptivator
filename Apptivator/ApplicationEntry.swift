@@ -77,7 +77,7 @@ class ApplicationEntry: CustomDebugStringConvertible {
     var sequence: [MASShortcutView] = [] {
         didSet {
             // Unregister old shortcuts if any of them are registered. `state.registerShortcuts()` will
-            // unregister all other shortcuts anyway, so this doesn't affect anything.
+            // unregister all other shortcuts anyway, so this can be called outside of the state.
             oldValue.forEach({ shortcutView in
                 if state.monitor.isShortcutRegistered(shortcutView.shortcutValue) {
                     state.monitor.unregisterShortcut(shortcutView.shortcutValue)

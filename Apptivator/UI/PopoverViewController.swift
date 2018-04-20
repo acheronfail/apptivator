@@ -44,7 +44,7 @@ class PopoverViewController: NSViewController {
     
     @IBAction func onLocalCheckboxChange(_ sender: NSButton) {
         for index in tableView.selectedRowIndexes {
-            let entry = state.entries[index]
+            let entry = state.getEntry(at: index)
             for button in getLocalConfigButtons() {
                 entry.config[button.identifier!.rawValue] = button.state == .on ? true : false
             }
@@ -68,7 +68,7 @@ class PopoverViewController: NSViewController {
 
     @IBAction func onShortcutClick(_ sender: Any) {
         if let button = sender as? ShortcutButton, let index = button.index {
-            showSequenceEditor(for: state.entries[index])
+            showSequenceEditor(for: state.getEntry(at: index))
         }
     }
     override func viewDidLoad() {
@@ -165,8 +165,7 @@ class PopoverViewController: NSViewController {
     @IBAction func onRemoveClick(_ sender: NSButton) {
         guard !isSequenceEditorActive else { return }
         for index in tableView.selectedRowIndexes.sorted(by: { $0 > $1 }) {
-            state.entries.remove(at: index)
-            state.registerShortcuts()
+            state.removeEntry(at: index)
         }
         tableView.selectRowIndexes([], byExtendingSelection: false)
         tableView.reloadData()
@@ -195,17 +194,17 @@ class PopoverViewController: NSViewController {
 
     func addEntry(fromURL url: URL) {
         // Check if the entry already exists.
-        if let app = (state.entries.first { $0.url == url }) {
+        if let entry = (state.getEntries().first { $0.url == url }) {
             let alert = NSAlert()
             alert.messageText = "Duplicate Entry"
-            alert.informativeText = "The application \"\(app.name)\" has already been added. Please edit its entry in the list, or remove it to add it again."
+            alert.informativeText = "The application \"\(entry.name)\" has already been added. Please edit its entry in the list, or remove it to add it again."
             alert.alertStyle = .warning
             alert.runModal()
             return
         }
 
         if let appEntry = ApplicationEntry(url: url, config: nil) {
-            state.entries.append(appEntry)
+            state.addEntry(appEntry)
             tableView.reloadData()
         }
     }
@@ -242,7 +241,7 @@ extension PopoverViewController: NSMenuDelegate {
 
 extension PopoverViewController: NSTableViewDataSource {
     func numberOfRows(in tableView: NSTableView) -> Int {
-        return state.entries.count
+        return state.getEntries().count
     }
 }
 
@@ -269,7 +268,7 @@ extension PopoverViewController: NSTableViewDelegate {
         // Combine settings together: if one app has a flag on, and another off, then the checkbox
         // state will be `.mixed`.
         for index in selectedIndexes {
-            let entry = state.entries[index]
+            let entry = state.getEntry(at: index)
             for (i, tuple) in localConfig.enumerated() {
                 let (button, newState) = tuple
                 let entryValue = entry.config[button.identifier!.rawValue]!
@@ -291,15 +290,15 @@ extension PopoverViewController: NSTableViewDelegate {
 
     func tableView(_ tableView: NSTableView, sortDescriptorsDidChange oldDescriptors: [NSSortDescriptor]) {
         if tableView.sortDescriptors[0].ascending {
-            state.entries.sort { $0.name.lowercased() < $1.name.lowercased() }
+            state.sortEntries(comparator: { $0.name.lowercased() < $1.name.lowercased() })
         } else {
-            state.entries.sort { $0.name.lowercased() > $1.name.lowercased() }
+            state.sortEntries(comparator: { $0.name.lowercased() > $1.name.lowercased() })
         }
         tableView.reloadData()
     }
 
     func tableView(_ tableView: NSTableView, viewFor tableColumn: NSTableColumn?, row: Int) -> NSView? {
-        let item = state.entries[row]
+        let item = state.getEntry(at: row)
 
         // Application column:
         if tableColumn == tableView.tableColumns[0] {
