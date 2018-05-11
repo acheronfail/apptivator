@@ -143,19 +143,45 @@ extension AppDelegate: NSMenuDelegate {
         contextMenu.addItem(NSMenuItem(title: "Active applications", action: nil, keyEquivalent: ""))
         contextMenu.item(at: contextMenu.numberOfItems - 1)?.isEnabled = false
 
+        // HACK: Having custom text for a NSMenuItem's `keyEquivalent` is basically impossible.
+        // You can't change the text, and getting custom views to appear native is practically impossible.
+
+        // Below is a hacky but effective 4-step remedy (inspired by Sublime Text's implementation).
+        // See https://forum.sublimetext.com/t/q-how-does-sublime-create-a-custom-keyequivalent-string-in-its-menu/36825?u=acheronfail
+
+        // 1: We need the width of the longest title (the text on the left of the NSMenuItem).
+        // The added `80` is the margins of the NSMenuItem, the image, plus some inner padding.
+        let maxWidth: CGFloat = entries.reduce(0, { max($0, ($1.name as NSString).size(withAttributes: [.font: contextMenu.font]).width + 80) })
         for entry in entries {
-            // Try and attach observer to app here if none is unattached.
+            // Here we try and attach an observer there isn't already one.
             if !entry.isActive { entry.createObserver(findRunningApp(withURL: entry.url)) }
             if entry.isActive {
-                let menuItem = NSMenuItem(title: entry.name, action: nil, keyEquivalent: "")
-                menuItem.view = MultiMenuItemController.viewFor(entry: entry)
+                let menuItem = NSMenuItem(title: "", action: #selector(apptivate(_:)), keyEquivalent: "")
+                menuItem.image = entry.icon.copy() as? NSImage
+                menuItem.image?.size = NSSize(width: 20, height: 20)
                 menuItem.representedObject = entry
+
+                // 2: Separate the title, and our "keyEquivalent" text with a tab. Make sure that there aren't any extra tabs.
+                let title = "\(entry.name.replacingOccurrences(of: "\t", with: ""))\t\(entry.shortcutString ?? "")"
+                // 3: Create a left-aligned paragraph and use right-aligned tabStops with a location just past the longest title.
+                let paragraph = NSMutableParagraphStyle.init()
+                paragraph.alignment = .left
+                paragraph.tabStops = [NSTextTab.init(textAlignment: .right, location: maxWidth, options: [:])]
+                // 4: Set the NSMenuItem's title to an attributed string with the paragraph attribute we just created.
+                menuItem.attributedTitle = NSMutableAttributedString.init(string: title, attributes: [.paragraphStyle: paragraph])
+
                 contextMenu.addItem(menuItem)
             }
         }
 
         contextMenu.addItem(NSMenuItem.separator())
         contextMenu.addItem(NSMenuItem(title: "Quit \(APP_NAME)", action: #selector(quitApplication), keyEquivalent: ""))
+    }
+
+    @objc func apptivate(_ sender: Any) {
+        if let menuItem = sender as? NSMenuItem {
+            (menuItem.representedObject as? ApplicationEntry)?.apptivate()
+        }
     }
 
     func menuDidClose(_ menu: NSMenu) {

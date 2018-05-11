@@ -17,7 +17,6 @@
 		1537F5E1204C8D860056EE50 /* ApplicationEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1537F5E0204C8D860056EE50 /* ApplicationEntry.swift */; };
 		1547AC99208738310088701F /* CleanroomLogger.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1547AC972087382D0088701F /* CleanroomLogger.framework */; };
 		1547AC9A208738310088701F /* CleanroomLogger.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 1547AC972087382D0088701F /* CleanroomLogger.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		15492101207A399F00E45BBC /* MultiMenuItemController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 154920FF207A399F00E45BBC /* MultiMenuItemController.xib */; };
 		15492103207B53AE00E45BBC /* Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15492102207B53AE00E45BBC /* Util.swift */; };
 		155D2C03204F61220087478B /* Credits.rtfd in Resources */ = {isa = PBXBuildFile; fileRef = 155D2C02204F61220087478B /* Credits.rtfd */; };
 		1561AED2207615AC00C69338 /* UIOverrides.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1561AED1207615AC00C69338 /* UIOverrides.swift */; };
@@ -70,7 +69,6 @@
 		151CF3AA20876C8600D6DC91 /* SwiftyJSON.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftyJSON.framework; path = Carthage/Build/Mac/SwiftyJSON.framework; sourceTree = "<group>"; };
 		1537F5E0204C8D860056EE50 /* ApplicationEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApplicationEntry.swift; sourceTree = "<group>"; };
 		1547AC972087382D0088701F /* CleanroomLogger.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CleanroomLogger.framework; path = Carthage/Build/Mac/CleanroomLogger.framework; sourceTree = "<group>"; };
-		154920FF207A399F00E45BBC /* MultiMenuItemController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MultiMenuItemController.xib; sourceTree = "<group>"; };
 		15492102207B53AE00E45BBC /* Util.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Util.swift; sourceTree = "<group>"; };
 		155D2C02204F61220087478B /* Credits.rtfd */ = {isa = PBXFileReference; lastKnownFileType = wrapper.rtfd; path = Credits.rtfd; sourceTree = "<group>"; };
 		1561AED1207615AC00C69338 /* UIOverrides.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIOverrides.swift; sourceTree = "<group>"; };
@@ -135,7 +133,6 @@
 				159ED107207E379D005489ED /* SequenceViewController.swift */,
 				159ED108207E379D005489ED /* SequenceViewController.xib */,
 				1561AED1207615AC00C69338 /* UIOverrides.swift */,
-				154920FF207A399F00E45BBC /* MultiMenuItemController.xib */,
 			);
 			path = UI;
 			sourceTree = "<group>";
@@ -286,7 +283,6 @@
 				155D2C03204F61220087478B /* Credits.rtfd in Resources */,
 				B3B4C2C61E25894B009F8E4E /* PreferencesPopover.xib in Resources */,
 				159ED10A207E379D005489ED /* SequenceViewController.xib in Resources */,
-				15492101207A399F00E45BBC /* MultiMenuItemController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -223,7 +223,7 @@ extension PopoverViewController: NSMenuDelegate {
             return
         }
 
-        // Get all running application, sort them and add them to the menu.
+        // Get all running applications, sort them and add them to the menu.
         NSWorkspace.shared.runningApplications.compactMap({ runningApp in
             if runningApp.activationPolicy == .regular {
                 let appItem = NSMenuItem(title: runningApp.localizedName!, action: #selector(chooseFromRunningApps(_:)), keyEquivalent: "")
