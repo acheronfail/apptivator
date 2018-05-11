@@ -14,10 +14,10 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "E32E9B621EB87D7B000FEEE9"
-               BuildableName = "LaunchAtLogin.framework"
-               BlueprintName = "LaunchAtLogin"
-               ReferencedContainer = "container:LaunchAtLogin.xcodeproj">
+               BlueprintIdentifier = "E4D7CCDE1B9465A700EE7221"
+               BuildableName = "SwiftyJSON.framework"
+               BlueprintName = "SwiftyJSON watchOS"
+               ReferencedContainer = "container:SwiftyJSON.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -45,10 +45,10 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "E32E9B621EB87D7B000FEEE9"
-            BuildableName = "LaunchAtLogin.framework"
-            BlueprintName = "LaunchAtLogin"
-            ReferencedContainer = "container:LaunchAtLogin.xcodeproj">
+            BlueprintIdentifier = "E4D7CCDE1B9465A700EE7221"
+            BuildableName = "SwiftyJSON.framework"
+            BlueprintName = "SwiftyJSON watchOS"
+            ReferencedContainer = "container:SwiftyJSON.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
       <AdditionalOptions>
@@ -63,10 +63,10 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "E32E9B621EB87D7B000FEEE9"
-            BuildableName = "LaunchAtLogin.framework"
-            BlueprintName = "LaunchAtLogin"
-            ReferencedContainer = "container:LaunchAtLogin.xcodeproj">
+            BlueprintIdentifier = "E4D7CCDE1B9465A700EE7221"
+            BuildableName = "SwiftyJSON.framework"
+            BlueprintName = "SwiftyJSON watchOS"
+            ReferencedContainer = "container:SwiftyJSON.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
    </ProfileAction>
