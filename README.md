@@ -14,7 +14,7 @@ Simply download the dmg from the [releases](https://github.com/acheronfail/appti
 
 ## Usage
 
-It's simple really. Once Apptivator is running you'll see an icon in your menubar - click it to enable/disable Apptivator's functionality. You can open the shortcuts window by right-clicking on the icon and choosing it from the menu.
+It's simple really. Once Apptivator is running you'll see an icon in your menubar - click it to enable/disable Apptivator's functionality. You can open the shortcuts window by clicking on the icon and choosing it from the menu.
 
 In the menu, select an application (or exectuable) from the Finder (or optionally choose from running applications) and register a sequence for it. From now on (as long as Apptivator is enabled) you can activate that application via the sequence you set for it.
 
@@ -24,7 +24,7 @@ Apptivator uses something called a "shortcut sequence" to define hotkeys. This m
 
 #### Make apps appear on every space
 
-If you want your applications to appear on every space, I recommend allowing the application to appear on all spaces. This can be done by right-clicking on the icon in the dock and selecting -> `Options` -> `All Desktops`.
+If you want your applications to appear on every space, I recommend allowing the application to appear on all spaces. This can be done by clicking on the icon in the dock and selecting -> `Options` -> `All Desktops`.
 
 ### Options
 
@@ -47,8 +47,10 @@ Apptivator has some experimental overrides that can be toggled via the Terminal 
 
 ## Questions/Concerns
 
+* **Nothing works, no shortcuts do anything**
+	- Make sure that Apptivator is enabled! You can enable/disable it by right-clicking on the menu bar icon - you can see if Apptivator is off/on by left-clicking on the icon to show the menu. The first item in the menu will display whether Apptivator is on or off.
 * **When I activate my app its window doesn't appear**
-	- Set the application to appear on all spaces. This can be done by right-clicking on the icon in the dock and selecting -> `Options` -> `All Desktops` (see [#12](https://github.com/acheronfail/apptivator/issues/12#issuecomment-370787813) for a discussion and ways to automate this).
+	- Set the application to appear on all spaces. This can be done by clicking on the icon in the dock and selecting -> `Options` -> `All Desktops` (see [#12](https://github.com/acheronfail/apptivator/issues/12#issuecomment-370787813) for a discussion and ways to automate this).
 * **Activating my app always moves my computer to another space**
 	- This won't happen if the `Options` -> `All Desktops` is set for the application.
 	- The behaviour can be adjusted by going to `System Preferences` -> `Mission Control` -> and enabling/disabling the checkbox: `When switching to an application, switch to a Space with open windows for the application`
