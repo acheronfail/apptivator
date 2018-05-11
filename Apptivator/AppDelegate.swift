@@ -143,7 +143,7 @@ extension AppDelegate: NSMenuDelegate {
         contextMenu.addItem(NSMenuItem(title: "Active applications", action: nil, keyEquivalent: ""))
         contextMenu.item(at: contextMenu.numberOfItems - 1)?.isEnabled = false
 
-        // HACK: Having custom text for a NSMenuItem's `keyEquivalent` is basically impossible.
+        // HACK: Having custom text for a NSMenuItem's `keyEquivalent` is unnecessarily difficult.
         // You can't change the text, and getting custom views to appear native is practically impossible.
 
         // Below is a hacky but effective 4-step remedy (inspired by Sublime Text's implementation).
