@@ -167,10 +167,10 @@ extension AppDelegate: NSMenuDelegate {
 
                 // 2: Separate the title, and our "keyEquivalent" text with a tab. Make sure that there aren't any extra tabs.
                 let title = "\(entry.name.replacingOccurrences(of: "\t", with: ""))\t\(entry.shortcutString ?? "")"
-                // 3: Create a left-aligned paragraph and use right-aligned tabStops with a location just past the longest title.
+                // 3: Create a left-aligned paragraph and use left-aligned tabStops with a long enough stop location (with width from earlier).
                 let paragraph = NSMutableParagraphStyle.init()
                 paragraph.alignment = .left
-                paragraph.tabStops = [NSTextTab.init(textAlignment: .right, location: maxWidth, options: [:])]
+                paragraph.tabStops = [NSTextTab.init(textAlignment: .left, location: maxWidth, options: [:])]
                 // 4: Set the NSMenuItem's title to an attributed string with the paragraph attribute we just created.
                 menuItem.attributedTitle = NSMutableAttributedString.init(string: title, attributes: [.paragraphStyle: paragraph])
 
