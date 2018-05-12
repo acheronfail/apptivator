@@ -57,7 +57,11 @@ let ICON_OFF = setupMenuBarIcon(NSImage(named: NSImage.Name(rawValue: "icon-off"
             Log.info?.message("Application does not have Accessibility Permissions, requesting...")
             let alert = NSAlert()
             alert.messageText = "Action Required"
-            alert.informativeText = "\(APP_NAME) requires access to the accessibility API in order to hide/show other application's windows.\n\nPlease open System Preferences and allow \(APP_NAME) access.\n\nSystem Preferences -> Security & Privacy -> Privacy"
+            alert.informativeText = """
+            \(APP_NAME) requires access to the accessibility API in order to hide/show other application's windows.\n
+            Please open System Preferences and allow \(APP_NAME) access.\n
+            System Preferences -> Security & Privacy -> Privacy
+            """
             alert.alertStyle = .warning
             alert.runModal()
         }
