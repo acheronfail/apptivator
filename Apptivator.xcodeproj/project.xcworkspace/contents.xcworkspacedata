@@ -2,6 +2,9 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "self:Apptivator.xcodeproj">
+      location = "container:/Users/acheronfail/src/Apptivator/Apptivator/README.md">
+   </FileRef>
+   <FileRef
+      location = "self:">
    </FileRef>
 </Workspace>

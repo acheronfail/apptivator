@@ -13,7 +13,7 @@ let ICON_OFF = setupMenuBarIcon(NSImage(named: NSImage.Name(rawValue: "icon-off"
 
 @NSApplicationMain class AppDelegate: NSObject, NSApplicationDelegate {
     @IBOutlet weak var popover: NSPopover!
-    @IBOutlet weak var popoverViewController: PopoverViewController!
+    @IBOutlet weak var popoverViewController: APPopoverViewController!
 
     private var contextMenu: NSMenu = NSMenu()
     private var menuBarItem: NSStatusItem! = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
@@ -24,7 +24,7 @@ let ICON_OFF = setupMenuBarIcon(NSImage(named: NSImage.Name(rawValue: "icon-off"
     private let invisibleWindow = NSWindow(contentRect: NSMakeRect(0, 0, 1, 1), styleMask: .borderless, backing: .buffered, defer: false)
 
     func applicationWillFinishLaunching(_ notification: Notification) {
-        let minimumSeverity: LogSeverity = ApplicationState.shared.defaults.bool(forKey: "debugMode") ? .debug : .info
+        let minimumSeverity: LogSeverity = APState.shared.defaults.bool(forKey: "debugMode") ? .debug : .info
         var logConfigurations: [LogConfiguration] = [
             RotatingLogFileConfiguration(minimumSeverity: minimumSeverity, daysToKeep: 7, directoryPath: defaultLogPath().path)
         ]
@@ -32,7 +32,7 @@ let ICON_OFF = setupMenuBarIcon(NSImage(named: NSImage.Name(rawValue: "icon-off"
         logConfigurations.append(XcodeLogConfiguration(minimumSeverity: .debug))
         #endif
         Log.enable(configuration: logConfigurations)
-        ApplicationState.shared.loadFromDisk()
+        APState.shared.loadFromDisk()
     }
 
     func applicationDidFinishLaunching(_ aNotification: Notification) {
@@ -49,7 +49,7 @@ let ICON_OFF = setupMenuBarIcon(NSImage(named: NSImage.Name(rawValue: "icon-off"
         menuBarItem.action = #selector(onMenuClick)
         menuBarItem.sendAction(on: [.leftMouseUp, .rightMouseUp])
 
-        enable(ApplicationState.shared.isEnabled)
+        enable(APState.shared.isEnabled)
         popoverViewController.reloadView()
 
         // Check for accessibility permissions.
@@ -70,26 +70,26 @@ let ICON_OFF = setupMenuBarIcon(NSImage(named: NSImage.Name(rawValue: "icon-off"
     }
 
     func applicationWillTerminate(_ aNotification: Notification) {
-        ApplicationState.shared.saveToDisk()
+        APState.shared.saveToDisk()
     }
 
     func enable(_ flag: Bool) {
-        ApplicationState.shared.isEnabled = flag
+        APState.shared.isEnabled = flag
         menuBarItem?.image = flag ? ICON_ON : ICON_OFF
         enabledIndicator.title = flag ? ENABLED_INDICATOR_ON : ENABLED_INDICATOR_OFF
     }
 
     @objc func onMenuClick(sender: NSStatusItem) {
-        let leftClickToggles = ApplicationState.shared.defaults.bool(forKey: "leftClickToggles")
+        let leftClickToggles = APState.shared.defaults.bool(forKey: "leftClickToggles")
         let toggleEvent: NSEvent.EventType = leftClickToggles ? .leftMouseUp : .rightMouseUp
         let dropdownEvent: NSEvent.EventType = leftClickToggles ? .rightMouseUp : .leftMouseUp
 
         let event = NSApp.currentEvent!
         if event.type == dropdownEvent {
-            buildContextMenu(ApplicationState.shared.getEntries())
+            buildContextMenu(APState.shared.getEntries())
             menuBarItem?.popUpMenu(contextMenu)
         } else if event.type == toggleEvent {
-            enable(!ApplicationState.shared.isEnabled)
+            enable(!APState.shared.isEnabled)
         }
     }
 
@@ -112,7 +112,7 @@ let ICON_OFF = setupMenuBarIcon(NSImage(named: NSImage.Name(rawValue: "icon-off"
             let screenBounds = menuBarButton.window!.convertToScreen(buttonBounds)
 
             var xPosition: CGFloat
-            if ApplicationState.shared.defaults.bool(forKey: "showPopoverOnScreenWithMouse"), let screen = getScreenWithMouse() {
+            if APState.shared.defaults.bool(forKey: "showPopoverOnScreenWithMouse"), let screen = getScreenWithMouse() {
                 xPosition = screen.frame.origin.x + screen.frame.width - 1
             } else {
                 // Account for Bartender moving the menu bar item offscreen. If the midpoint doesn't
@@ -138,53 +138,54 @@ let ICON_OFF = setupMenuBarIcon(NSImage(named: NSImage.Name(rawValue: "icon-off"
 }
 
 extension AppDelegate: NSMenuDelegate {
-    func buildContextMenu(_ entries: ArraySlice<ApplicationEntry>) {
+    func buildContextMenu(_ entries: ArraySlice<APAppEntry>) {
         contextMenu.addItem(enabledIndicator)
-        contextMenu.addItem(NSMenuItem(title: "Configure Shortcuts", action: #selector(togglePreferencesPopover), keyEquivalent: ""))
-        contextMenu.addItem(NSMenuItem.separator())
-        contextMenu.addItem(NSMenuItem(title: "About", action: #selector(showAboutPanel), keyEquivalent: ""))
-        contextMenu.addItem(NSMenuItem.separator())
-        contextMenu.addItem(NSMenuItem(title: "Active applications", action: nil, keyEquivalent: ""))
-        contextMenu.item(at: contextMenu.numberOfItems - 1)?.isEnabled = false
+        contextMenu.addItem(withTitle: "Configure Shortcuts", action: #selector(togglePreferencesPopover), keyEquivalent: "")
+        contextMenu.addItem(.separator())
+        contextMenu.addItem(withTitle: "About", action: #selector(showAboutPanel), keyEquivalent: "")
+        contextMenu.addItem(.separator())
 
-        // HACK: Having custom text for a NSMenuItem's `keyEquivalent` is unnecessarily difficult.
-        // You can't change the text, and getting custom views to appear native is practically impossible.
+        if entries.count > 0 {
+            let activeApps = contextMenu.addItem(withTitle: "Active applications", action: nil, keyEquivalent: "")
+            activeApps.isEnabled = false
 
-        // Below is a hacky but effective 4-step remedy (inspired by Sublime Text's implementation).
-        // See https://forum.sublimetext.com/t/q-how-does-sublime-create-a-custom-keyequivalent-string-in-its-menu/36825?u=acheronfail
+            // HACK: Having custom text for a NSMenuItem's `keyEquivalent` is unnecessarily difficult.
+            // You can't change the text, and getting custom views to appear native is practically impossible.
 
-        // 1: We need the width of the longest title (the text on the left of the NSMenuItem).
-        // The added `80` is the margins of the NSMenuItem, the image, plus some inner padding.
-        let maxWidth: CGFloat = entries.reduce(0, { max($0, ($1.name as NSString).size(withAttributes: [.font: contextMenu.font]).width + 80) })
-        for entry in entries {
-            // Here we try and attach an observer there isn't already one.
-            if !entry.isActive { entry.createObserver(findRunningApp(withURL: entry.url)) }
-            if entry.isActive {
-                let menuItem = NSMenuItem(title: "", action: #selector(apptivate(_:)), keyEquivalent: "")
-                menuItem.image = entry.icon.copy() as? NSImage
-                menuItem.image?.size = NSSize(width: 20, height: 20)
-                menuItem.representedObject = entry
+            // Below is a hacky but effective 4-step remedy (inspired by Sublime Text's implementation).
+            // See https://forum.sublimetext.com/t/q-how-does-sublime-create-a-custom-keyequivalent-string-in-its-menu/36825?u=acheronfail
 
-                // 2: Separate the title, and our "keyEquivalent" text with a tab. Make sure that there aren't any extra tabs.
-                let title = "\(entry.name.replacingOccurrences(of: "\t", with: ""))\t\(entry.shortcutString ?? "")"
-                // 3: Create a left-aligned paragraph and use left-aligned tabStops with a long enough stop location (with width from earlier).
-                let paragraph = NSMutableParagraphStyle.init()
-                paragraph.alignment = .left
-                paragraph.tabStops = [NSTextTab.init(textAlignment: .left, location: maxWidth, options: [:])]
-                // 4: Set the NSMenuItem's title to an attributed string with the paragraph attribute we just created.
-                menuItem.attributedTitle = NSMutableAttributedString.init(string: title, attributes: [.paragraphStyle: paragraph])
+            // 1: We need the width of the longest title (the text on the left of the NSMenuItem).
+            // The added `80` is the margins of the NSMenuItem, the image, plus some inner padding.
+            let maxWidth: CGFloat = entries.reduce(0, { max($0, ($1.name as NSString).size(withAttributes: [.font: contextMenu.font]).width + 80) })
+            for entry in entries {
+                // Here we try and attach an observer there isn't already one.
+                if !entry.isActive { entry.createObserver(findRunningApp(withURL: entry.url)) }
+                if entry.isActive {
+                    let menuItem = contextMenu.addItem(withTitle: "", action: #selector(apptivate(_:)), keyEquivalent: "")
+                    menuItem.image = entry.icon.copy() as? NSImage
+                    menuItem.image?.size = NSSize(width: 20, height: 20)
+                    menuItem.representedObject = entry
 
-                contextMenu.addItem(menuItem)
+                    // 2: Separate the title, and our "keyEquivalent" text with a tab. Make sure that there aren't any extra tabs.
+                    let title = "\(entry.name.replacingOccurrences(of: "\t", with: ""))\t\(entry.shortcutString ?? "")"
+                    // 3: Create a left-aligned paragraph and use left-aligned tabStops with a long enough stop location (with width from earlier).
+                    let paragraph = NSMutableParagraphStyle.init()
+                    paragraph.alignment = .left
+                    paragraph.tabStops = [NSTextTab.init(textAlignment: .left, location: maxWidth, options: [:])]
+                    // 4: Set the NSMenuItem's title to an attributed string with the paragraph attribute we just created.
+                    menuItem.attributedTitle = NSMutableAttributedString.init(string: title, attributes: [.paragraphStyle: paragraph])
+                }
             }
         }
 
-        contextMenu.addItem(NSMenuItem.separator())
-        contextMenu.addItem(NSMenuItem(title: "Quit \(APP_NAME)", action: #selector(quitApplication), keyEquivalent: ""))
+        contextMenu.addItem(.separator())
+        contextMenu.addItem(withTitle: "Quit \(APP_NAME)", action: #selector(quitApplication), keyEquivalent: "")
     }
 
     @objc func apptivate(_ sender: Any) {
         if let menuItem = sender as? NSMenuItem {
-            (menuItem.representedObject as? ApplicationEntry)?.apptivate()
+            (menuItem.representedObject as? APAppEntry)?.apptivate()
         }
     }
 

@@ -1,5 +1,5 @@
 //
-//  Configuration.swift
+//  APState.swift
 //  Apptivator
 //
 
@@ -8,9 +8,9 @@ import MASShortcut
 import LaunchAtLogin
 import CleanroomLogger
 
-@objcMembers class ApplicationState: NSObject {
+@objcMembers class APState: NSObject {
     // Only one instance of this class should be used at a time.
-    static var shared = ApplicationState(atPath: defaultConfigurationPath())
+    static var shared = APState(atPath: defaultConfigurationPath())
 
     // Location of our serialised application state.
     let savePath: URL
@@ -46,7 +46,7 @@ import CleanroomLogger
     // The list of application -> shortcut mappings. Made private because whenever we need to
     // unregister an entry's shortcuts otherwise its reference count will always be > 0. So we
     // provide helpers to manipulate this array.
-    private var entries: [ApplicationEntry] = []
+    private var entries: [APAppEntry] = []
 
     private init(atPath url: URL) {
         self.savePath = url
@@ -64,21 +64,21 @@ import CleanroomLogger
         // See https://github.com/acheronfail/MASShortcut/tree/custom
         MASShortcutValidator.shared().allowAnyShortcut = true
 
-        Log.info?.message("ApplicationState initialised at \(url.path)")
+        Log.info?.message("APState initialised at \(url.path)")
     }
 
     // Get a specific entry at the given index.
-    func getEntry(at index: Int) -> ApplicationEntry {
+    func getEntry(at index: Int) -> APAppEntry {
         return entries[index]
     }
 
     // Return a slice of the entries array.
-    func getEntries() -> ArraySlice<ApplicationEntry> {
+    func getEntries() -> ArraySlice<APAppEntry> {
         return entries[0..<entries.count]
     }
 
     // Add an entry.
-    func addEntry(_ entry: ApplicationEntry) {
+    func addEntry(_ entry: APAppEntry) {
         entries.append(entry)
         registerShortcuts()
     }
@@ -96,7 +96,7 @@ import CleanroomLogger
         registerShortcuts()
     }
 
-    func sortEntries(comparator: (ApplicationEntry, ApplicationEntry) -> Bool) {
+    func sortEntries(comparator: (APAppEntry, APAppEntry) -> Bool) {
         entries.sort(by: comparator)
     }
 
@@ -174,7 +174,7 @@ import CleanroomLogger
 
     // This is called when a key is hit in a sequence of shortcuts. If it's the last shortcut, it
     // will activate the app, otherwise it will just advance the sequence along.
-    private func keyFired(_ i: Int, _ entry: ApplicationEntry, _ shortcut: MASShortcut) {
+    private func keyFired(_ i: Int, _ entry: APAppEntry, _ shortcut: MASShortcut) {
         if currentlyRecording { return }
         if i > 0 { timer?.invalidate() }
 
@@ -192,8 +192,8 @@ import CleanroomLogger
 
     // This checks the given sequences to see if it conflicts with another sequence. Shortcut
     // sequences must have unique prefixes, so that each one can be distinguished from another.
-    // See `SequenceViewController.updateUIWith()`.
-    func checkForConflictingSequence(_ otherSequence: [MASShortcutView], excluding otherEntry: ApplicationEntry?) -> ApplicationEntry? {
+    // See `APSequenceViewController.updateUIWith()`.
+    func checkForConflictingSequence(_ otherSequence: [MASShortcutView], excluding otherEntry: APAppEntry?) -> APAppEntry? {
         // It doesn't make sense to call this function with an empty sequence.
         assert(otherSequence.count > 0, "tried to check sequence with count == 0")
 
@@ -247,13 +247,13 @@ import CleanroomLogger
                 case "appIsEnabled":
                     _isEnabled = value.bool ?? true
                 case "entries":
-                    entries = ApplicationEntry.deserialiseList(fromJSON: value)
+                    entries = APAppEntry.deserialiseList(fromJSON: value)
                 default:
                     Log.warning?.message("unknown key '\(key)' encountered in json")
                 }
             }
 
-            if ApplicationState.shared.defaults.bool(forKey: "matchAppleInterfaceStyle") {
+            if APState.shared.defaults.bool(forKey: "matchAppleInterfaceStyle") {
                 darkModeEnabled = appleInterfaceStyleIsDark()
             }
 
@@ -266,7 +266,7 @@ import CleanroomLogger
         let json: JSON = [
             "appIsEnabled": _isEnabled,
             "darkModeEnabled": darkModeEnabled,
-            "entries": ApplicationEntry.serialiseList(entries: getEntries())
+            "entries": APAppEntry.serialiseList(entries: getEntries())
         ]
         do {
             if let jsonString = json.rawString() {

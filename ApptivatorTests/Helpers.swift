@@ -24,8 +24,8 @@ func shortcutView(withKeyCode keyCode: UInt, modifierFlags: UInt) -> MASShortcut
     return shortcutView
 }
 
-func entry(atURL url: URL, sequence: [MASShortcutView]) -> ApplicationEntry {
-    let entry = ApplicationEntry(url: url, config: nil)!
+func entry(atURL url: URL, sequence: [MASShortcutView]) -> APAppEntry {
+    let entry = APAppEntry(url: url, config: nil)!
     entry.sequence = sequence
     return entry
 }

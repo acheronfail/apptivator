@@ -1,5 +1,5 @@
 //
-//  ApplicationStateTests.swift
+//  APStateTests.swift
 //  ApptivatorTests
 //
 
@@ -7,7 +7,7 @@ import XCTest
 
 @testable import Apptivator
 
-class ApplicationStateTests: XCTestCase {
+class APStateTests: XCTestCase {
     func testSequencesDoNotConflict() {
         resetState(withSampleEntries: true)
         let sequences = [
@@ -32,7 +32,7 @@ class ApplicationStateTests: XCTestCase {
         ]
         for (i, pair) in sequences.enumerated() {
             let (shouldConflict, sequence) = pair
-            let didConflict = ApplicationState.shared.checkForConflictingSequence(sequence, excluding: nil) != nil
+            let didConflict = APState.shared.checkForConflictingSequence(sequence, excluding: nil) != nil
             XCTAssert(didConflict == shouldConflict, "Incorrect assertion at index: \(i)")
         }
     }
@@ -51,33 +51,33 @@ class ApplicationStateTests: XCTestCase {
         ]
 
         // Initial.
-        ApplicationState.shared.registerShortcuts(atIndex: 0, last: nil)
+        APState.shared.registerShortcuts(atIndex: 0, last: nil)
         expected = [true, false, false, true, false, false, true]
         zip(shortcuts, expected).forEach({ XCTAssert(isShortcutRegistered($0.0, $0.1) == $1) })
 
         // Xcode shortcut #1.
-        ApplicationState.shared.registerShortcuts(atIndex: 1, last: (KEY_A, CMD_SHIFT))
+        APState.shared.registerShortcuts(atIndex: 1, last: (KEY_A, CMD_SHIFT))
         expected = [false, true, false, true, false, false, false]
         zip(shortcuts, expected).forEach({ XCTAssert(isShortcutRegistered($0.0, $0.1) == $1) })
 
         // Xcode shortcut #2. This is when the sequence is complete, so this should never really be
         // called - it should reset at this point. Just check that no other shortcuts are registered.
-        ApplicationState.shared.registerShortcuts(atIndex: 2, last: (KEY_B, CMD_SHIFT))
+        APState.shared.registerShortcuts(atIndex: 2, last: (KEY_B, CMD_SHIFT))
         expected = [false, false, false, false, false, false, false]
         zip(shortcuts, expected).forEach({ XCTAssert(isShortcutRegistered($0.0, $0.1) == $1) })
 
         // Initial, again.
-        ApplicationState.shared.registerShortcuts(atIndex: 0, last: nil)
+        APState.shared.registerShortcuts(atIndex: 0, last: nil)
         expected = [true, false, false, true, false, false, true]
         zip(shortcuts, expected).forEach({ XCTAssert(isShortcutRegistered($0.0, $0.1) == $1) })
 
         // System Preferences.app shortcut #1.
-        ApplicationState.shared.registerShortcuts(atIndex: 1, last: (KEY_G, CMD_SHIFT))
+        APState.shared.registerShortcuts(atIndex: 1, last: (KEY_G, CMD_SHIFT))
         expected = [false, false, false, false, false, true, false]
         zip(shortcuts, expected).forEach({ XCTAssert(isShortcutRegistered($0.0, $0.1) == $1) })
 
         // System Preferences.app shortcut #2.
-        ApplicationState.shared.registerShortcuts(atIndex: 2, last: (KEY_F, CMD_SHIFT))
+        APState.shared.registerShortcuts(atIndex: 2, last: (KEY_F, CMD_SHIFT))
         expected = [false, false, false, false, true, false, false]
         zip(shortcuts, expected).forEach({ XCTAssert(isShortcutRegistered($0.0, $0.1) == $1) })
     }
@@ -86,16 +86,16 @@ class ApplicationStateTests: XCTestCase {
         resetState(withSampleEntries: false)
 
         // Make changes to the state.
-        ApplicationState.shared.isEnabled = false
-        ApplicationState.shared.darkModeEnabled = true
-        ApplicationState.shared.addEntry(entry(atURL: URL(fileURLWithPath: "/Applications/Xcode.app"), sequence: [shortcutView(withKeyCode: 120, modifierFlags: 0)]))
-        ApplicationState.shared.addEntry(ApplicationEntry(url: URL(fileURLWithPath: "/Applications/Calculator.app"), config: nil)!)
+        APState.shared.isEnabled = false
+        APState.shared.darkModeEnabled = true
+        APState.shared.addEntry(entry(atURL: URL(fileURLWithPath: "/Applications/Xcode.app"), sequence: [shortcutView(withKeyCode: 120, modifierFlags: 0)]))
+        APState.shared.addEntry(APAppEntry(url: URL(fileURLWithPath: "/Applications/Calculator.app"), config: nil)!)
 
         // Write to disk.
-        ApplicationState.shared.saveToDisk()
+        APState.shared.saveToDisk()
         // Save written json.
         do {
-            let savePath = ApplicationState.shared.savePath
+            let savePath = APState.shared.savePath
             let newPath = URL(fileURLWithPath: savePath.path + ".backup")
             if FileManager.default.fileExists(atPath: newPath.path) {
                 try FileManager.default.removeItem(at: newPath)
@@ -115,15 +115,15 @@ class ApplicationStateTests: XCTestCase {
         }
 
         // Reload from disk.
-        ApplicationState.shared.loadFromDisk()
+        APState.shared.loadFromDisk()
 
         // Compare the two states for equality.
-        XCTAssert(ApplicationState.shared.darkModeEnabled == true)
-        XCTAssert(ApplicationState.shared.getEntries().count == 2)
+        XCTAssert(APState.shared.darkModeEnabled == true)
+        XCTAssert(APState.shared.getEntries().count == 2)
     }
 
     func isShortcutRegistered(_ keyCode: UInt, _ modifierFlags: UInt) -> Bool {
-        return ApplicationState.shared.monitor.isShortcutRegistered(MASShortcut(keyCode: keyCode, modifierFlags: modifierFlags))
+        return APState.shared.monitor.isShortcutRegistered(MASShortcut(keyCode: keyCode, modifierFlags: modifierFlags))
     }
 
     func getTemporaryFilePath() -> URL {
@@ -134,11 +134,11 @@ class ApplicationStateTests: XCTestCase {
 func resetState(withSampleEntries: Bool) {
     // Clear the application state (write an empty file to load it from).
     do {
-        try "{}".write(to: ApplicationState.shared.savePath, atomically: false, encoding: .utf8)
+        try "{}".write(to: APState.shared.savePath, atomically: false, encoding: .utf8)
     } catch {
         XCTFail(error.localizedDescription)
     }
-    ApplicationState.shared.loadFromDisk()
+    APState.shared.loadFromDisk()
     if withSampleEntries {
         [
             entry(atURL: URL(fileURLWithPath: "/Applications/Xcode.app"), sequence: [
@@ -157,6 +157,6 @@ func resetState(withSampleEntries: Bool) {
                 shortcutView(withKeyCode: KEY_F, modifierFlags: CMD_SHIFT),
                 shortcutView(withKeyCode: KEY_E, modifierFlags: CMD_SHIFT)
             ])
-        ].forEach({ ApplicationState.shared.addEntry($0) })
+        ].forEach({ APState.shared.addEntry($0) })
     }
 }

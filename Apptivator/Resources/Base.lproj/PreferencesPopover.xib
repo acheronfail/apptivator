@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="14109" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
     <dependencies>
-        <deployment identifier="macosx"/>
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="14109"/>
         <capability name="box content view" minToolsVersion="7.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -20,7 +19,7 @@
                 <outlet property="popoverViewController" destination="goT-YD-soK" id="pWf-s8-gZe"/>
             </connections>
         </customObject>
-        <viewController id="goT-YD-soK" customClass="PopoverViewController" customModule="Apptivator" customModuleProvider="target">
+        <viewController id="goT-YD-soK" customClass="APPopoverViewController" customModule="Apptivator" customModuleProvider="target">
             <connections>
                 <outlet property="addButton" destination="Z53-PH-wbI" id="x6P-Uw-dhO"/>
                 <outlet property="appDelegate" destination="Voe-Tx-rLC" id="k1C-Cb-LO9"/>
@@ -73,7 +72,7 @@
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <clipView key="contentView" ambiguous="YES" drawsBackground="NO" copiesOnScroll="NO" id="G3h-rF-URc">
                                                 <rect key="frame" x="1" y="1" width="448" height="177"/>
-                                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                                <autoresizingMask key="autoresizingMask"/>
                                                 <subviews>
                                                     <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" alternatingRowBackgroundColors="YES" columnSelection="YES" autosaveColumns="NO" rowHeight="19" rowSizeStyle="automatic" headerView="g5N-HU-6HD" viewBased="YES" id="2eX-UM-aS6">
                                                         <rect key="frame" x="0.0" y="0.0" width="448" height="154"/>
@@ -139,7 +138,7 @@
                                                                         <rect key="frame" x="305" y="1" width="141" height="19"/>
                                                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                         <subviews>
-                                                                            <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="yO4-3o-fqc" customClass="ShortcutButton" customModule="Apptivator" customModuleProvider="target">
+                                                                            <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="yO4-3o-fqc" customClass="APShortcutButton" customModule="Apptivator" customModuleProvider="target">
                                                                                 <rect key="frame" x="0.0" y="0.0" width="141" height="19"/>
                                                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                                                 <buttonCell key="cell" type="roundRect" title="Sequence" bezelStyle="roundedRect" alignment="center" lineBreakMode="truncatingMiddle" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="mpg-Qj-oA6">
@@ -156,7 +155,7 @@
                                                 </subviews>
                                             </clipView>
                                             <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="YES" id="I79-T7-Wwo">
-                                                <rect key="frame" x="1" y="162" width="448" height="16"/>
+                                                <rect key="frame" x="1" y="8" width="0.0" height="16"/>
                                                 <autoresizingMask key="autoresizingMask"/>
                                             </scroller>
                                             <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" doubleValue="1" horizontal="NO" id="hOs-IS-OD2">
@@ -182,7 +181,7 @@
                                         <button identifier="hideWithShortcutWhenActive" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="fm8-ma-Yip">
                                             <rect key="frame" x="8" y="80" width="252" height="18"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                            <buttonCell key="cell" type="check" title="Hide when active and shortcut is fired" bezelStyle="regularSquare" imagePosition="left" enabled="NO" allowsMixedState="YES" inset="2" id="LqG-bN-Qs4" customClass="MixedCheckboxCell" customModule="Apptivator" customModuleProvider="target">
+                                            <buttonCell key="cell" type="check" title="Hide when active and shortcut is fired" bezelStyle="regularSquare" imagePosition="left" enabled="NO" allowsMixedState="YES" inset="2" id="LqG-bN-Qs4" customClass="APMixedButtonCell" customModule="Apptivator" customModuleProvider="target">
                                                 <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                                 <font key="font" metaFont="system"/>
                                             </buttonCell>
@@ -193,7 +192,7 @@
                                         <button identifier="showOnScreenWithMouse" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="bXg-rt-UMh">
                                             <rect key="frame" x="8" y="60" width="248" height="18"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                            <buttonCell key="cell" type="check" title="Show windows on screen with mouse" bezelStyle="regularSquare" imagePosition="left" enabled="NO" identifier="showOnScreenWithMouse" allowsMixedState="YES" inset="2" id="6s4-a3-huF" customClass="MixedCheckboxCell" customModule="Apptivator" customModuleProvider="target">
+                                            <buttonCell key="cell" type="check" title="Show windows on screen with mouse" bezelStyle="regularSquare" imagePosition="left" enabled="NO" identifier="showOnScreenWithMouse" allowsMixedState="YES" inset="2" id="6s4-a3-huF" customClass="APMixedButtonCell" customModule="Apptivator" customModuleProvider="target">
                                                 <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                                 <font key="font" metaFont="system"/>
                                             </buttonCell>
@@ -204,7 +203,7 @@
                                         <button identifier="hideWhenDeactivated" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="bJl-e3-U5r">
                                             <rect key="frame" x="8" y="40" width="242" height="18"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                            <buttonCell key="cell" type="check" title="Automatically hide when loses focus" bezelStyle="regularSquare" imagePosition="left" enabled="NO" allowsMixedState="YES" inset="2" id="tsm-Jq-Dpu" customClass="MixedCheckboxCell" customModule="Apptivator" customModuleProvider="target">
+                                            <buttonCell key="cell" type="check" title="Automatically hide when loses focus" bezelStyle="regularSquare" imagePosition="left" enabled="NO" allowsMixedState="YES" inset="2" id="tsm-Jq-Dpu" customClass="APMixedButtonCell" customModule="Apptivator" customModuleProvider="target">
                                                 <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                                 <font key="font" metaFont="system"/>
                                             </buttonCell>
@@ -215,7 +214,7 @@
                                         <button identifier="launchIfNotRunning" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="QZZ-PQ-w5a">
                                             <rect key="frame" x="8" y="20" width="151" height="18"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                            <buttonCell key="cell" type="check" title="Launch if not running" bezelStyle="regularSquare" imagePosition="left" enabled="NO" allowsMixedState="YES" inset="2" id="Y7i-5C-KTK" customClass="MixedCheckboxCell" customModule="Apptivator" customModuleProvider="target">
+                                            <buttonCell key="cell" type="check" title="Launch if not running" bezelStyle="regularSquare" imagePosition="left" enabled="NO" allowsMixedState="YES" inset="2" id="Y7i-5C-KTK" customClass="APMixedButtonCell" customModule="Apptivator" customModuleProvider="target">
                                                 <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                                 <font key="font" metaFont="system"/>
                                             </buttonCell>

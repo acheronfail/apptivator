@@ -1,5 +1,5 @@
 //
-//  SequenceViewController.swift
+//  APSequenceViewController.swift
 //  Apptivator
 //
 
@@ -15,7 +15,7 @@ enum UIStates {
     case ConflictingShortcuts
 }
 
-class SequenceViewController: NSViewController {
+class APSequenceViewController: NSViewController {
     // View animation lifecycle hooks.
     var beforeAdded: (() -> Void)?
     var afterAdded: (() -> Void)?
@@ -30,7 +30,7 @@ class SequenceViewController: NSViewController {
         // Filter out any nil values.
         get { return list.compactMap({ $0.0.shortcutValue != nil ? $0.0 : nil }) }
     }
-    var entry: ApplicationEntry! {
+    var entry: APAppEntry! {
         // Copy the entry's sequence.
         didSet {
             list = entry.sequence.map({
@@ -53,7 +53,7 @@ class SequenceViewController: NSViewController {
         // This is a sanity check: the save button should never be enabled without a valid sequence.
         assert(sequence.count > 0, "sequence.count must be > 0.")
 
-        if ApplicationState.shared.checkForConflictingSequence(sequence, excluding: self.entry) == nil {
+        if APState.shared.checkForConflictingSequence(sequence, excluding: self.entry) == nil {
             entry.sequence = sequence
             slideOutAndRemove()
         } else {
@@ -85,7 +85,7 @@ class SequenceViewController: NSViewController {
             view.shortcutValue = MASShortcut(keyCode: keyCode!, modifierFlags: modifierFlags!)
         }
         view.shortcutValueChange = updateList
-        let watcher = view.observe(\.isRecording, changeHandler: ApplicationState.shared.onRecordingChange)
+        let watcher = view.observe(\.isRecording, changeHandler: APState.shared.onRecordingChange)
         return (view, watcher)
     }
 
@@ -99,7 +99,7 @@ class SequenceViewController: NSViewController {
         }
 
         // Ensure there's always one more shortcut at the end of the list.
-        if list.last?.0.shortcutValue != nil && list.count < ApplicationState.shared.defaults.integer(forKey: "maxShortcutsInSequence") {
+        if list.last?.0.shortcutValue != nil && list.count < APState.shared.defaults.integer(forKey: "maxShortcutsInSequence") {
             list.append(newShortcut(withKeyCode: nil, modifierFlags: nil))
         }
 
@@ -108,7 +108,7 @@ class SequenceViewController: NSViewController {
         if sequence.count == 0 {
             updateUIWith(reason: .NoShortcuts, nil)
         } else {
-            if let conflictingEntry = ApplicationState.shared.checkForConflictingSequence(sequence, excluding: entry) {
+            if let conflictingEntry = APState.shared.checkForConflictingSequence(sequence, excluding: entry) {
                 updateUIWith(reason: .ConflictingShortcuts, conflictingEntry)
             } else {
                 updateUIWith(reason: .Okay, nil)
@@ -121,7 +121,7 @@ class SequenceViewController: NSViewController {
     // Update the view with information regarding a conflicting entry. Entries' sequences conflict
     // when you cannot fully type sequence A without first calling sequence B (this makes it
     // impossible to call sequence A, and is therefore forbidden).
-    func updateUIWith(reason: UIStates, _ conflictingEntry: ApplicationEntry?) {
+    func updateUIWith(reason: UIStates, _ conflictingEntry: APAppEntry?) {
         switch reason {
         case .ConflictingShortcuts:
             assert(conflictingEntry != nil, "conflictingEntry must be != nil")
@@ -175,7 +175,7 @@ class SequenceViewController: NSViewController {
     }
 }
 
-extension SequenceViewController: NSTableViewDelegate {
+extension APSequenceViewController: NSTableViewDelegate {
     func tableView(_ tableView: NSTableView, viewFor tableColumn: NSTableColumn?, row: Int) -> NSView? {
         return list[row].0
     }
@@ -185,7 +185,7 @@ extension SequenceViewController: NSTableViewDelegate {
     }
 }
 
-extension SequenceViewController: NSTableViewDataSource {
+extension APSequenceViewController: NSTableViewDataSource {
     func numberOfRows(in tableView: NSTableView) -> Int {
         return list.count
     }

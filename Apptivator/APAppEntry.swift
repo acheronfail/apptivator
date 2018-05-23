@@ -1,5 +1,5 @@
 //
-//  ApplicationEntry.swift
+//  APAppEntry.swift
 //  Apptivator
 //
 
@@ -12,7 +12,7 @@ import CleanroomLogger
 // to attach listeners to it.
 let APP_LAUNCH_DELAY = 2.0
 
-struct ApplicationConfig: Equatable {
+struct APAppConfig: Equatable {
     // When the app is active, should pressing the shortcut hide it?
     var hideWithShortcutWhenActive: Bool = true
     // When activating, move windows to the screen where the mouse is.
@@ -62,25 +62,25 @@ struct ApplicationConfig: Equatable {
 }
 
 // Represents an item in the Shortcut table of the app's window.
-// Each ApplicationEntry is simply a URL of an app mapped to a shortcut.
-class ApplicationEntry: CustomDebugStringConvertible {
+// Each APAppEntry is simply a URL of an app mapped to a shortcut.
+class APAppEntry: CustomDebugStringConvertible {
     let url: URL
     let name: String
     let icon: NSImage
 
-    var config: ApplicationConfig
+    var config: APAppConfig
     private var watcher: NSKeyValueObservation?
     private var observer: Observer?
 
     var isActive: Bool { return self.observer != nil }
-    var isEnabled: Bool { return ApplicationState.shared.isEnabled && UIElement.isProcessTrusted(withPrompt: true) }
+    var isEnabled: Bool { return APState.shared.isEnabled && UIElement.isProcessTrusted(withPrompt: true) }
     var sequence: [MASShortcutView] = [] {
         didSet {
             // Unregister old shortcuts if any of them are registered. `state.registerShortcuts()` will
             // unregister all other shortcuts anyway, so this can be called outside of the state.
             oldValue.forEach({ shortcutView in
-                if ApplicationState.shared.monitor.isShortcutRegistered(shortcutView.shortcutValue) {
-                    ApplicationState.shared.monitor.unregisterShortcut(shortcutView.shortcutValue)
+                if APState.shared.monitor.isShortcutRegistered(shortcutView.shortcutValue) {
+                    APState.shared.monitor.unregisterShortcut(shortcutView.shortcutValue)
                 }
             })
         }
@@ -88,7 +88,7 @@ class ApplicationEntry: CustomDebugStringConvertible {
 
     init?(url: URL, config: [String:Bool]?) {
         self.url = url
-        self.config = ApplicationConfig(withValues: config)
+        self.config = APAppConfig(withValues: config)
 
         do {
             let properties = try (url as NSURL).resourceValues(forKeys: [.localizedNameKey, .effectiveIconKey])
@@ -237,15 +237,15 @@ class ApplicationEntry: CustomDebugStringConvertible {
         return "AppEntry: { \(name), Shortcut: \(shortcutString ?? "nil") }"
     }
 
-    static func serialiseList(entries: ArraySlice<ApplicationEntry>) -> JSON {
+    static func serialiseList(entries: ArraySlice<APAppEntry>) -> JSON {
         return JSON(entries.map { $0.asJSON })
     }
 
-    static func deserialiseList(fromJSON json: JSON) -> [ApplicationEntry] {
-        var entries: [ApplicationEntry] = []
+    static func deserialiseList(fromJSON json: JSON) -> [APAppEntry] {
+        var entries: [APAppEntry] = []
         for (_, entryJson):(String, JSON) in json {
             do {
-                if let entry = try ApplicationEntry.init(json: entryJson) { entries.append(entry) }
+                if let entry = try APAppEntry.init(json: entryJson) { entries.append(entry) }
             } catch {
                 Log.error?.message("Unexpected error deserialising ApplicationEntry: \(entryJson), \(error)")
             }

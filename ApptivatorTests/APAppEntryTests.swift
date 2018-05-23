@@ -1,5 +1,5 @@
 //
-//  ApplicationEntryTests.swift
+//  APAppEntryTests.swift
 //  ApptivatorTests
 //
 
@@ -8,18 +8,18 @@ import SwiftyJSON
 
 @testable import Apptivator
 
-class ApplicationEntryTests: XCTestCase {
+class APAppEntryTests: XCTestCase {
     func testMustBeValidFilePath() {
-        let entry = ApplicationEntry(url: URL(fileURLWithPath: "/file/does/not/exist.app"), config: nil)
+        let entry = APAppEntry(url: URL(fileURLWithPath: "/file/does/not/exist.app"), config: nil)
         XCTAssert(entry == nil)
     }
 
-    // Since ApplicationEntry instances have some closures associated with them, it's a good idea to
+    // Since APAppEntry instances have some closures associated with them, it's a good idea to
     // ensure that they're cleaned up once they go out of scope to prevent memory leaks.
     // MASShortcutMonitor also retains some strong references to their `shortcutValue`s.
     func testEntryIsDeinitialised() {
         // Add a hook into the instance's `deinit` block.
-        class MockEntry: ApplicationEntry {
+        class MockEntry: APAppEntry {
             var deinitCalled: (() -> Void)?
             deinit { deinitCalled!() }
         }
@@ -43,12 +43,12 @@ class ApplicationEntryTests: XCTestCase {
             let entryTwo = try MockEntry(json: try JSON(data: data))!
             entryTwo.deinitCalled = { expectation.fulfill() }
 
-            ApplicationState.shared.addEntry(entryOne)
-            ApplicationState.shared.addEntry(entryTwo)
-            while ApplicationState.shared.getEntries().count > 0 {
-                ApplicationState.shared.removeEntry(at: 0)
+            APState.shared.addEntry(entryOne)
+            APState.shared.addEntry(entryTwo)
+            while APState.shared.getEntries().count > 0 {
+                APState.shared.removeEntry(at: 0)
             }
-            print(ApplicationState.shared.getEntries())
+            print(APState.shared.getEntries())
         } catch { XCTFail(error.localizedDescription) }
 
         self.waitForExpectations(timeout: 0.5, handler: nil)
@@ -56,8 +56,8 @@ class ApplicationEntryTests: XCTestCase {
 
     func testSerialisesAndDeserialises() {
         let entriesBefore = getSampleEntries()
-        let json = ApplicationEntry.serialiseList(entries: entriesBefore[0..<entriesBefore.count])
-        let entriesAfter = ApplicationEntry.deserialiseList(fromJSON: json)
+        let json = APAppEntry.serialiseList(entries: entriesBefore[0..<entriesBefore.count])
+        let entriesAfter = APAppEntry.deserialiseList(fromJSON: json)
         for i in (0..<entriesBefore.count) {
             let a = entriesBefore[i]
             let b = entriesAfter[i]
@@ -76,7 +76,7 @@ class ApplicationEntryTests: XCTestCase {
         }
     }
 
-    func getSampleEntries() -> [ApplicationEntry] {
+    func getSampleEntries() -> [APAppEntry] {
         do {
             return try [
                 "{\"url\":\"file:///Applications/Xcode.app\",\"config\":{\"showOnScreenWithMouse\":true}}",
@@ -84,7 +84,7 @@ class ApplicationEntryTests: XCTestCase {
                 "{\"url\":\"file:///Applications/Calculator.app\",\"sequence\":[{\"keyCode\":120,\"modifierFlags\":0}]}",
             ]
                 .map({ try JSON(data: $0.data(using: .utf8, allowLossyConversion: false)!) })
-                .map({ try ApplicationEntry(json: $0)! })
+                .map({ try APAppEntry(json: $0)! })
         } catch {
             XCTFail(error.localizedDescription)
         }
