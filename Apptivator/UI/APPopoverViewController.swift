@@ -182,7 +182,10 @@ class APPopoverViewController: NSViewController {
 
     @IBAction func onAddClick(_ sender: NSButton) {
         guard !isSequenceEditorActive else { return }
-        addMenu.popUp(positioning: addMenu.item(at: 0), at: NSEvent.mouseLocation, in: nil)
+        // The current event should still be the left-mouse-up event.
+        if let event = NSApp.currentEvent {
+            NSMenu.popUpContextMenu(addMenu, with: event, for: addButton)
+        }
     }
 
     @IBAction func onRemoveClick(_ sender: NSButton) {
