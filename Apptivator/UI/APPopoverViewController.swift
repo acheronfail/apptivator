@@ -71,16 +71,19 @@ class APPopoverViewController: NSViewController {
             showSequenceEditor(for: APState.shared.getEntry(at: index))
         }
     }
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
         // Default to Aqua appearance (Apptivator in Aqua looks better than Vibrant Light).
         if !mojaveDarkModeSupported() {
-            self.view.appearance = NSAppearance(named: .aqua)
+            view.appearance = NSAppearance(named: .aqua)
         } else {
             // Otherwise, disable the button in macOS 10.14 and above.
             enableDarkMode.state = .off
             enableDarkMode.isEnabled = false
+            enableDarkMode.alphaValue = 0
+            boxWrapper.fillColor = NSColor.windowBackgroundColor
         }
 
         bannerImage.image?.isTemplate = true
@@ -108,6 +111,16 @@ class APPopoverViewController: NSViewController {
         if keyPath == APPLE_INTERFACE_STYLE && APState.shared.defaults.bool(forKey: "matchAppleInterfaceStyle") {
             APState.shared.darkModeEnabled = appleInterfaceStyleIsDark()
             reloadView()
+        }
+    }
+
+    override func viewWillAppear() {
+        if #available(OSX 10.14, *) {
+            if let value = UserDefaults.standard.string(forKey: APPLE_INTERFACE_STYLE), value.lowercased() == "dark" {
+                view.appearance = NSAppearance(named: .darkAqua)
+            } else {
+                view.appearance = NSAppearance(named: .aqua)
+            }
         }
     }
 

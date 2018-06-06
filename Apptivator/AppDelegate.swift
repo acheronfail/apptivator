@@ -52,6 +52,7 @@ let ICON_OFF = setupMenuBarIcon(NSImage(named: NSImage.Name(stringLiteral: "icon
         enable(APState.shared.isEnabled)
         popoverViewController.reloadView()
 
+        #if !DEBUG
         // Check for accessibility permissions.
         if !UIElement.isProcessTrusted(withPrompt: true) {
             Log.info?.message("Application does not have Accessibility Permissions, requesting...")
@@ -65,6 +66,7 @@ let ICON_OFF = setupMenuBarIcon(NSImage(named: NSImage.Name(stringLiteral: "icon
             alert.alertStyle = .warning
             alert.runModal()
         }
+        #endif
 
         Log.info?.message("Sucessfully launched.")
     }
