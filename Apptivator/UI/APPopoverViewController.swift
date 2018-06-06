@@ -74,20 +74,32 @@ class APPopoverViewController: NSViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        // Default to Aqua appearance (Apptivator in Aqua looks better than Vibrant Light).
+        if !mojaveDarkModeSupported() {
+            self.view.appearance = NSAppearance(named: .aqua)
+        }
+
         bannerImage.image?.isTemplate = true
 
         tableView.delegate = self
         tableView.dataSource = self
 
         addMenu.delegate = self
-        addMenu.addItem(NSMenuItem(title: "Choose from File System", action: #selector(chooseFromFileSystem), keyEquivalent: ""))
-        addMenu.addItem(NSMenuItem(title: "Choose from Running Applications", action: nil, keyEquivalent: ""))
-        addMenu.item(at: 1)?.submenu = NSMenu()
+        addMenu.addItem(withTitle: "Choose from File System", action: #selector(chooseFromFileSystem), keyEquivalent: "")
+        let runningAppsItem = addMenu.addItem(withTitle: "Choose from Running Applications", action: nil, keyEquivalent: "")
+        runningAppsItem.submenu = NSMenu()
 
         setupToggleWindowShortcut()
-        APState.shared.defaults.addObserver(self, forKeyPath: APPLE_INTERFACE_STYLE, options: [], context: nil)
+
+        // Only observe changes to APPLE_INTERFACE_STYLE if we're below macOS 10.14 (in 10.14 this
+        // happens automatically and is inherited by the application's appearance).
+        if !mojaveDarkModeSupported() {
+            APState.shared.defaults.addObserver(self, forKeyPath: APPLE_INTERFACE_STYLE, options: [], context: nil)
+        }
     }
 
+    // If we're below 10.14, then we'll be looking for changes in APPLE_INTERFACE_STYLE. No observer
+    // is added for versions below 10.14.
     override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
         if keyPath == APPLE_INTERFACE_STYLE && APState.shared.defaults.bool(forKey: "matchAppleInterfaceStyle") {
             APState.shared.darkModeEnabled = appleInterfaceStyleIsDark()
@@ -143,17 +155,23 @@ class APPopoverViewController: NSViewController {
         toggleWindowShortcut.shortcutValueChange(nil)
     }
 
+    // Don't call this if we're 10.14 or later - in those versions we allow macOS to handle the
+    // light and dark appearances itself.
     func toggleDarkMode(_ flag: Bool) {
-        appDelegate.popover.appearance = NSAppearance.init(named: flag ? .vibrantDark : .aqua)
+        guard !mojaveDarkModeSupported() else { return }
+        appDelegate.popover.appearance = NSAppearance(named: flag ? .vibrantDark : .aqua)
         boxWrapper.isTransparent = flag
         tableView.reloadData()
         sequenceEditor?.tableView.reloadData()
     }
 
     func reloadView() {
-        let darkModeEnabled = APState.shared.darkModeEnabled
-        toggleDarkMode(darkModeEnabled)
-        enableDarkMode.state = darkModeEnabled ? .on : .off
+        // Reload and ensure dark mode is functional on macOS versions below 10.14.
+        if !mojaveDarkModeSupported() {
+            let darkModeEnabled = APState.shared.darkModeEnabled
+            toggleDarkMode(darkModeEnabled)
+            enableDarkMode.state = darkModeEnabled ? .on : .off
+        }
         launchAppAtLogin.state = LaunchAtLogin.isEnabled ? .on : .off
         tableView.reloadData()
     }

@@ -21,10 +21,11 @@ import CleanroomLogger
     let defaults: UserDefaults = UserDefaults.standard
     // A Timer to handle the delay between keypresses in a sequence. When this runs out, then the
     // sequence cancels and the user will have to start the sequence from the beginning.
-    var timer: Timer?
+    var sequenceTimer: Timer?
 
     // Toggle for dark mode.
-    var darkModeEnabled = appleInterfaceStyleIsDark()
+    // On macOS 10.14 and later this isn't used since macOS has a global dark mode.
+    var darkModeEnabled = mojaveDarkModeSupported() ? false : appleInterfaceStyleIsDark()
     // Whether or not the app should launch after login.
     private var launchAppAtLogin = LaunchAtLogin.isEnabled
     // Don't fire any shortcuts if user is recording a new shortcut.
@@ -164,8 +165,8 @@ import CleanroomLogger
         // if no other shortcuts were hit.
         if index > 0 {
             let interval = TimeInterval(defaults.float(forKey: "sequentialShortcutDelay"))
-            timer = Timer.scheduledTimer(withTimeInterval: interval, repeats: false) { _ in
-                self.timer = nil
+            sequenceTimer = Timer.scheduledTimer(withTimeInterval: interval, repeats: false) { _ in
+                self.sequenceTimer = nil
                 self.registerShortcuts(atIndex: 0, last: nil)
                 Log.debug?.message("Resetting shortcut state.")
             }
@@ -176,7 +177,7 @@ import CleanroomLogger
     // will activate the app, otherwise it will just advance the sequence along.
     private func keyFired(_ i: Int, _ entry: APAppEntry, _ shortcut: MASShortcut) {
         if currentlyRecording { return }
-        if i > 0 { timer?.invalidate() }
+        if i > 0 { sequenceTimer?.invalidate() }
 
         // Last shortcut in sequence: apptivate and reset shortcut state.
         if i == entry.sequence.count {
@@ -216,8 +217,10 @@ import CleanroomLogger
         // Reset the state before loading from disk.
         _currentlyRecording = false
         _isEnabled = true
-        timer = nil
-        darkModeEnabled = appleInterfaceStyleIsDark()
+        sequenceTimer = nil
+
+        // Default to the current interface style on macOS versions below 10.14.
+        if !mojaveDarkModeSupported() { darkModeEnabled = appleInterfaceStyleIsDark() }
 
         // Unregister shortcuts and remove all entries.
         unregisterShortcuts()
@@ -242,8 +245,9 @@ import CleanroomLogger
             let json = try JSON(data: dataFromString)
             for (key, value):(String, JSON) in json {
                 switch key {
+                // Only care about dark mode on macOS versions below 10.14.
                 case "darkModeEnabled":
-                    darkModeEnabled = value.bool ?? false
+                    if !mojaveDarkModeSupported() { darkModeEnabled = value.bool ?? false }
                 case "appIsEnabled":
                     _isEnabled = value.bool ?? true
                 case "entries":
@@ -253,7 +257,7 @@ import CleanroomLogger
                 }
             }
 
-            if APState.shared.defaults.bool(forKey: "matchAppleInterfaceStyle") {
+            if !mojaveDarkModeSupported() && APState.shared.defaults.bool(forKey: "matchAppleInterfaceStyle") {
                 darkModeEnabled = appleInterfaceStyleIsDark()
             }
 
@@ -263,11 +267,16 @@ import CleanroomLogger
 
     // Saves the app state to disk, creating the parent directories if they don't already exist.
     func saveToDisk() {
-        let json: JSON = [
+        var json: JSON = [
             "appIsEnabled": _isEnabled,
-            "darkModeEnabled": darkModeEnabled,
             "entries": APAppEntry.serialiseList(entries: getEntries())
         ]
+
+        // Only bother saving whether dark mode is enabled or not on macOS versions below 10.14.
+        if !mojaveDarkModeSupported() {
+            json["darkModeEnabled"].boolValue = darkModeEnabled
+        }
+
         do {
             if let jsonString = json.rawString() {
                 let configDir = savePath.deletingLastPathComponent()

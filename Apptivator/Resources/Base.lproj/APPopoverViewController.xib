@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="14109" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="14269.12" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="14109"/>
-        <capability name="box content view" minToolsVersion="7.0"/>
+        <deployment identifier="macosx"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="14269.12"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -39,7 +39,7 @@
                 <outlet property="view" destination="WKh-ca-1Vm" id="bDW-96-eBc"/>
             </connections>
         </viewController>
-        <popover appearance="aqua" behavior="t" id="WQx-Ab-Sa5">
+        <popover behavior="t" id="WQx-Ab-Sa5">
             <connections>
                 <outlet property="contentViewController" destination="goT-YD-soK" id="KmB-It-NBm"/>
             </connections>
@@ -72,7 +72,7 @@
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <clipView key="contentView" ambiguous="YES" drawsBackground="NO" copiesOnScroll="NO" id="G3h-rF-URc">
                                                 <rect key="frame" x="1" y="1" width="448" height="177"/>
-                                                <autoresizingMask key="autoresizingMask"/>
+                                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
                                                     <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" alternatingRowBackgroundColors="YES" columnSelection="YES" autosaveColumns="NO" rowHeight="19" rowSizeStyle="automatic" headerView="g5N-HU-6HD" viewBased="YES" id="2eX-UM-aS6">
                                                         <rect key="frame" x="0.0" y="0.0" width="448" height="154"/>
@@ -81,7 +81,7 @@
                                                         <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                                         <color key="gridColor" name="gridColor" catalog="System" colorSpace="catalog"/>
                                                         <tableColumns>
-                                                            <tableColumn identifier="" width="301" minWidth="40" maxWidth="1000" id="4IJ-5b-Yp8">
+                                                            <tableColumn width="301" minWidth="40" maxWidth="1000" id="4IJ-5b-Yp8">
                                                                 <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" title="Application or executable">
                                                                     <font key="font" metaFont="smallSystem"/>
                                                                     <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
@@ -121,7 +121,7 @@
                                                                     </tableCellView>
                                                                 </prototypeCellViews>
                                                             </tableColumn>
-                                                            <tableColumn identifier="" width="141" minWidth="40" maxWidth="1000" id="LgK-ax-hg0">
+                                                            <tableColumn width="141" minWidth="40" maxWidth="1000" id="LgK-ax-hg0">
                                                                 <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="center" title="Shortcut Sequence">
                                                                     <font key="font" metaFont="smallSystem"/>
                                                                     <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
@@ -153,12 +153,13 @@
                                                         </tableColumns>
                                                     </tableView>
                                                 </subviews>
+                                                <nil key="backgroundColor"/>
                                             </clipView>
-                                            <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="YES" id="I79-T7-Wwo">
+                                            <scroller key="horizontalScroller" hidden="YES" wantsLayer="YES" verticalHuggingPriority="750" horizontal="YES" id="I79-T7-Wwo">
                                                 <rect key="frame" x="1" y="8" width="0.0" height="16"/>
                                                 <autoresizingMask key="autoresizingMask"/>
                                             </scroller>
-                                            <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" doubleValue="1" horizontal="NO" id="hOs-IS-OD2">
+                                            <scroller key="verticalScroller" hidden="YES" wantsLayer="YES" verticalHuggingPriority="750" doubleValue="1" horizontal="NO" id="hOs-IS-OD2">
                                                 <rect key="frame" x="224" y="17" width="15" height="102"/>
                                                 <autoresizingMask key="autoresizingMask"/>
                                             </scroller>
@@ -319,7 +320,6 @@ CA
                         </subviews>
                     </view>
                     <color key="borderColor" name="gridColor" catalog="System" colorSpace="catalog"/>
-                    <color key="fillColor" name="secondarySelectedControlColor" catalog="System" colorSpace="catalog"/>
                 </box>
             </subviews>
             <point key="canvasLocation" x="122" y="174"/>

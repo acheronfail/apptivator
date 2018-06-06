@@ -106,12 +106,12 @@ class APSequenceViewController: NSViewController {
         // Check for any conflicting entries.
         let sequence = listAsSequence
         if sequence.count == 0 {
-            updateUIWith(reason: .NoShortcuts, nil)
+            updateUI(reason: .NoShortcuts, nil)
         } else {
             if let conflictingEntry = APState.shared.checkForConflictingSequence(sequence, excluding: entry) {
-                updateUIWith(reason: .ConflictingShortcuts, conflictingEntry)
+                updateUI(reason: .ConflictingShortcuts, conflictingEntry)
             } else {
-                updateUIWith(reason: .Okay, nil)
+                updateUI(reason: .Okay, nil)
             }
         }
 
@@ -119,16 +119,16 @@ class APSequenceViewController: NSViewController {
     }
 
     // Update the view with information regarding a conflicting entry. Entries' sequences conflict
-    // when you cannot fully type sequence A without first calling sequence B (this makes it
-    // impossible to call sequence A, and is therefore forbidden).
-    func updateUIWith(reason: UIStates, _ conflictingEntry: APAppEntry?) {
+    // when you cannot fully type sequence `A` without first calling sequence `B` (this makes it
+    // impossible to call sequence `A`, and is therefore forbidden).
+    func updateUI(reason: UIStates, _ conflictingEntry: APAppEntry?) {
         switch reason {
         case .ConflictingShortcuts:
             assert(conflictingEntry != nil, "conflictingEntry must be != nil")
             saveButton.isEnabled = false
             detailTextField.textColor = .red
 
-            let boldAttribute = [NSAttributedStringKey.font: NSFont.boldSystemFont(ofSize: 11)]
+            let boldAttribute = [NSAttributedString.Key.font: NSFont.boldSystemFont(ofSize: 11)]
             let attrString = NSMutableAttributedString(string: "Current sequence conflicts with:\n")
             attrString.append(NSAttributedString(string: conflictingEntry!.name, attributes: boldAttribute))
             attrString.append(NSAttributedString(string: ", which has the sequence:\n"))
@@ -147,27 +147,30 @@ class APSequenceViewController: NSViewController {
 
     // Animate entering the view, making it the size of `referenceView` and sliding over the top
     // of it.
+    // FIXME: macOS 10.14 seems to have broken the fade-in animation, but it's quite unstable at
+    // this stage so leaving the fade animation disabled until 10.14 is closer to its release.
     func slideInAndAdd(to referringView: NSView) {
         beforeAdded?()
         referenceView = referringView
-        self.view.alphaValue = 0.0
+//        self.view.alphaValue = 0.0
         self.view.frame.size = referenceView.frame.size
         self.view.frame.origin = CGPoint(x: referenceView.frame.maxX, y: referenceView.frame.minY)
         referenceView.superview!.addSubview(self.view)
         runAnimation({ _ in
             self.view.animator().frame.origin = referenceView.frame.origin
-            self.view.animator().alphaValue = 1.0
+//            self.view.animator().alphaValue = 1.0
         }, done: {
             self.afterAdded?()
         })
     }
 
+    // FIXME: see `slideInAndAdd()`.
     func slideOutAndRemove() {
         beforeRemoved?()
         let destination = CGPoint(x: referenceView.frame.maxX, y: referenceView.frame.minY)
         runAnimation({ _ in
             self.view.animator().frame.origin = destination
-            self.view.animator().alphaValue = 0.0
+//            self.view.animator().alphaValue = 0.0
         }, done: {
             self.view.removeFromSuperview()
             self.afterRemoved?()

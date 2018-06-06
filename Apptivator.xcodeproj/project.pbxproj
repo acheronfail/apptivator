@@ -14,6 +14,8 @@
 		151CF3AF20876CDE00D6DC91 /* MASShortcut.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 151CF3A820876C7800D6DC91 /* MASShortcut.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		151CF3B120876CE200D6DC91 /* LaunchAtLogin.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 151CF3A620876C6900D6DC91 /* LaunchAtLogin.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		151CF3B320876CE500D6DC91 /* AXSwift.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 151CF3A420876C5600D6DC91 /* AXSwift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		152416AB20C73D0E00A5D7D2 /* APPopoverViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = B3B4C2C41E25894B009F8E4E /* APPopoverViewController.xib */; };
+		152416AC20C73D1300A5D7D2 /* APSequenceViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 159ED108207E379D005489ED /* APSequenceViewController.xib */; };
 		1537F5E1204C8D860056EE50 /* APAppEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1537F5E0204C8D860056EE50 /* APAppEntry.swift */; };
 		1547AC99208738310088701F /* CleanroomLogger.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1547AC972087382D0088701F /* CleanroomLogger.framework */; };
 		1547AC9A208738310088701F /* CleanroomLogger.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 1547AC972087382D0088701F /* CleanroomLogger.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -22,7 +24,6 @@
 		1561AED2207615AC00C69338 /* UIOverrides.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1561AED1207615AC00C69338 /* UIOverrides.swift */; };
 		15673D7020B6140F00542276 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 15673D6F20B6140E00542276 /* README.md */; };
 		159ED109207E379D005489ED /* APSequenceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 159ED107207E379D005489ED /* APSequenceViewController.swift */; };
-		159ED10A207E379D005489ED /* SequenceViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 159ED108207E379D005489ED /* SequenceViewController.xib */; };
 		159F304C2079A0E5000BD387 /* APAppEntryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 159F304B2079A0E5000BD387 /* APAppEntryTests.swift */; };
 		159F304E2079A111000BD387 /* AppDelegateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 159F304D2079A111000BD387 /* AppDelegateTests.swift */; };
 		159F30502079A12D000BD387 /* PopoverViewControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 159F304F2079A12D000BD387 /* PopoverViewControllerTests.swift */; };
@@ -32,7 +33,6 @@
 		15FC8CC8204E2E2C000B5E1E /* APState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15FC8CC7204E2E2C000B5E1E /* APState.swift */; };
 		B3B4C2C11E25894B009F8E4E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3B4C2C01E25894B009F8E4E /* AppDelegate.swift */; };
 		B3B4C2C31E25894B009F8E4E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B3B4C2C21E25894B009F8E4E /* Assets.xcassets */; };
-		B3B4C2C61E25894B009F8E4E /* PreferencesPopover.xib in Resources */ = {isa = PBXBuildFile; fileRef = B3B4C2C41E25894B009F8E4E /* PreferencesPopover.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -75,7 +75,7 @@
 		1561AED1207615AC00C69338 /* UIOverrides.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIOverrides.swift; sourceTree = "<group>"; };
 		15673D6F20B6140E00542276 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = SOURCE_ROOT; };
 		159ED107207E379D005489ED /* APSequenceViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APSequenceViewController.swift; sourceTree = "<group>"; };
-		159ED108207E379D005489ED /* SequenceViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SequenceViewController.xib; sourceTree = "<group>"; };
+		159ED108207E379D005489ED /* APSequenceViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = APSequenceViewController.xib; sourceTree = "<group>"; };
 		159F304B2079A0E5000BD387 /* APAppEntryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APAppEntryTests.swift; sourceTree = "<group>"; };
 		159F304D2079A111000BD387 /* AppDelegateTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegateTests.swift; sourceTree = "<group>"; };
 		159F304F2079A12D000BD387 /* PopoverViewControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopoverViewControllerTests.swift; sourceTree = "<group>"; };
@@ -89,7 +89,7 @@
 		B3B4C2BD1E25894B009F8E4E /* Apptivator.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Apptivator.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B3B4C2C01E25894B009F8E4E /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		B3B4C2C21E25894B009F8E4E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		B3B4C2C51E25894B009F8E4E /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/PreferencesPopover.xib; sourceTree = "<group>"; };
+		B3B4C2C51E25894B009F8E4E /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/APPopoverViewController.xib; sourceTree = "<group>"; };
 		B3B4C2C71E25894B009F8E4E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -131,8 +131,8 @@
 			isa = PBXGroup;
 			children = (
 				B3B4C2C21E25894B009F8E4E /* Assets.xcassets */,
-				B3B4C2C41E25894B009F8E4E /* PreferencesPopover.xib */,
-				159ED108207E379D005489ED /* SequenceViewController.xib */,
+				B3B4C2C41E25894B009F8E4E /* APPopoverViewController.xib */,
+				159ED108207E379D005489ED /* APSequenceViewController.xib */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -248,13 +248,14 @@
 				TargetAttributes = {
 					15B4E86F207994AF0024FDE4 = {
 						CreatedOnToolsVersion = 9.3;
+						LastSwiftMigration = 1000;
 						ProvisioningStyle = Automatic;
 						TestTargetID = B3B4C2BC1E25894B009F8E4E;
 					};
 					B3B4C2BC1E25894B009F8E4E = {
 						CreatedOnToolsVersion = 8.2.1;
 						DevelopmentTeam = UNR5C68RPX;
-						LastSwiftMigration = 0920;
+						LastSwiftMigration = 1000;
 						ProvisioningStyle = Automatic;
 					};
 				};
@@ -293,8 +294,8 @@
 				B3B4C2C31E25894B009F8E4E /* Assets.xcassets in Resources */,
 				155D2C03204F61220087478B /* Credits.rtfd in Resources */,
 				15673D7020B6140F00542276 /* README.md in Resources */,
-				B3B4C2C61E25894B009F8E4E /* PreferencesPopover.xib in Resources */,
-				159ED10A207E379D005489ED /* SequenceViewController.xib in Resources */,
+				152416AB20C73D0E00A5D7D2 /* APPopoverViewController.xib in Resources */,
+				152416AC20C73D1300A5D7D2 /* APSequenceViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -354,12 +355,12 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
-		B3B4C2C41E25894B009F8E4E /* PreferencesPopover.xib */ = {
+		B3B4C2C41E25894B009F8E4E /* APPopoverViewController.xib */ = {
 			isa = PBXVariantGroup;
 			children = (
 				B3B4C2C51E25894B009F8E4E /* Base */,
 			);
-			name = PreferencesPopover.xib;
+			name = APPopoverViewController.xib;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
@@ -388,7 +389,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.acheronfail.ApptivatorTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 4.2;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Apptivator.app/Contents/MacOS/Apptivator";
 			};
 			name = Debug;
@@ -416,7 +417,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.acheronfail.ApptivatorTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 4.2;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Apptivator.app/Contents/MacOS/Apptivator";
 			};
 			name = Release;
@@ -552,8 +553,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "Apptivator/Bridging-Header.h";
-				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 4.2;
 			};
 			name = Debug;
 		};
@@ -576,8 +576,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "Apptivator/Bridging-Header.h";
-				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 4.2;
 			};
 			name = Release;
 		};

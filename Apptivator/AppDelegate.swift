@@ -8,8 +8,8 @@ import CleanroomLogger
 
 let ENABLED_INDICATOR_ON = "\(APP_NAME): on"
 let ENABLED_INDICATOR_OFF = "\(APP_NAME): off"
-let ICON_ON = setupMenuBarIcon(NSImage(named: NSImage.Name(rawValue: "icon-on")))
-let ICON_OFF = setupMenuBarIcon(NSImage(named: NSImage.Name(rawValue: "icon-off")))
+let ICON_ON = setupMenuBarIcon(NSImage(named: NSImage.Name(stringLiteral: "icon-on")))
+let ICON_OFF = setupMenuBarIcon(NSImage(named: NSImage.Name(stringLiteral: "icon-off")))
 
 @NSApplicationMain class AppDelegate: NSObject, NSApplicationDelegate {
     @IBOutlet weak var popover: NSPopover!

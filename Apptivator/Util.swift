@@ -8,6 +8,19 @@ import CleanroomLogger
 let APP_NAME = Bundle.main.infoDictionary![kCFBundleNameKey as String] as! String
 let APPLE_INTERFACE_STYLE = "AppleInterfaceStyle"
 
+// Checks the current interface style.
+func appleInterfaceStyleIsDark() -> Bool {
+    return UserDefaults.standard.string(forKey: APPLE_INTERFACE_STYLE) == "Dark"
+}
+
+func mojaveDarkModeSupported() -> Bool {
+    if #available(OSX 10.14, *) {
+        return true
+    } else {
+        return false
+    }
+}
+
 // Launches the application at the given url. First tries to launch it as if it were a an
 // application bundle, and if that fails, it tries to run it as if it were an executable.
 func launchApplication(at url: URL) -> NSRunningApplication? {
@@ -46,10 +59,6 @@ func findRunningApp(withURL url: URL) -> NSRunningApplication? {
     }
 
     return nil
-}
-
-func appleInterfaceStyleIsDark() -> Bool {
-    return UserDefaults.standard.string(forKey: APPLE_INTERFACE_STYLE) == "Dark"
 }
 
 // Returns the screen which contains the mouse cursor.
@@ -118,7 +127,7 @@ func setRect(ofElement element: UIElement, rect: CGRect) {
 func runAnimation(_ f: (NSAnimationContext) -> Void, done: (() -> Void)?) {
     NSAnimationContext.runAnimationGroup({ context in
         context.duration = 0.5
-        context.timingFunction = .init(name: kCAMediaTimingFunctionEaseInEaseOut)
+        context.timingFunction = CAMediaTimingFunction.init(name: .easeInEaseOut)
         context.allowsImplicitAnimation = true
         f(context)
     }, completionHandler: done)
