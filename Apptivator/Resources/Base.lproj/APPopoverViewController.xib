@@ -307,9 +307,9 @@ CA
                                 </view>
                             </box>
                             <button identifier="enableDarkMode" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="S1m-gw-fuX">
-                                <rect key="frame" x="13" y="60" width="131" height="18"/>
+                                <rect key="frame" x="13" y="60" width="289" height="18"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                <buttonCell key="cell" type="check" title="Enable dark mode" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="dhj-WG-Jq7">
+                                <buttonCell key="cell" type="check" title="Enable dark mode (macOS 10.13 and below)" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="dhj-WG-Jq7">
                                     <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                     <font key="font" metaFont="system"/>
                                 </buttonCell>

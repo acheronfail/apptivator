@@ -77,6 +77,10 @@ class APPopoverViewController: NSViewController {
         // Default to Aqua appearance (Apptivator in Aqua looks better than Vibrant Light).
         if !mojaveDarkModeSupported() {
             self.view.appearance = NSAppearance(named: .aqua)
+        } else {
+            // Otherwise, disable the button in macOS 10.14 and above.
+            enableDarkMode.state = .off
+            enableDarkMode.isEnabled = false
         }
 
         bannerImage.image?.isTemplate = true
