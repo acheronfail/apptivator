@@ -2,7 +2,7 @@
 
 With Apptivator, you can create global hotkeys that will activate chosen apps (or scripts/anything executable) with predefined shortcuts. This means you can have a shortcut to show/hide/execute any application at any time!
 
-I created this because I liked iTerm2's concept of a "hotkey" window, and I wanted to try kitty as my main terminal for a while and found I couldn't live without a window I could activate at any time. So, I created this in order to have a global hotkey to activate/deactivate kitty (and any other apps) at the touch of a button.
+I created this because I liked iTerm2's concept of a "hotkey" window, and I wanted to try alacritty/kitty as my main terminal for a while and found I couldn't live without a window I could activate at any time. So, I created this in order to have a global hotkey to activate/deactivate kitty (and any other apps) at the touch of a button.
 
 It's also sometimes useful to run a script easily via a keyboard shortcut (or sequence of shortcuts).
 
@@ -21,6 +21,7 @@ In the menu, select an application (or executable) from the Finder (or optionall
 #### Shortcut Sequences
 
 Apptivator uses something called a "shortcut sequence" to define hotkeys. This means that you can define a sequence of shortcuts (minimum 1) to activate your application. So if you set the sequence to <kbd>⇧⌘A</kbd> + <kbd>^B</kbd>, to activate your application you would need to first press (and release) <kbd>⇧⌘A</kbd>, and then press <kbd>^B</kbd>.
+Apptivator's icon will turn red if you're currently in a shortcut sequence.
 
 #### Make apps appear on every space
 
