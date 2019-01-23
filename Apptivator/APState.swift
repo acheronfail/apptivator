@@ -12,6 +12,9 @@ import CleanroomLogger
     // Only one instance of this class should be used at a time.
     static var shared = APState(atPath: defaultConfigurationPath())
 
+    // A reference to the Application's AppDelegate (used to set the menu bar icon).
+    let appDelegate = NSApp.delegate as! AppDelegate
+
     // Location of our serialised application state.
     let savePath: URL
 
@@ -41,7 +44,14 @@ import CleanroomLogger
     private var _isEnabled = true
     var isEnabled: Bool {
         get { return _isEnabled && !currentlyRecording }
-        set { _isEnabled = newValue }
+        set {
+            _isEnabled = newValue
+            if newValue {
+                registerShortcutsIfEnabled()
+            } else {
+                unregisterShortcuts()
+            }
+        }
     }
 
     // The list of application -> shortcut mappings. Made private because whenever we need to
@@ -81,7 +91,7 @@ import CleanroomLogger
     // Add an entry.
     func addEntry(_ entry: APAppEntry) {
         entries.append(entry)
-        registerShortcuts()
+        registerShortcutsIfEnabled()
     }
 
     // In order for an entry to be cleaned up by ARC, there must be no more references to it.
@@ -94,7 +104,7 @@ import CleanroomLogger
             }
             shortcutView.shortcutValue = nil
         })
-        registerShortcuts()
+        registerShortcutsIfEnabled()
     }
 
     func sortEntries(comparator: (APAppEntry, APAppEntry) -> Bool) {
@@ -108,8 +118,10 @@ import CleanroomLogger
 
     // This resets the shortcut state to its initial setting. This should be called whenever a
     // an ApplicationEntry updates its sequence.
-    func registerShortcuts() {
-        registerShortcuts(atIndex: 0, last: nil)
+    func registerShortcutsIfEnabled() {
+        if isEnabled {
+            registerShortcuts(atIndex: 0, last: nil)
+        }
     }
 
     // Unregister all previously registered application shortcuts. We can't just use
@@ -164,8 +176,10 @@ import CleanroomLogger
         // If this is a sequential shortcut, then start a timer to reset back to the initial state
         // if no other shortcuts were hit.
         if index > 0 {
+            appDelegate.setMenuBarIcon(ICON_REC)
             let interval = TimeInterval(defaults.float(forKey: "sequentialShortcutDelay"))
             sequenceTimer = Timer.scheduledTimer(withTimeInterval: interval, repeats: false) { _ in
+                self.appDelegate.setMenuBarIcon(ICON_ON)
                 self.sequenceTimer = nil
                 self.registerShortcuts(atIndex: 0, last: nil)
                 Log.debug?.message("Resetting shortcut state.")
@@ -183,6 +197,7 @@ import CleanroomLogger
         if i == entry.sequence.count {
             entry.apptivate()
             registerShortcuts(atIndex: 0, last: nil)
+            appDelegate.setMenuBarIcon(ICON_ON)
             Log.debug?.message("Apptivating \(entry.name).")
         } else {
             // Advance shortcut state with last shortcut and the number of shortcuts hit.
@@ -237,7 +252,7 @@ import CleanroomLogger
             }
         }
 
-        registerShortcuts()
+        registerShortcutsIfEnabled()
     }
 
     func loadFromString(_ jsonString: String) throws {
@@ -249,7 +264,7 @@ import CleanroomLogger
                 case "darkModeEnabled":
                     if !mojaveDarkModeSupported() { darkModeEnabled = value.bool ?? false }
                 case "appIsEnabled":
-                    _isEnabled = value.bool ?? true
+                    isEnabled = value.bool ?? true
                 case "entries":
                     entries = APAppEntry.deserialiseList(fromJSON: value)
                 default:

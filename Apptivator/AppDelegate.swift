@@ -10,6 +10,7 @@ let ENABLED_INDICATOR_ON = "\(APP_NAME): on"
 let ENABLED_INDICATOR_OFF = "\(APP_NAME): off"
 let ICON_ON = setupMenuBarIcon(NSImage(named: NSImage.Name(stringLiteral: "icon-on")))
 let ICON_OFF = setupMenuBarIcon(NSImage(named: NSImage.Name(stringLiteral: "icon-off")))
+let ICON_REC = setupMenuBarIcon(NSImage(named: NSImage.Name(stringLiteral: "icon-on")))?.tinted(with: NSColor.red)
 
 @NSApplicationMain class AppDelegate: NSObject, NSApplicationDelegate {
     @IBOutlet weak var popover: NSPopover!
@@ -75,9 +76,13 @@ let ICON_OFF = setupMenuBarIcon(NSImage(named: NSImage.Name(stringLiteral: "icon
         APState.shared.saveToDisk()
     }
 
+    func setMenuBarIcon(_ image: NSImage?) {
+        menuBarItem?.image = image
+    }
+
     func enable(_ flag: Bool) {
         APState.shared.isEnabled = flag
-        menuBarItem?.image = flag ? ICON_ON : ICON_OFF
+        setMenuBarIcon(flag ? ICON_ON : ICON_OFF)
         enabledIndicator.title = flag ? ENABLED_INDICATOR_ON : ENABLED_INDICATOR_OFF
     }
 

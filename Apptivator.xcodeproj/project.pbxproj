@@ -33,6 +33,7 @@
 		15FC8CC8204E2E2C000B5E1E /* APState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15FC8CC7204E2E2C000B5E1E /* APState.swift */; };
 		B3B4C2C11E25894B009F8E4E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3B4C2C01E25894B009F8E4E /* AppDelegate.swift */; };
 		B3B4C2C31E25894B009F8E4E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B3B4C2C21E25894B009F8E4E /* Assets.xcassets */; };
+		BA54C46621F87F480084BB36 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA54C46521F87F480084BB36 /* Extensions.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -91,6 +92,7 @@
 		B3B4C2C21E25894B009F8E4E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		B3B4C2C51E25894B009F8E4E /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/APPopoverViewController.xib; sourceTree = "<group>"; };
 		B3B4C2C71E25894B009F8E4E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		BA54C46521F87F480084BB36 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -188,6 +190,7 @@
 				B3B4C2C01E25894B009F8E4E /* AppDelegate.swift */,
 				1537F5E0204C8D860056EE50 /* APAppEntry.swift */,
 				15FC8CC7204E2E2C000B5E1E /* APState.swift */,
+				BA54C46521F87F480084BB36 /* Extensions.swift */,
 				15492102207B53AE00E45BBC /* Util.swift */,
 				15673D6F20B6140E00542276 /* README.md */,
 				155D2C02204F61220087478B /* Credits.rtfd */,
@@ -336,6 +339,7 @@
 				15F39F3C204CB72D00847CD5 /* APPopoverViewController.swift in Sources */,
 				15492103207B53AE00E45BBC /* Util.swift in Sources */,
 				B3B4C2C11E25894B009F8E4E /* AppDelegate.swift in Sources */,
+				BA54C46621F87F480084BB36 /* Extensions.swift in Sources */,
 				1561AED2207615AC00C69338 /* UIOverrides.swift in Sources */,
 				15FC8CC8204E2E2C000B5E1E /* APState.swift in Sources */,
 				1537F5E1204C8D860056EE50 /* APAppEntry.swift in Sources */,

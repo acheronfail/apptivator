@@ -146,7 +146,7 @@ class APPopoverViewController: NSViewController {
                 self.tableView.selectRowIndexes([], byExtendingSelection: false)
             }
             sequenceEditor!.beforeRemoved = {
-                APState.shared.registerShortcuts()
+                APState.shared.registerShortcutsIfEnabled()
                 self.addButton.isEnabled = true
                 self.removeButton.isEnabled = self.tableView.selectedRowIndexes.count > 0
                 self.reloadView()
