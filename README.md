@@ -89,4 +89,4 @@ The process to create build artefacts for this app is extremely simple:
 
 ## License
 
-[MIT](./LICENSE)
+[GPLv3](./LICENSE)
