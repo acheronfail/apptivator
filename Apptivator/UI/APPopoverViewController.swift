@@ -3,6 +3,7 @@
 //  Apptivator
 //
 
+import Cocoa
 import MASShortcut
 import LaunchAtLogin
 import CleanroomLogger
@@ -74,6 +75,7 @@ class APPopoverViewController: NSViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        toggleWindowShortcut.shortcutValidator = APShortcutValidator()
 
         // Default to Aqua appearance (Apptivator in Aqua looks better than Vibrant Light).
         if !mojaveDarkModeSupported() {
@@ -169,7 +171,7 @@ class APPopoverViewController: NSViewController {
                 if APState.shared.isEnabled { self.appDelegate.togglePreferencesPopover() }
             })
         }
-        toggleWindowShortcut.shortcutValueChange(nil)
+        toggleWindowShortcut.shortcutValueChange?(toggleWindowShortcut)
     }
 
     // Don't call this if we're 10.14 or later - in those versions we allow macOS to handle the

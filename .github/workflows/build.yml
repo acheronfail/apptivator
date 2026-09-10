@@ -1,0 +1,42 @@
+name: Build
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: build-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: macos-26
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Test on Apple silicon
+        run: ./scripts/test.sh
+      - name: Build pull-request preview (ad-hoc signed)
+        if: github.event_name == 'pull_request'
+        run: ./scripts/build.sh
+      - name: Build with the stable signing identity
+        if: github.event_name != 'pull_request'
+        env:
+          MACOS_CODE_SIGN_P12_BASE64: ${{ secrets.MACOS_CODE_SIGN_P12_BASE64 }}
+          MACOS_CODE_SIGN_P12_PASSWORD: ${{ secrets.MACOS_CODE_SIGN_P12_PASSWORD }}
+        run: ./scripts/with-code-signing-identity.sh ./scripts/build.sh
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: Apptivator-universal-${{ github.sha }}
+          path: |
+            dist/*-universal.zip
+            dist/*-universal.dmg
+            dist/*-SHA256SUMS.txt
+          if-no-files-found: error

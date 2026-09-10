@@ -3,6 +3,7 @@
 //  Apptivator
 //
 
+import Cocoa
 // http://homecoffeecode.com/nsimage-tinted-as-easily-as-a-uiimage/
 extension NSImage {
     func tinted(with tintColor: NSColor) -> NSImage {

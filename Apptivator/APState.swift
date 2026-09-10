@@ -3,9 +3,9 @@
 //  Apptivator
 //
 
+import Cocoa
 import SwiftyJSON
 import MASShortcut
-import LaunchAtLogin
 import CleanroomLogger
 
 @objcMembers class APState: NSObject {
@@ -29,8 +29,6 @@ import CleanroomLogger
     // Toggle for dark mode.
     // On macOS 10.14 and later this isn't used since macOS has a global dark mode.
     var darkModeEnabled = mojaveDarkModeSupported() ? false : appleInterfaceStyleIsDark()
-    // Whether or not the app should launch after login.
-    private var launchAppAtLogin = LaunchAtLogin.isEnabled
     // Don't fire any shortcuts if user is recording a new shortcut.
     private var currentlyRecording = false
     // This is intentionally public and prefixed with "_" because *it should not be used*, except as
@@ -69,11 +67,6 @@ import CleanroomLogger
             "matchAppleInterfaceStyle": false,
             "showPopoverOnScreenWithMouse": false
         ])
-
-        // Allow all shortcuts.
-        // NOTE: this feature comes from a custom fork of MASShortcut.
-        // See https://github.com/acheronfail/MASShortcut/tree/custom
-        MASShortcutValidator.shared().allowAnyShortcut = true
 
         Log.info?.message("APState initialised at \(url.path)")
     }
@@ -140,7 +133,7 @@ import CleanroomLogger
     // Only register the shortcuts that are expected.
     // NOTE: Ideally this should be a private function, but we need to expose it here s in order to
     // write tests for its behaviour.
-    func registerShortcuts(atIndex index: Int, last: (UInt, UInt)?) {
+    func registerShortcuts(atIndex index: Int, last: (Int, UInt)?) {
         guard entries.count > 0 else { return }
         unregisterShortcuts()
 
@@ -162,7 +155,7 @@ import CleanroomLogger
                 // at the given index, whose previous shortcut was hit.
                 let (lastKeyCode, lastModifierFlags) = last!
                 let prev = entry.sequence[index - 1].shortcutValue!
-                if prev.keyCode == lastKeyCode && prev.modifierFlags == lastModifierFlags {
+                if prev.keyCode == lastKeyCode && prev.modifierFlags.rawValue == lastModifierFlags {
                     if !monitor.isShortcutRegistered(shortcut) {
                         monitor.register(shortcut, withAction: { self.keyFired(index + 1, entry, shortcut) })
                         count += 1
@@ -201,7 +194,7 @@ import CleanroomLogger
             Log.debug?.message("Apptivating \(entry.name).")
         } else {
             // Advance shortcut state with last shortcut and the number of shortcuts hit.
-            let last = (shortcut.keyCode, shortcut.modifierFlags)
+            let last = (shortcut.keyCode, shortcut.modifierFlags.rawValue)
             registerShortcuts(atIndex: i, last: last)
         }
     }

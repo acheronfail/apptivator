@@ -5,10 +5,30 @@
 
 import XCTest
 import SwiftyJSON
+import MASShortcut
 
 @testable import Apptivator
 
 class APAppEntryTests: XCTestCase {
+    func testUnmodifiedSequenceKeysAreStillAccepted() {
+        let editor = APSequenceViewController()
+        let (view, observation) = editor.newShortcut(withKeyCode: KEY_A, modifierFlags: 0)
+        defer { observation.invalidate() }
+        XCTAssertTrue(view.shortcutValidator!.isShortcutValid(view.shortcutValue))
+    }
+
+    func testLegacyShortcutJSONKeepsNumericKeyAndModifiers() throws {
+        let json: JSON = [
+            "url": fixtureURL("Calculator.app").absoluteString,
+            "sequence": [["keyCode": 120, "modifierFlags": 1179648]]
+        ]
+        let entry = try XCTUnwrap(APAppEntry(json: json))
+        let shortcut = try XCTUnwrap(entry.sequence.first?.shortcutValue)
+        XCTAssertEqual(shortcut.keyCode, 120)
+        XCTAssertEqual(shortcut.modifierFlags.rawValue, 1179648)
+        XCTAssertEqual(entry.asJSON["sequence"], json["sequence"])
+    }
+
     func testMustBeValidFilePath() {
         let entry = APAppEntry(url: URL(fileURLWithPath: "/file/does/not/exist.app"), config: nil)
         XCTAssert(entry == nil)
@@ -33,13 +53,13 @@ class APAppEntryTests: XCTestCase {
 
         do {
             // Simple init
-            let entryOne = MockEntry(url: URL(fileURLWithPath: "/Applications/Xcode.app"), config: nil)!
+            let entryOne = MockEntry(url: fixtureURL("Xcode.app"), config: nil)!
             entryOne.deinitCalled = { expectation.fulfill() }
-            XCTAssert(entryOne.isActive == true)
+            XCTAssertFalse(entryOne.isActive)
 
             // Init with shortcut
             let data = "{\"url\":\"file:///Applications/Xcode.app\",\"sequence\":[{\"keyCode\":120,\"modifierFlags\":0}]}"
-                .data(using: .utf8, allowLossyConversion: false)!
+                .replacingOccurrences(of: "file:///Applications/", with: fixtureDirectory.absoluteString).data(using: .utf8, allowLossyConversion: false)!
             let entryTwo = try MockEntry(json: try JSON(data: data))!
             entryTwo.deinitCalled = { expectation.fulfill() }
 
@@ -83,7 +103,7 @@ class APAppEntryTests: XCTestCase {
                 "{\"url\":\"file:///Applications/Chess.app\",\"sequence\":[{\"keyCode\":1,\"modifierFlags\":1179648}]}",
                 "{\"url\":\"file:///Applications/Calculator.app\",\"sequence\":[{\"keyCode\":120,\"modifierFlags\":0}]}",
             ]
-                .map({ try JSON(data: $0.data(using: .utf8, allowLossyConversion: false)!) })
+                .map({ try JSON(data: $0.replacingOccurrences(of: "file:///Applications/", with: fixtureDirectory.absoluteString).data(using: .utf8, allowLossyConversion: false)!) })
                 .map({ try APAppEntry(json: $0)! })
         } catch {
             XCTFail(error.localizedDescription)

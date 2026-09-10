@@ -4,6 +4,7 @@
 //
 
 import XCTest
+import MASShortcut
 
 @testable import Apptivator
 
@@ -88,8 +89,8 @@ class APStateTests: XCTestCase {
         // Make changes to the state.
         APState.shared.isEnabled = false
         APState.shared.darkModeEnabled = true
-        APState.shared.addEntry(entry(atURL: URL(fileURLWithPath: "/Applications/Xcode.app"), sequence: [shortcutView(withKeyCode: 120, modifierFlags: 0)]))
-        APState.shared.addEntry(APAppEntry(url: URL(fileURLWithPath: "/Applications/Calculator.app"), config: nil)!)
+        APState.shared.addEntry(entry(atURL: fixtureURL("Xcode.app"), sequence: [shortcutView(withKeyCode: 120, modifierFlags: 0)]))
+        APState.shared.addEntry(APAppEntry(url: fixtureURL("Calculator.app"), config: nil)!)
 
         // Write to disk.
         APState.shared.saveToDisk()
@@ -122,8 +123,8 @@ class APStateTests: XCTestCase {
         XCTAssert(APState.shared.getEntries().count == 2)
     }
 
-    func isShortcutRegistered(_ keyCode: UInt, _ modifierFlags: UInt) -> Bool {
-        return APState.shared.monitor.isShortcutRegistered(MASShortcut(keyCode: keyCode, modifierFlags: modifierFlags))
+    func isShortcutRegistered(_ keyCode: Int, _ modifierFlags: UInt) -> Bool {
+        return APState.shared.monitor.isShortcutRegistered(MASShortcut(keyCode: keyCode, modifierFlags: NSEvent.ModifierFlags(rawValue: modifierFlags)))
     }
 
     func getTemporaryFilePath() -> URL {
@@ -141,18 +142,18 @@ func resetState(withSampleEntries: Bool) {
     APState.shared.loadFromDisk()
     if withSampleEntries {
         [
-            entry(atURL: URL(fileURLWithPath: "/Applications/Xcode.app"), sequence: [
+            entry(atURL: fixtureURL("Xcode.app"), sequence: [
                 shortcutView(withKeyCode: KEY_A, modifierFlags: CMD_SHIFT),
                 shortcutView(withKeyCode: KEY_B, modifierFlags: CMD_SHIFT)
             ]),
-            entry(atURL: URL(fileURLWithPath: "/Applications/Calculator.app"), sequence: [
+            entry(atURL: fixtureURL("Calculator.app"), sequence: [
                 shortcutView(withKeyCode: KEY_A, modifierFlags: CMD_SHIFT),
                 shortcutView(withKeyCode: KEY_D, modifierFlags: CMD_SHIFT)
             ]),
-            entry(atURL: URL(fileURLWithPath: "/Applications/Chess.app"), sequence: [
+            entry(atURL: fixtureURL("Chess.app"), sequence: [
                 shortcutView(withKeyCode: KEY_D, modifierFlags: CMD_SHIFT)
             ]),
-            entry(atURL: URL(fileURLWithPath: "/Applications/System Preferences.app"), sequence: [
+            entry(atURL: fixtureURL("System Preferences.app"), sequence: [
                 shortcutView(withKeyCode: KEY_G, modifierFlags: CMD_SHIFT),
                 shortcutView(withKeyCode: KEY_F, modifierFlags: CMD_SHIFT),
                 shortcutView(withKeyCode: KEY_E, modifierFlags: CMD_SHIFT)

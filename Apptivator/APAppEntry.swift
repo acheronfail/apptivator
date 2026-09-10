@@ -3,6 +3,7 @@
 //  Apptivator
 //
 
+import Cocoa
 import AXSwift
 import SwiftyJSON
 import MASShortcut
@@ -110,9 +111,9 @@ class APAppEntry: CustomDebugStringConvertible {
 
         var sequence: [MASShortcutView] = []
         for (_, value):(String, JSON) in json["sequence"] {
-            if let keyCode = value["keyCode"].uInt, let modifierFlags = value["modifierFlags"].uInt {
+            if let keyCode = value["keyCode"].int, let modifierFlags = value["modifierFlags"].uInt {
                 let shortcutView = MASShortcutView()
-                shortcutView.shortcutValue = MASShortcut(keyCode: keyCode, modifierFlags: modifierFlags)
+                shortcutView.shortcutValue = MASShortcut(keyCode: keyCode, modifierFlags: NSEvent.ModifierFlags(rawValue: modifierFlags))
                 sequence.append(shortcutView)
             }
         }
@@ -213,7 +214,7 @@ class APAppEntry: CustomDebugStringConvertible {
 
     var shortcutString: String? {
         let str = sequence
-            .compactMap({ $0.shortcutValue != nil ? "\($0.shortcutValue.description)" : nil })
+            .compactMap({ $0.shortcutValue?.description })
             .joined(separator: ", ")
         return str.count > 0 ? str : nil
     }
@@ -225,8 +226,8 @@ class APAppEntry: CustomDebugStringConvertible {
             "sequence": sequence.map({ shortcutView in
                 var json: JSON = [:]
                 if let shortcut = shortcutView.shortcutValue {
-                    json["keyCode"].uInt = shortcut.keyCode
-                    json["modifierFlags"].uInt = shortcut.modifierFlags
+                    json["keyCode"].int = shortcut.keyCode
+                    json["modifierFlags"].uInt = shortcut.modifierFlags.rawValue
                 }
                 return json
             }) as [JSON]

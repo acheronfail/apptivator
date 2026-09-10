@@ -63,29 +63,82 @@ Apptivator has some experimental overrides that can be toggled via the Terminal 
 
 ## Developing
 
-#### Setting up the project
+#### Requirements and dependencies
 
-Apptivator uses `carthage` to manage its dependencies (you can install it with `brew`). To build Apptivator on your machine:
+The app requires macOS 13 or later. Build with Xcode 26.3 or later.
+Release builds are universal: the application and its dependencies contain both
+`arm64` (Apple silicon) and `x86_64` (Intel) code. Replace the old Intel-only app
+in `/Applications` with the new build to remove macOS's Intel-app support warning.
+
+Dependencies are built from source with Swift Package Manager. Open
+`Apptivator.xcodeproj` and Xcode resolves them automatically; Carthage is no longer
+needed. Commit `Apptivator.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved`
+when updating dependencies.
+
+| Dependency | Version / revision | Migration |
+| --- | --- | --- |
+| [SwiftyJSON](https://github.com/SwiftyJSON/SwiftyJSON) | 5.0.2 | Keeps the existing configuration JSON format |
+| [AXSwift](https://github.com/tmandry/AXSwift) | 0.3.2 | Native source build for both architectures |
+| [LaunchAtLogin Modern](https://github.com/sindresorhus/LaunchAtLogin-Modern) | 1.1.0 | Uses macOS's login-item service; removes the legacy helper app |
+| [CleanroomLogger](https://github.com/emaloney/CleanroomLogger) | `d732baead85b77471505daf290212700b9d87a05` | Post-7.0.0 revision with a supported Swift package manifest; preserves rotating logs |
+| [MASShortcut](https://github.com/shpakovski/MASShortcut) | `6f2603c6b6cc18f64a799e5d2c9d3bbc467c413a` | Post-2.4.0 revision with Swift package support; replaces the custom fork with a validator subclass |
+
+MASShortcut and CleanroomLogger have no tagged release containing their current
+Swift package manifests, so they use fixed upstream revisions. Dependencies and
+GitHub Actions are pinned for reproducible builds. Third-party licenses are
+included in the app's resources.
+
+After upgrading, check **Launch Apptivator at Login** again if you used the old
+login helper. macOS manages the new registration under System Settings → General
+→ Login Items. The existing shortcut configuration stays at
+`~/Library/Preferences/Apptivator/configuration.json`.
+
+#### CI builds and packages
+
+Builds and tests run in GitHub Actions. Master pushes and manual Build runs use
+`scripts/with-code-signing-identity.sh ./scripts/build.sh`; tagged releases pass
+the tag to that command. Pull-request builds use ad-hoc signatures and never
+receive signing secrets. Configure the two signing secrets before running a
+master or release build; see [Signing and releases](RELEASING.md).
+
+Tests run on the host architecture and use temporary configuration and application
+fixtures. The release script archives both architectures, verifies every Mach-O
+binary and the app signature, and writes these files to `dist/`:
+
+- `Apptivator-<version>-universal.dmg`
+- `Apptivator-<version>-universal.zip`
+- `Apptivator-<version>-universal-SHA256SUMS.txt`
+
+Master and release builds use the same long-lived self-signed certificate and an
+explicit designated requirement for `com.acheronfail.apptivator`, so updates keep
+a stable identity for Accessibility permissions. The initial transition from an
+older signature may require granting Accessibility access once more. Keep using
+the same certificate and bundle identifier for subsequent updates.
+
+This does not require Apple Developer Program membership, and it does not provide
+Developer ID signing or notarization. Downloaded builds may still require approval
+in System Settings → Privacy & Security. Debug symbols remain in the CI archive
+but are not packaged or published.
+
+#### Continuous integration and releases
+
+The Build workflow runs on pushes and pull requests to `master`, and can also be
+started manually. It runs tests on a GitHub-hosted Apple silicon Mac and uploads
+the universal packages as workflow artifacts.
+
+Push a tag matching `vX.Y.Z` to run the Release workflow, for example:
 
 ```bash
-# Clone the repository
-git clone git@github.com:acheronfail/apptivator.git && cd apptivator
-# Install dependencies with carthage
-carthage update --platform macos
-# Open the project
-open Apptivator.xcodeproj
+git tag v1.7.0
+git push origin v1.7.0
 ```
 
-Once you've opened the Xcode project, it should be enough to make your changes and then just hit the build/run button and go from there.
-
-#### Creating a DMG
-
-The process to create build artefacts for this app is extremely simple:
-
-1. Archive a build in Xcode (`Products` -> `Archive`)
-2. Export the app
-3. Run [`create-dmg`](https://github.com/sindresorhus/create-dmg)
-4. 🎉
+The release job validates the tag, runs tests, builds fresh universal artifacts,
+and creates a GitHub release with those artifacts attached. The tag sets
+`CFBundleShortVersionString`; the Actions run number sets `CFBundleVersion`.
+Only the release job has `contents: write` permission. It uses GitHub's automatic
+`GITHUB_TOKEN` to publish the release. The two certificate secrets described in
+[RELEASING.md](RELEASING.md) are required for signing.
 
 ## License
 

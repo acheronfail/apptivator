@@ -1,0 +1,55 @@
+name: Release
+on:
+  push:
+    tags: ['v*.*.*']
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  release:
+    runs-on: macos-26
+    timeout-minutes: 30
+    permissions:
+      contents: write
+    steps:
+      - name: Validate release tag
+        env:
+          RELEASE_TAG: ${{ github.ref_name }}
+        run: |
+          [[ "$RELEASE_TAG" =~ ^v(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)$ ]] || {
+            echo 'Release tags must have the form v1.2.3' >&2
+            exit 1
+          }
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Test on Apple silicon
+        run: ./scripts/test.sh
+      - name: Build versioned universal release
+        env:
+          RELEASE_TAG: ${{ github.ref_name }}
+          MACOS_CODE_SIGN_P12_BASE64: ${{ secrets.MACOS_CODE_SIGN_P12_BASE64 }}
+          MACOS_CODE_SIGN_P12_PASSWORD: ${{ secrets.MACOS_CODE_SIGN_P12_PASSWORD }}
+        run: ./scripts/with-code-signing-identity.sh ./scripts/build.sh "$RELEASE_TAG"
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: Apptivator-${{ github.ref_name }}-universal
+          path: |
+            dist/*-universal.zip
+            dist/*-universal.dmg
+            dist/*-SHA256SUMS.txt
+          if-no-files-found: error
+      - name: Publish GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          RELEASE_TAG: ${{ github.ref_name }}
+        run: |
+          gh release create "$RELEASE_TAG" dist/*-universal.zip dist/*-universal.dmg dist/*-SHA256SUMS.txt \
+            --verify-tag --title "Apptivator $RELEASE_TAG" --generate-notes \
+            --notes 'Universal build for Apple silicon and Intel. Requires macOS 13 or later. Signed with the stable Apptivator identity; not Developer ID signed or notarized.'

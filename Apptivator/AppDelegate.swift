@@ -3,7 +3,8 @@
 //  Apptivator
 //
 
-import SwiftyJSON
+import Cocoa
+import AXSwift
 import CleanroomLogger
 
 let ENABLED_INDICATOR_ON = "\(APP_NAME): on"
@@ -12,7 +13,7 @@ let ICON_ON = setupMenuBarIcon(NSImage(named: NSImage.Name(stringLiteral: "icon-
 let ICON_OFF = setupMenuBarIcon(NSImage(named: NSImage.Name(stringLiteral: "icon-off")))
 let ICON_REC = setupMenuBarIcon(NSImage(named: NSImage.Name(stringLiteral: "icon-on")))?.tinted(with: NSColor.red)
 
-@NSApplicationMain class AppDelegate: NSObject, NSApplicationDelegate {
+@main class AppDelegate: NSObject, NSApplicationDelegate {
     @IBOutlet weak var popover: NSPopover!
     @IBOutlet weak var popoverViewController: APPopoverViewController!
 

@@ -3,6 +3,8 @@
 //  Apptivator
 //
 
+import Cocoa
+import MASShortcut
 let SEQUENCE_DETAIL_NO_SHORTCUT = "There must be at least one shortcut in a sequence."
 let SEQUENCE_DETAIL_TEXT = """
 To use a seqeunce, press the first shortcut (and release it), then press the next, and so on, until \
@@ -34,7 +36,7 @@ class APSequenceViewController: NSViewController {
         // Copy the entry's sequence.
         didSet {
             list = entry.sequence.map({
-                newShortcut(withKeyCode: $0.shortcutValue.keyCode, modifierFlags: $0.shortcutValue.modifierFlags)
+                newShortcut(withKeyCode: $0.shortcutValue?.keyCode, modifierFlags: $0.shortcutValue?.modifierFlags.rawValue)
             })
             list.append(newShortcut(withKeyCode: nil, modifierFlags: nil))
         }
@@ -79,10 +81,11 @@ class APSequenceViewController: NSViewController {
     // This should be the only way to create shortcuts to add to the editable list. Each shortcut is
     // paired with its recordingWatcher, so that we don't accidentally fire any other shortcuts when
     // the user is configuring these shortcuts.
-    func newShortcut(withKeyCode keyCode: UInt?, modifierFlags: UInt?) -> (MASShortcutView, NSKeyValueObservation) {
+    func newShortcut(withKeyCode keyCode: Int?, modifierFlags: UInt?) -> (MASShortcutView, NSKeyValueObservation) {
         let view = MASShortcutView()
+        view.shortcutValidator = APShortcutValidator()
         if keyCode != nil && modifierFlags != nil {
-            view.shortcutValue = MASShortcut(keyCode: keyCode!, modifierFlags: modifierFlags!)
+            view.shortcutValue = MASShortcut(keyCode: keyCode!, modifierFlags: NSEvent.ModifierFlags(rawValue: modifierFlags!))
         }
         view.shortcutValueChange = updateList
         let watcher = view.observe(\.isRecording, changeHandler: APState.shared.onRecordingChange)
@@ -191,5 +194,12 @@ extension APSequenceViewController: NSTableViewDelegate {
 extension APSequenceViewController: NSTableViewDataSource {
     func numberOfRows(in tableView: NSTableView) -> Int {
         return list.count
+    }
+}
+
+// Sequences may contain unmodified keys. Keep system conflict checks from MASShortcut.
+final class APShortcutValidator: MASShortcutValidator {
+    override func isShortcutValid(_ shortcut: MASShortcut!) -> Bool {
+        return shortcut != nil
     }
 }

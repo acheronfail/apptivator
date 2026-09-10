@@ -3,6 +3,8 @@
 //  Apptivator
 //
 
+import Cocoa
+import AXSwift
 import CleanroomLogger
 
 let APP_NAME = Bundle.main.infoDictionary![kCFBundleNameKey as String] as! String
@@ -54,7 +56,7 @@ func launchApplication(at url: URL) -> NSRunningApplication? {
 // Find the running app at the given URL.
 func findRunningApp(withURL url: URL) -> NSRunningApplication? {
     let runningApps = NSWorkspace.shared.runningApplications
-    if let i = runningApps.index(where: { $0.bundleURL?.path == url.path || $0.executableURL?.path == url.path }) {
+    if let i = runningApps.firstIndex(where: { $0.bundleURL?.path == url.path || $0.executableURL?.path == url.path }) {
         return runningApps[i]
     }
 
