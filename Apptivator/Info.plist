@@ -33,7 +33,7 @@
 	<key>SUFeedURL</key>
 	<string>https://github.com/acheronfail/apptivator/releases/latest/download/appcast.xml</string>
 	<key>SUPublicEDKey</key>
-	<string>$(SPARKLE_PUBLIC_ED_KEY)</string>
+	<string>njmTshmE4HlGJsH/81CIYDz2QeGfWxafaXmVnsaXbmY=</string>
 	<key>SUVerifyUpdateBeforeExtraction</key>
 	<true/>
 	<key>SURequireSignedFeed</key>

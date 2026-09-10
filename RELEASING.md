@@ -127,16 +127,14 @@ build/SourcePackages/artifacts/sparkle/Sparkle/bin/generate_keys --account appti
 ```
 
 This stores a new private key in your login Keychain and prints its public key.
-Set the public key as the GitHub Actions **repository variable**
-`SPARKLE_PUBLIC_ED_KEY`. The build script embeds it as `SUPublicEDKey`.
+Set the public key as `SUPublicEDKey` in `Apptivator/Info.plist` and commit it.
+The build script validates this embedded public key before signed builds.
 Export the private key to a temporary file, then upload it as a repository secret:
 
 ```bash
 umask 077
 build/SourcePackages/artifacts/sparkle/Sparkle/bin/generate_keys \
   --account apptivator -x /private/tmp/apptivator-sparkle-private-key
-# Use the public key printed by generate_keys:
-gh variable set SPARKLE_PUBLIC_ED_KEY --body '<public key>'
 gh secret set SPARKLE_PRIVATE_ED_KEY < /private/tmp/apptivator-sparkle-private-key
 ```
 
@@ -162,7 +160,7 @@ update. Release assets and the appcast must remain byte-for-byte unchanged after
 signing. The checksum manifest covers the packages; the appcast has its own
 embedded cryptographic signature.
 
-Debug builds and unconfigured PR previews keep the updater disabled. Configured
+Debug builds keep the updater disabled. Configured
 Release builds offer **Check for Updates…** in the menu and Sparkle's standard
 permission prompt for automatic checks. CI build numbers use seconds since 2020,
 shared across both workflows, rather than unrelated workflow run counters.

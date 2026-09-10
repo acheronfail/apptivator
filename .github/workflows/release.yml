@@ -33,7 +33,6 @@ jobs:
       - name: Build versioned universal release
         env:
           RELEASE_TAG: ${{ github.ref_name }}
-          SPARKLE_PUBLIC_ED_KEY: ${{ vars.SPARKLE_PUBLIC_ED_KEY }}
           MACOS_CODE_SIGN_P12_BASE64: ${{ secrets.MACOS_CODE_SIGN_P12_BASE64 }}
           MACOS_CODE_SIGN_P12_PASSWORD: ${{ secrets.MACOS_CODE_SIGN_P12_PASSWORD }}
         run: ./scripts/with-code-signing-identity.sh ./scripts/build.sh "$RELEASE_TAG"

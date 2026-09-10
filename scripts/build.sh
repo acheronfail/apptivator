@@ -4,12 +4,13 @@ cd "$(dirname "$0")/.."
 
 # An optional release tag sets the version inside the app as well as artifact names.
 tag="${1:-}"
-version_args=("CODE_SIGN_IDENTITY=-" "SPARKLE_PUBLIC_ED_KEY=${SPARKLE_PUBLIC_ED_KEY:-}")
+version_args=("CODE_SIGN_IDENTITY=-")
 if [[ -n "$tag" || ( -n "${CODE_SIGN_IDENTITY:-}" && "$CODE_SIGN_IDENTITY" != - ) ]]; then
-  : "${SPARKLE_PUBLIC_ED_KEY:?Configure the Sparkle public key before distributing signed builds}"
   python3 - <<'PYTHON'
-import base64, os
-assert len(base64.b64decode(os.environ['SPARKLE_PUBLIC_ED_KEY'], validate=True)) == 32, 'Invalid Sparkle public key'
+import base64, plistlib
+with open('Apptivator/Info.plist', 'rb') as source:
+    public_key = plistlib.load(source)['SUPublicEDKey']
+assert len(base64.b64decode(public_key, validate=True)) == 32, 'Invalid Sparkle public key'
 PYTHON
 fi
 if [[ -n "$tag" ]]; then
