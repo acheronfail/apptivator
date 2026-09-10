@@ -30,6 +30,14 @@
 	<string>Copyright © 2018 acheronfail</string>
 	<key>NSMainNibFile</key>
 	<string>APPopoverViewController</string>
+	<key>SUFeedURL</key>
+	<string>https://github.com/acheronfail/apptivator/releases/latest/download/appcast.xml</string>
+	<key>SUPublicEDKey</key>
+	<string>$(SPARKLE_PUBLIC_ED_KEY)</string>
+	<key>SUVerifyUpdateBeforeExtraction</key>
+	<true/>
+	<key>SURequireSignedFeed</key>
+	<true/>
 	<key>NSPrincipalClass</key>
 	<string>NSApplication</string>
 </dict>

@@ -1,5 +1,5 @@
 {
-  "originHash" : "26aa6cbb58e3ce2b4ee8fd7b40ea23d7cafa1dba760911936ec8be1c501a2e47",
+  "originHash" : "25325865a31ea6af76d1cc50bfb64b7de7ccc71ef997daa698e8c21accfccbf4",
   "pins" : [
     {
       "identity" : "axswift",
@@ -33,6 +33,15 @@
       "location" : "https://github.com/shpakovski/MASShortcut.git",
       "state" : {
         "revision" : "6f2603c6b6cc18f64a799e5d2c9d3bbc467c413a"
+      }
+    },
+    {
+      "identity" : "sparkle",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/sparkle-project/Sparkle.git",
+      "state" : {
+        "revision" : "ac2def288cbff5cfc7df3ffef6abdf45b72bcb0a",
+        "version" : "2.9.6"
       }
     },
     {

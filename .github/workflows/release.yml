@@ -7,7 +7,7 @@ permissions:
   contents: read
 
 concurrency:
-  group: release-${{ github.ref }}
+  group: release
   cancel-in-progress: false
 
 jobs:
@@ -33,9 +33,15 @@ jobs:
       - name: Build versioned universal release
         env:
           RELEASE_TAG: ${{ github.ref_name }}
+          SPARKLE_PUBLIC_ED_KEY: ${{ vars.SPARKLE_PUBLIC_ED_KEY }}
           MACOS_CODE_SIGN_P12_BASE64: ${{ secrets.MACOS_CODE_SIGN_P12_BASE64 }}
           MACOS_CODE_SIGN_P12_PASSWORD: ${{ secrets.MACOS_CODE_SIGN_P12_PASSWORD }}
         run: ./scripts/with-code-signing-identity.sh ./scripts/build.sh "$RELEASE_TAG"
+      - name: Generate signed Sparkle appcast
+        env:
+          RELEASE_TAG: ${{ github.ref_name }}
+          SPARKLE_PRIVATE_ED_KEY: ${{ secrets.SPARKLE_PRIVATE_ED_KEY }}
+        run: ./scripts/generate-appcast.sh "$RELEASE_TAG"
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: Apptivator-${{ github.ref_name }}-universal
@@ -43,6 +49,7 @@ jobs:
             dist/*-universal.zip
             dist/*-universal.dmg
             dist/*-SHA256SUMS.txt
+            dist/appcast.xml
           if-no-files-found: error
       - name: Publish GitHub release
         env:
@@ -50,6 +57,8 @@ jobs:
           GH_REPO: ${{ github.repository }}
           RELEASE_TAG: ${{ github.ref_name }}
         run: |
-          gh release create "$RELEASE_TAG" dist/*-universal.zip dist/*-universal.dmg dist/*-SHA256SUMS.txt \
-            --verify-tag --title "Apptivator $RELEASE_TAG" --generate-notes \
-            --notes 'Universal build for Apple silicon and Intel. Requires macOS 13 or later. Signed with the stable Apptivator identity; not Developer ID signed or notarized.'
+          gh release create "$RELEASE_TAG" dist/*-universal.zip dist/*-universal.dmg dist/*-SHA256SUMS.txt dist/appcast.xml \
+            --draft --verify-tag --title "Apptivator $RELEASE_TAG" --generate-notes
+          # Publishing the complete draft makes the feed and archive available
+          # together. GitHub's latest/download URL then points at this appcast.
+          gh release edit "$RELEASE_TAG" --draft=false --latest

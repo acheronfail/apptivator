@@ -29,6 +29,7 @@ jobs:
       - name: Build with the stable signing identity
         if: github.event_name != 'pull_request'
         env:
+          SPARKLE_PUBLIC_ED_KEY: ${{ vars.SPARKLE_PUBLIC_ED_KEY }}
           MACOS_CODE_SIGN_P12_BASE64: ${{ secrets.MACOS_CODE_SIGN_P12_BASE64 }}
           MACOS_CODE_SIGN_P12_PASSWORD: ${{ secrets.MACOS_CODE_SIGN_P12_PASSWORD }}
         run: ./scripts/with-code-signing-identity.sh ./scripts/build.sh

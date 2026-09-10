@@ -73,6 +73,8 @@ explains storage and fork-PR restrictions.
 
 ## 3. Run CI
 
+Configure the Sparkle keys below before running signed builds.
+
 Once this branch is merged, a push to `master` signs the Build workflow's app using
 that identity. You can also use **Actions → Build → Run workflow** and select the
 branch to test it after the secrets are set. Signed runs fail when secrets are
@@ -97,11 +99,80 @@ certificate trust. Cleanup calls are time-limited because macOS security service
 can stall; the disposable hosted VM is discarded after the job. The wrapper
 refuses to run on a local developer machine.
 
-Every release uploads exactly these three files:
+Every release uploads these four files:
 
 - `Apptivator-<version>-universal.dmg`
 - `Apptivator-<version>-universal.zip`
 - `Apptivator-<version>-universal-SHA256SUMS.txt`
+- `appcast.xml` (signed Sparkle update feed)
 
 The checksum manifest covers the DMG and app ZIP. No `*-dSYMs.zip` is generated or
-published. Upload paths explicitly allow only these three artifact types.
+published. Upload paths explicitly allow only these package files and the appcast.
+
+## Sparkle update signing (one-time setup)
+
+Sparkle 2.9.6 checks the signed feed at
+`https://github.com/acheronfail/apptivator/releases/latest/download/appcast.xml`.
+GitHub Releases hosts everything; no GitHub Pages site or separate server is
+needed. Updates use the existing universal ZIP, with an Ed25519 signature in the
+appcast. The feed is also signed and verified before it is used. These signatures
+are separate from the macOS code-signing identity described above.
+
+After resolving packages, generate a dedicated key using Sparkle's official tool:
+
+```bash
+xcodebuild -resolvePackageDependencies -project Apptivator.xcodeproj \
+  -scheme Apptivator -clonedSourcePackagesDirPath build/SourcePackages
+build/SourcePackages/artifacts/sparkle/Sparkle/bin/generate_keys --account apptivator
+```
+
+This stores a new private key in your login Keychain and prints its public key.
+Set the public key as the GitHub Actions **repository variable**
+`SPARKLE_PUBLIC_ED_KEY`. The build script embeds it as `SUPublicEDKey`.
+Export the private key to a temporary file, then upload it as a repository secret:
+
+```bash
+umask 077
+build/SourcePackages/artifacts/sparkle/Sparkle/bin/generate_keys \
+  --account apptivator -x /private/tmp/apptivator-sparkle-private-key
+# Use the public key printed by generate_keys:
+gh variable set SPARKLE_PUBLIC_ED_KEY --body '<public key>'
+gh secret set SPARKLE_PRIVATE_ED_KEY < /private/tmp/apptivator-sparkle-private-key
+```
+
+Back up the exported private key in your password/secrets manager before deleting
+the temporary file. Keep the same key for every release. Never put it in the
+repository, a release, a command-line argument, or logs. CI passes it to Sparkle
+through standard input, without importing it into a keychain. Signed builds fail
+if the public key is absent or malformed; release publication also fails if the
+private key is absent or does not match the embedded public key.
+
+The Release workflow generates and validates `appcast.xml`, uploads it alongside
+the ZIP, DMG, and checksum manifest to a draft, then publishes the complete draft
+as the latest release. Release jobs are serialized. Publish tags in increasing
+version order; do not mark older releases or releases without an appcast as
+latest. If publishing fails after draft creation, inspect/delete that draft
+before rerunning the job. GitHub's latest-release redirect must remain publicly
+accessible; forks must change the feed URL and publishing script to their repo.
+
+The feed contains only the current full ZIP (no delta updates). If the minimum
+supported macOS version changes, preserve compatible older items in the feed
+before release so users on older systems can still find their last supported
+update. Release assets and the appcast must remain byte-for-byte unchanged after
+signing. The checksum manifest covers the packages; the appcast has its own
+embedded cryptographic signature.
+
+Debug builds and unconfigured PR previews keep the updater disabled. Configured
+Release builds offer **Check for Updates…** in the menu and Sparkle's standard
+permission prompt for automatic checks. CI build numbers use seconds since 2020,
+shared across both workflows, rather than unrelated workflow run counters.
+
+The first Sparkle-enabled version must be installed manually. For an end-to-end
+smoke test, install that signed build in `/Applications`, publish a newer version,
+choose **Check for Updates…**, and confirm the update installs, relaunches, retains
+shortcuts, and preserves Accessibility access. Local build/signature validation
+does not substitute for this two-release test. Sparkle does not add Developer ID
+signing or notarization; the distribution limitations above still apply.
+
+See [Sparkle setup](https://sparkle-project.org/documentation/) and
+[publishing updates](https://sparkle-project.org/documentation/publishing/).

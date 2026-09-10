@@ -70,13 +70,14 @@ Release builds are universal: the application and its dependencies contain both
 `arm64` (Apple silicon) and `x86_64` (Intel) code. Replace the old Intel-only app
 in `/Applications` with the new build to remove macOS's Intel-app support warning.
 
-Dependencies are built from source with Swift Package Manager. Open
+Dependencies are managed with Swift Package Manager; Sparkle supplies a universal binary framework. Open
 `Apptivator.xcodeproj` and Xcode resolves them automatically; Carthage is no longer
 needed. Commit `Apptivator.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved`
 when updating dependencies.
 
 | Dependency | Version / revision | Migration |
 | --- | --- | --- |
+| [Sparkle](https://github.com/sparkle-project/Sparkle) | 2.9.6 | Signed automatic updates hosted on GitHub Releases |
 | [SwiftyJSON](https://github.com/SwiftyJSON/SwiftyJSON) | 5.0.2 | Keeps the existing configuration JSON format |
 | [AXSwift](https://github.com/tmandry/AXSwift) | 0.3.2 | Native source build for both architectures |
 | [LaunchAtLogin Modern](https://github.com/sindresorhus/LaunchAtLogin-Modern) | 1.1.0 | Uses macOS's login-item service; removes the legacy helper app |
@@ -98,7 +99,7 @@ login helper. macOS manages the new registration under System Settings → Gener
 Builds and tests run in GitHub Actions. Master pushes and manual Build runs use
 `scripts/with-code-signing-identity.sh ./scripts/build.sh`; tagged releases pass
 the tag to that command. Pull-request builds use ad-hoc signatures and never
-receive signing secrets. Configure the two signing secrets before running a
+receive signing secrets. Configure the certificate secrets and Sparkle public key before running a
 master or release build; see [Signing and releases](RELEASING.md).
 
 Tests run on the host architecture and use temporary configuration and application
@@ -135,10 +136,13 @@ git push origin v1.7.0
 
 The release job validates the tag, runs tests, builds fresh universal artifacts,
 and creates a GitHub release with those artifacts attached. The tag sets
-`CFBundleShortVersionString`; the Actions run number sets `CFBundleVersion`.
+`CFBundleShortVersionString`; a shared time-based build number sets `CFBundleVersion`.
 Only the release job has `contents: write` permission. It uses GitHub's automatic
-`GITHUB_TOKEN` to publish the release. The two certificate secrets described in
-[RELEASING.md](RELEASING.md) are required for signing.
+`GITHUB_TOKEN` to publish the release. The certificate secrets and Sparkle signing configuration described in
+[RELEASING.md](RELEASING.md) are required for publishing. The release also includes
+a signed `appcast.xml`; Sparkle uses it to discover and verify updates. Install the
+first Sparkle-enabled release manually, then use **Check for Updates…** from the
+menu. Sparkle asks permission to check automatically.
 
 ## License
 

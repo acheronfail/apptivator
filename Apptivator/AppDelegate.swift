@@ -6,6 +6,7 @@
 import Cocoa
 import AXSwift
 import CleanroomLogger
+import Sparkle
 
 let ENABLED_INDICATOR_ON = "\(APP_NAME): on"
 let ENABLED_INDICATOR_OFF = "\(APP_NAME): off"
@@ -16,6 +17,9 @@ let ICON_REC = setupMenuBarIcon(NSImage(named: NSImage.Name(stringLiteral: "icon
 @main class AppDelegate: NSObject, NSApplicationDelegate {
     @IBOutlet weak var popover: NSPopover!
     @IBOutlet weak var popoverViewController: APPopoverViewController!
+
+    // Keep the controller alive for the lifetime of this menu-bar app.
+    private var updaterController: SPUStandardUpdaterController?
 
     private var contextMenu: NSMenu = NSMenu()
     private var menuBarItem: NSStatusItem! = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
@@ -67,6 +71,14 @@ let ICON_REC = setupMenuBarIcon(NSImage(named: NSImage.Name(stringLiteral: "icon
             """
             alert.alertStyle = .warning
             alert.runModal()
+        }
+        #endif
+
+        #if !DEBUG
+        if let key = Bundle.main.object(forInfoDictionaryKey: "SUPublicEDKey") as? String,
+           Data(base64Encoded: key)?.count == 32 {
+            updaterController = SPUStandardUpdaterController(
+                startingUpdater: true, updaterDelegate: nil, userDriverDelegate: nil)
         }
         #endif
 
@@ -150,6 +162,11 @@ extension AppDelegate: NSMenuDelegate {
         contextMenu.addItem(enabledIndicator)
         contextMenu.addItem(withTitle: "Configure Shortcuts", action: #selector(togglePreferencesPopover), keyEquivalent: "")
         contextMenu.addItem(.separator())
+        let updateItem = contextMenu.addItem(withTitle: "Check for Updates…",
+                                             action: #selector(SPUStandardUpdaterController.checkForUpdates(_:)),
+                                             keyEquivalent: "")
+        updateItem.target = updaterController
+        updateItem.isEnabled = updaterController?.updater.canCheckForUpdates ?? false
         contextMenu.addItem(withTitle: "About", action: #selector(showAboutPanel), keyEquivalent: "")
         contextMenu.addItem(.separator())
 

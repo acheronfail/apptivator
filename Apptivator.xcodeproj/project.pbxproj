@@ -31,6 +31,7 @@
 		A20000000000000000000003 = {isa = PBXBuildFile; productRef = A10000000000000000000003; };
 		A20000000000000000000004 = {isa = PBXBuildFile; productRef = A10000000000000000000004; };
 		A30000000000000000000000 = {isa = PBXBuildFile; fileRef = A30000000000000000000001; };
+		A20000000000000000000005 = {isa = PBXBuildFile; productRef = A10000000000000000000005; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -87,6 +88,7 @@
 				A20000000000000000000002,
 				A20000000000000000000003,
 				A20000000000000000000004,
+				A20000000000000000000005,
 
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -203,7 +205,7 @@
 			);
 			dependencies = (
 			);
-			packageProductDependencies = (A10000000000000000000000, A10000000000000000000001, A10000000000000000000002, A10000000000000000000003, A10000000000000000000004, );
+			packageProductDependencies = (A10000000000000000000000, A10000000000000000000001, A10000000000000000000002, A10000000000000000000003, A10000000000000000000004, A10000000000000000000005, );
 			name = Apptivator;
 			productName = Apptivator;
 			productReference = B3B4C2BD1E25894B009F8E4E /* Apptivator.app */;
@@ -242,7 +244,7 @@
 			);
 			mainGroup = B3B4C2B41E25894B009F8E4E;
 			productRefGroup = B3B4C2BE1E25894B009F8E4E /* Products */;
-			packageReferences = (A00000000000000000000000, A00000000000000000000001, A00000000000000000000002, A00000000000000000000003, A00000000000000000000004, );
+			packageReferences = (A00000000000000000000000, A00000000000000000000001, A00000000000000000000002, A00000000000000000000003, A00000000000000000000004, A00000000000000000000005, );
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
@@ -331,6 +333,7 @@
 		A00000000000000000000002 = {isa = XCRemoteSwiftPackageReference; repositoryURL = "https://github.com/sindresorhus/LaunchAtLogin-Modern.git"; requirement = {kind = exactVersion; version = 1.1.0;}; };
 		A00000000000000000000003 = {isa = XCRemoteSwiftPackageReference; repositoryURL = "https://github.com/emaloney/CleanroomLogger.git"; requirement = {kind = revision; revision = d732baead85b77471505daf290212700b9d87a05;}; };
 		A00000000000000000000004 = {isa = XCRemoteSwiftPackageReference; repositoryURL = "https://github.com/shpakovski/MASShortcut.git"; requirement = {kind = revision; revision = 6f2603c6b6cc18f64a799e5d2c9d3bbc467c413a;}; };
+		A00000000000000000000005 = {isa = XCRemoteSwiftPackageReference; repositoryURL = "https://github.com/sparkle-project/Sparkle.git"; requirement = {kind = exactVersion; version = 2.9.6;}; };
 /* End XCRemoteSwiftPackageReference section */
 /* Begin XCSwiftPackageProductDependency section */
 		A10000000000000000000000 = {isa = XCSwiftPackageProductDependency; package = A00000000000000000000000; productName = SwiftyJSON; };
@@ -338,6 +341,7 @@
 		A10000000000000000000002 = {isa = XCSwiftPackageProductDependency; package = A00000000000000000000002; productName = LaunchAtLogin; };
 		A10000000000000000000003 = {isa = XCSwiftPackageProductDependency; package = A00000000000000000000003; productName = CleanroomLogger; };
 		A10000000000000000000004 = {isa = XCSwiftPackageProductDependency; package = A00000000000000000000004; productName = MASShortcut; };
+		A10000000000000000000005 = {isa = XCSwiftPackageProductDependency; package = A00000000000000000000005; productName = Sparkle; };
 /* End XCSwiftPackageProductDependency section */
 
 /* Begin XCBuildConfiguration section */
