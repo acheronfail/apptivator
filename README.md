@@ -96,30 +96,20 @@ login helper. macOS manages the new registration under System Settings → Gener
 
 #### CI builds and packages
 
-Builds and tests run in GitHub Actions. Master pushes and manual Build runs use
-`scripts/with-code-signing-identity.sh ./scripts/build.sh`; tagged releases pass
-the tag to that command. Pull-request builds use ad-hoc signatures and never
-receive signing secrets. Configure the certificate secrets and Sparkle public key before running a
-master or release build; see [Signing and releases](RELEASING.md).
+Master pushes and manual Build runs use
+`acheronfail/dist-tools/actions/apple-release@v1` for Developer ID signing,
+notarization and ZIP/DMG packaging. Pull-request builds use ad-hoc preview
+packages. See [Signing and releases](RELEASING.md) for credential setup.
 
-Tests run on the host architecture and use temporary configuration and application
-fixtures. The release script archives both architectures, verifies every Mach-O
-binary and the app signature, and writes these files to `dist/`:
+The build checks every bundled Mach-O for both `arm64` and `x86_64`. Final
+packages in `dist/` retain these names:
 
 - `Apptivator-<version>-universal.dmg`
 - `Apptivator-<version>-universal.zip`
 - `Apptivator-<version>-universal-SHA256SUMS.txt`
 
-Master and release builds use the same long-lived self-signed certificate and an
-explicit designated requirement for `com.acheronfail.apptivator`, so updates keep
-a stable identity for Accessibility permissions. The initial transition from an
-older signature may require granting Accessibility access once more. Keep using
-the same certificate and bundle identifier for subsequent updates.
-
-This does not require Apple Developer Program membership, and it does not provide
-Developer ID signing or notarization. Downloaded builds may still require approval
-in System Settings → Privacy & Security. Debug symbols remain in the CI archive
-but are not packaged or published.
+The bundle identifier remains `com.acheronfail.apptivator`. Switching from the
+previous self-signed identity may require granting Accessibility access again.
 
 #### Continuous integration and releases
 
