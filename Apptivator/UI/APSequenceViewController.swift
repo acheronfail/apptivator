@@ -7,8 +7,7 @@ import Cocoa
 import MASShortcut
 let SEQUENCE_DETAIL_NO_SHORTCUT = "There must be at least one shortcut in a sequence."
 let SEQUENCE_DETAIL_TEXT = """
-To use a seqeunce, press the first shortcut (and release it), then press the next, and so on, until \
-you activate the application.
+Press and release each shortcut in order to activate the application.
 """
 
 enum UIStates {
@@ -129,7 +128,7 @@ class APSequenceViewController: NSViewController {
         case .ConflictingShortcuts:
             assert(conflictingEntry != nil, "conflictingEntry must be != nil")
             saveButton.isEnabled = false
-            detailTextField.textColor = .red
+            detailTextField.textColor = .systemRed
 
             let boldAttribute = [NSAttributedString.Key.font: NSFont.boldSystemFont(ofSize: 11)]
             let attrString = NSMutableAttributedString(string: "Current sequence conflicts with:\n")
@@ -139,7 +138,7 @@ class APSequenceViewController: NSViewController {
             detailTextField.attributedStringValue = attrString
         case .NoShortcuts:
             saveButton.isEnabled = false
-            detailTextField.textColor = .red
+            detailTextField.textColor = .systemRed
             detailTextField.stringValue = SEQUENCE_DETAIL_NO_SHORTCUT
         case .Okay:
             saveButton.isEnabled = true

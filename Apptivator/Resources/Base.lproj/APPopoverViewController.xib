@@ -75,14 +75,14 @@
                                                 <rect key="frame" x="1" y="1" width="448" height="177"/>
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
-                                                    <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" alternatingRowBackgroundColors="YES" columnSelection="YES" autosaveColumns="NO" rowHeight="19" rowSizeStyle="automatic" headerView="g5N-HU-6HD" viewBased="YES" id="2eX-UM-aS6">
+                                                    <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" alternatingRowBackgroundColors="YES" columnSelection="YES" autosaveColumns="NO" rowHeight="26" headerView="g5N-HU-6HD" viewBased="YES" id="2eX-UM-aS6">
                                                         <rect key="frame" x="0.0" y="0.0" width="448" height="154"/>
                                                         <autoresizingMask key="autoresizingMask"/>
                                                         <size key="intercellSpacing" width="3" height="2"/>
                                                         <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                                         <color key="gridColor" name="gridColor" catalog="System" colorSpace="catalog"/>
                                                         <tableColumns>
-                                                            <tableColumn width="301" minWidth="40" maxWidth="1000" id="4IJ-5b-Yp8">
+                                                            <tableColumn width="301" minWidth="160" maxWidth="1000" id="4IJ-5b-Yp8">
                                                                 <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" title="Application or executable">
                                                                     <font key="font" metaFont="smallSystem"/>
                                                                     <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
@@ -97,17 +97,17 @@
                                                                 <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                                                 <prototypeCellViews>
                                                                     <tableCellView identifier="ApplicationCell" id="vQq-Ro-ncP">
-                                                                        <rect key="frame" x="1" y="1" width="301" height="17"/>
+                                                                        <rect key="frame" x="1" y="1" width="301" height="26"/>
                                                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                         <subviews>
                                                                             <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="irv-dM-ev1">
-                                                                                <rect key="frame" x="3" y="0.0" width="17" height="17"/>
-                                                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                                                                <rect key="frame" x="3" y="4" width="17" height="17"/>
+                                                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                                                                 <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="NSActionTemplate" id="bg6-fa-qci"/>
                                                                             </imageView>
                                                                             <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" allowsExpansionToolTips="YES" translatesAutoresizingMaskIntoConstraints="NO" id="CEX-EU-KCu">
-                                                                                <rect key="frame" x="25" y="0.0" width="276" height="17"/>
-                                                                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                                                                                <rect key="frame" x="25" y="4" width="272" height="17"/>
+                                                                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                                                                 <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" title="Table View Cell" id="AKW-hr-7Zs">
                                                                                     <font key="font" metaFont="system"/>
                                                                                     <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
@@ -122,7 +122,7 @@
                                                                     </tableCellView>
                                                                 </prototypeCellViews>
                                                             </tableColumn>
-                                                            <tableColumn width="141" minWidth="40" maxWidth="1000" id="LgK-ax-hg0">
+                                                            <tableColumn width="141" minWidth="126" maxWidth="1000" id="LgK-ax-hg0">
                                                                 <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="center" title="Shortcut Sequence">
                                                                     <font key="font" metaFont="smallSystem"/>
                                                                     <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
@@ -136,18 +136,23 @@
                                                                 <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                                                 <prototypeCellViews>
                                                                     <tableCellView identifier="ShortcutCell" id="aiS-2a-GBc">
-                                                                        <rect key="frame" x="305" y="1" width="141" height="19"/>
+                                                                        <rect key="frame" x="305" y="1" width="141" height="26"/>
                                                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                         <subviews>
-                                                                            <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="yO4-3o-fqc" customClass="APShortcutButton" customModule="Apptivator" customModuleProvider="target">
-                                                                                <rect key="frame" x="0.0" y="0.0" width="141" height="19"/>
-                                                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                                                            <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="yO4-3o-fqc" customClass="APShortcutButton" customModule="Apptivator" customModuleProvider="target">
+                                                                                <rect key="frame" x="4" y="3" width="131" height="20"/>
                                                                                 <buttonCell key="cell" type="roundRect" title="Sequence" bezelStyle="roundedRect" alignment="center" lineBreakMode="truncatingMiddle" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="mpg-Qj-oA6">
                                                                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                                                                     <font key="font" metaFont="cellTitle"/>
                                                                                 </buttonCell>
                                                                             </button>
                                                                         </subviews>
+                                                                        <constraints>
+                                                                            <constraint firstItem="yO4-3o-fqc" firstAttribute="leading" secondItem="aiS-2a-GBc" secondAttribute="leading" constant="4" id="shortcut-leading"/>
+                                                                            <constraint firstAttribute="trailing" secondItem="yO4-3o-fqc" secondAttribute="trailing" constant="6" id="shortcut-trailing"/>
+                                                                            <constraint firstItem="yO4-3o-fqc" firstAttribute="centerY" secondItem="aiS-2a-GBc" secondAttribute="centerY" id="shortcut-center-y"/>
+                                                                            <constraint firstItem="yO4-3o-fqc" firstAttribute="height" constant="20" id="shortcut-height"/>
+                                                                        </constraints>
                                                                     </tableCellView>
                                                                 </prototypeCellViews>
                                                             </tableColumn>
@@ -181,7 +186,7 @@
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <button identifier="hideWithShortcutWhenActive" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="fm8-ma-Yip">
-                                            <rect key="frame" x="8" y="100" width="252" height="18"/>
+                                            <rect key="frame" x="8" y="100" width="420" height="18"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <buttonCell key="cell" type="check" title="Hide when active and shortcut is fired" bezelStyle="regularSquare" imagePosition="left" enabled="NO" allowsMixedState="YES" inset="2" id="LqG-bN-Qs4" customClass="APMixedButtonCell" customModule="Apptivator" customModuleProvider="target">
                                                 <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
@@ -192,7 +197,7 @@
                                             </connections>
                                         </button>
                                         <button identifier="showOnScreenWithMouse" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="bXg-rt-UMh">
-                                            <rect key="frame" x="8" y="80" width="248" height="18"/>
+                                            <rect key="frame" x="8" y="80" width="420" height="18"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <buttonCell key="cell" type="check" title="Show windows on screen with mouse" bezelStyle="regularSquare" imagePosition="left" enabled="NO" identifier="showOnScreenWithMouse" allowsMixedState="YES" inset="2" id="6s4-a3-huF" customClass="APMixedButtonCell" customModule="Apptivator" customModuleProvider="target">
                                                 <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
@@ -203,9 +208,9 @@
                                             </connections>
                                         </button>
                                         <button identifier="hideWhenDeactivated" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="bJl-e3-U5r">
-                                            <rect key="frame" x="8" y="60" width="242" height="18"/>
+                                            <rect key="frame" x="8" y="60" width="420" height="18"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                            <buttonCell key="cell" type="check" title="Automatically hide when loses focus" bezelStyle="regularSquare" imagePosition="left" enabled="NO" allowsMixedState="YES" inset="2" id="tsm-Jq-Dpu" customClass="APMixedButtonCell" customModule="Apptivator" customModuleProvider="target">
+                                            <buttonCell key="cell" type="check" title="Automatically hide when app loses focus" bezelStyle="regularSquare" imagePosition="left" enabled="NO" allowsMixedState="YES" inset="2" id="tsm-Jq-Dpu" customClass="APMixedButtonCell" customModule="Apptivator" customModuleProvider="target">
                                                 <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                                 <font key="font" metaFont="system"/>
                                             </buttonCell>
@@ -214,7 +219,7 @@
                                             </connections>
                                         </button>
                                         <button identifier="reopenWhenNoWindows" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="reopen-button">
-                                            <rect key="frame" x="8" y="40" width="280" height="18"/>
+                                            <rect key="frame" x="8" y="40" width="420" height="18"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <buttonCell key="cell" type="check" title="Reopen when no windows are open" bezelStyle="regularSquare" imagePosition="left" enabled="NO" allowsMixedState="YES" inset="2" id="reopen-cell" customClass="APMixedButtonCell" customModule="Apptivator" customModuleProvider="target">
                                                 <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
@@ -225,7 +230,7 @@
                                             </connections>
                                         </button>
                                         <button identifier="launchIfNotRunning" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="QZZ-PQ-w5a">
-                                            <rect key="frame" x="8" y="20" width="151" height="18"/>
+                                            <rect key="frame" x="8" y="20" width="420" height="18"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <buttonCell key="cell" type="check" title="Launch if not running" bezelStyle="regularSquare" imagePosition="left" enabled="NO" allowsMixedState="YES" inset="2" id="Y7i-5C-KTK" customClass="APMixedButtonCell" customModule="Apptivator" customModuleProvider="target">
                                                 <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
@@ -236,10 +241,10 @@
                                             </connections>
                                         </button>
                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="j44-aI-4fJ">
-                                            <rect key="frame" x="32" y="8" width="296" height="13"/>
+                                            <rect key="frame" x="32" y="6" width="400" height="14"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                            <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="if this is a file or script, ensure it has executable permissions" id="Had-cU-HN0">
-                                                <font key="font" metaFont="system" size="10"/>
+                                            <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Scripts and executable files must have execute permission." id="Had-cU-HN0">
+                                                <font key="font" metaFont="system" size="11"/>
                                                 <color key="textColor" name="secondaryLabelColor" catalog="System" colorSpace="catalog"/>
                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                             </textFieldCell>
@@ -266,7 +271,7 @@
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="9Wu-r5-UQq">
-                                            <rect key="frame" x="305" y="-2" width="82" height="26"/>
+                                            <rect key="frame" x="306" y="0.0" width="78" height="21"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <buttonCell key="cell" type="smallSquare" title="Remove" bezelStyle="smallSquare" alignment="center" enabled="NO" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="NoY-qx-3jt">
                                                 <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -280,7 +285,7 @@ CA
                                             </connections>
                                         </button>
                                         <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Z53-PH-wbI">
-                                            <rect key="frame" x="385" y="-2" width="64" height="26"/>
+                                            <rect key="frame" x="386" y="0.0" width="62" height="21"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <buttonCell key="cell" type="smallSquare" title="Add" bezelStyle="smallSquare" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="fPh-jD-Usf">
                                                 <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -290,29 +295,37 @@ CA
                                                 <action selector="onAddClick:" target="goT-YD-soK" id="9Bf-Jl-1vx"/>
                                             </connections>
                                         </button>
+                                        <box fixedFrame="YES" boxType="separator" translatesAutoresizingMaskIntoConstraints="NO" id="button-bar-leading-divider">
+                                            <rect key="frame" x="303" y="0.0" width="5" height="21"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                        </box>
+                                        <box fixedFrame="YES" boxType="separator" translatesAutoresizingMaskIntoConstraints="NO" id="button-bar-middle-divider">
+                                            <rect key="frame" x="383" y="0.0" width="5" height="21"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                        </box>
                                     </subviews>
                                 </view>
                                 <color key="borderColor" name="gridColor" catalog="System" colorSpace="catalog"/>
                                 <color key="fillColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                             </box>
                             <box fixedFrame="YES" boxType="custom" borderWidth="0.0" title="Toggle Preferences" translatesAutoresizingMaskIntoConstraints="NO" id="4fj-oJ-0QX">
-                                <rect key="frame" x="15" y="17" width="450" height="22"/>
+                                <rect key="frame" x="15" y="12" width="450" height="26"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <view key="contentView" ambiguous="YES" id="ptY-l2-sEn">
-                                    <rect key="frame" x="0.0" y="0.0" width="450" height="22"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="450" height="26"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="NkU-5s-GQQ">
-                                            <rect key="frame" x="-2" y="4" width="217" height="17"/>
+                                            <rect key="frame" x="-2" y="5" width="217" height="17"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                            <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Show/hide this panel with shortcut:" id="OlC-EW-f1C">
+                                            <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Show/hide this panel:" id="OlC-EW-f1C">
                                                 <font key="font" metaFont="system"/>
                                                 <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                             </textFieldCell>
                                         </textField>
                                         <customView fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Pkw-YC-fI1" customClass="MASShortcutView">
-                                            <rect key="frame" x="287" y="-1" width="163" height="25"/>
+                                            <rect key="frame" x="287" y="2" width="157" height="22"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                         </customView>
                                     </subviews>

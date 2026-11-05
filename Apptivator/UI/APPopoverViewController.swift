@@ -92,6 +92,10 @@ class APPopoverViewController: NSViewController {
 
         bannerImage.image?.isTemplate = true
 
+        // The button bar supplies the outline and separators for these adjacent controls.
+        removeButton.isBordered = false
+        addButton.isBordered = false
+
         tableView.delegate = self
         tableView.dataSource = self
 
@@ -358,7 +362,8 @@ extension APPopoverViewController: NSTableViewDelegate {
             if let cell = tableView.makeView(withIdentifier: .init(CellIdentifiers.ShortcutCell), owner: nil) as? NSTableCellView {
                 if let button = cell.subviews.first as? APShortcutButton {
                     button.index = row
-                    button.title = item.shortcutString ?? "click to configure"
+                    button.title = item.shortcutString ?? "Set Shortcut…"
+                    button.toolTip = item.shortcutString.map { "Edit shortcut sequence: \($0)" } ?? "Set a shortcut sequence"
                     button.action = #selector(onShortcutClick(_:))
                 }
                 return cell

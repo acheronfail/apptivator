@@ -79,7 +79,7 @@
                         <rect key="frame" x="57" y="10" width="5" height="137"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     </box>
-                    <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="BbF-6r-FEt">
+                    <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" toolTip="Cancel shortcut editing" id="BbF-6r-FEt">
                         <rect key="frame" x="0.0" y="0.0" width="60" height="155"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="155" id="j9v-cd-11o"/>
@@ -102,7 +102,7 @@
                             <subviews>
                                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="dXu-Cl-yfG">
                                     <rect key="frame" x="8" y="3" width="97" height="14"/>
-                                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Application Name" usesSingleLineMode="YES" id="APA-F6-4hR">
+                                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="truncatingMiddle" sendsActionOnEndEditing="YES" title="Application Name" usesSingleLineMode="YES" id="APA-F6-4hR">
                                         <font key="font" metaFont="smallSystem"/>
                                         <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                         <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -148,7 +148,7 @@
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <textFieldCell key="cell" sendsActionOnEndEditing="YES" allowsEditingTextAttributes="YES" id="25N-gc-8d6">
                             <font key="font" metaFont="smallSystem"/>
-                            <string key="title">To use a seqeunce, press the first shortcut (and release it), then press the next, and so on, until you activate the application.</string>
+                            <string key="title">Press and release each shortcut in order to activate the application.</string>
                             <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
