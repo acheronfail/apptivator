@@ -13,6 +13,10 @@ import CleanroomLogger
 // to attach listeners to it.
 let APP_LAUNCH_DELAY = 2.0
 
+enum APRunningAppAction {
+    case reopen, activate, hide, none
+}
+
 struct APAppConfig: Equatable {
     // When the app is active, should pressing the shortcut hide it?
     var hideWithShortcutWhenActive: Bool = true
@@ -23,6 +27,15 @@ struct APAppConfig: Equatable {
     // Should we launch the application if it's not running and the shortcut is pressed?
     var launchIfNotRunning: Bool = false
 
+    // Ask the app to reopen when it is running without any windows.
+    var reopenWhenNoWindows: Bool = false
+
+    func actionForRunningApp(isActive: Bool, windowCount: Int?) -> APRunningAppAction {
+        if reopenWhenNoWindows && windowCount == 0 { return .reopen }
+        if !isActive { return .activate }
+        return hideWithShortcutWhenActive ? .hide : .none
+    }
+
     // Allow this struct to be subscripted. Swift makes this overly verbose. T_T
     subscript(_ key: String) -> Bool? {
         get {
@@ -30,6 +43,7 @@ struct APAppConfig: Equatable {
             if key == "showOnScreenWithMouse" { return self.showOnScreenWithMouse }
             if key == "hideWhenDeactivated" { return self.hideWhenDeactivated }
             if key == "launchIfNotRunning" { return self.launchIfNotRunning }
+            if key == "reopenWhenNoWindows" { return self.reopenWhenNoWindows }
             return nil
         }
         set {
@@ -38,6 +52,7 @@ struct APAppConfig: Equatable {
                 if key == "showOnScreenWithMouse" { self.showOnScreenWithMouse = newValue! }
                 if key == "hideWhenDeactivated" { self.hideWhenDeactivated = newValue! }
                 if key == "launchIfNotRunning" { self.launchIfNotRunning = newValue! }
+                if key == "reopenWhenNoWindows" { self.reopenWhenNoWindows = newValue! }
             }
         }
     }
@@ -48,6 +63,7 @@ struct APAppConfig: Equatable {
             showOnScreenWithMouse = opts["showOnScreenWithMouse"] ?? showOnScreenWithMouse
             hideWhenDeactivated = opts["hideWhenDeactivated"] ?? hideWhenDeactivated
             launchIfNotRunning = opts["launchIfNotRunning"] ?? launchIfNotRunning
+            reopenWhenNoWindows = opts["reopenWhenNoWindows"] ?? reopenWhenNoWindows
         }
     }
 
@@ -56,7 +72,8 @@ struct APAppConfig: Equatable {
             "hideWithShortcutWhenActive": hideWithShortcutWhenActive,
             "showOnScreenWithMouse": showOnScreenWithMouse,
             "hideWhenDeactivated": hideWhenDeactivated,
-            "launchIfNotRunning": launchIfNotRunning
+            "launchIfNotRunning": launchIfNotRunning,
+            "reopenWhenNoWindows": reopenWhenNoWindows
         ]
         return json
     }
@@ -124,13 +141,19 @@ class APAppEntry: CustomDebugStringConvertible {
     func apptivate() {
         if self.isEnabled {
             if let runningApp = findRunningApp(withURL: self.url) {
-                if !runningApp.isActive {
+                let windowCount = self.config.reopenWhenNoWindows ? self.windowCount(runningApp) : nil
+                switch self.config.actionForRunningApp(isActive: runningApp.isActive, windowCount: windowCount) {
+                case .reopen:
+                    self.reopenApplication(runningApp)
+                case .activate:
                     if self.config.showOnScreenWithMouse { self.showOnScreenWithMouse(runningApp) }
                     if runningApp.isHidden { runningApp.unhide() }
                     runningApp.activate(options: .activateIgnoringOtherApps)
                     self.createObserver(runningApp)
-                } else if self.config.hideWithShortcutWhenActive {
+                case .hide:
                     runningApp.hide()
+                case .none:
+                    break
                 }
             } else if self.config.launchIfNotRunning {
                 // Launch the application if it's not running, and after a delay attempt to
@@ -145,11 +168,44 @@ class APAppEntry: CustomDebugStringConvertible {
         }
     }
 
+    // AXWindows includes minimized windows. Missing attributes and AX errors are unknown,
+    // not evidence that the application has no windows.
+    private func windowCount(_ runningApp: NSRunningApplication) -> Int? {
+        guard let app = Application(runningApp) else { return nil }
+        do {
+            return try app.windows()?.count
+        } catch {
+            Log.warning?.message("Could not inspect windows of \(runningApp): \(error)")
+            return nil
+        }
+    }
+
+    private func reopenApplication(_ runningApp: NSRunningApplication) {
+        guard let bundleURL = runningApp.bundleURL else { return }
+        let configuration = NSWorkspace.OpenConfiguration()
+        configuration.activates = true
+        configuration.createsNewApplicationInstance = false
+        NSWorkspace.shared.openApplication(at: bundleURL, configuration: configuration) { [weak self] app, error in
+            DispatchQueue.main.async {
+                guard let self = self else { return }
+                if let error = error {
+                    Log.error?.message("Could not reopen application at \(bundleURL): \(error)")
+                    return
+                }
+                self.createObserver(app)
+                if self.config.showOnScreenWithMouse, let app = app {
+                    self.showOnScreenWithMouse(app)
+                }
+            }
+        }
+    }
+
     // Move all the application's windows to the screen where the mouse currently lies.
     private func showOnScreenWithMouse(_ runningApp: NSRunningApplication) {
         if let destScreen = getScreenWithMouse(), let app = Application(runningApp) {
             do {
-                for window in try app.windows()! {
+                guard let windows = try app.windows() else { return }
+                for window in windows {
                     // Get current CGRect of the window.
                     let prevFrame: CGRect = try window.attribute(.frame)!
                     var frame = prevFrame

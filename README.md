@@ -37,6 +37,8 @@ Apptivator provides some neat options:
 	- When this is on, then when activated the application will show up on whichever monitor your mouse is on.
 * **Hide when active and sequence is fired**
 	- If this is set then when you complete the sequence the application will hide if it's shown, or be shown if it's hidden.
+* **Reopen when no windows are open**
+	- When enabled, a shortcut asks a running app with no windows to reopen, even if it is already active. The app decides whether to create a window, as it does when clicked in the Dock. Minimized windows count as existing windows. This option is off by default.
 * **Launch app if it's not running**
 	- When set, if the application is fired then Apptivator will attempt to launch it.
 * **Launch Apptivator at login**

@@ -10,6 +10,45 @@ import MASShortcut
 @testable import Apptivator
 
 class APAppEntryTests: XCTestCase {
+    func testReopenOptionDefaultsOffAndRoundTrips() throws {
+        XCTAssertFalse(APAppConfig(withValues: nil).reopenWhenNoWindows)
+        XCTAssertFalse(APAppConfig(withValues: ["launchIfNotRunning": true]).reopenWhenNoWindows)
+        let entry = try XCTUnwrap(APAppEntry(url: fixtureURL("Calculator.app"), config: nil))
+        entry.config["reopenWhenNoWindows"] = true
+        let restored = try XCTUnwrap(APAppEntry(json: entry.asJSON))
+        XCTAssertTrue(restored.config.reopenWhenNoWindows)
+        XCTAssertEqual(restored.config["reopenWhenNoWindows"], true)
+        entry.config["reopenWhenNoWindows"] = false
+        let disabled = try XCTUnwrap(APAppEntry(json: entry.asJSON))
+        XCTAssertFalse(disabled.config.reopenWhenNoWindows)
+    }
+
+    func testReopenTakesPriorityOverActivationAndHidingOnlyWhenEnabled() {
+        var config = APAppConfig(withValues: nil)
+        for hide in [false, true] {
+            config.hideWithShortcutWhenActive = hide
+            config.reopenWhenNoWindows = false
+            XCTAssertEqual(config.actionForRunningApp(isActive: false, windowCount: 0), .activate)
+            XCTAssertEqual(config.actionForRunningApp(isActive: true, windowCount: 0), hide ? .hide : .none)
+            config.reopenWhenNoWindows = true
+            for active in [false, true] {
+                XCTAssertEqual(config.actionForRunningApp(isActive: active, windowCount: 0), .reopen)
+            }
+        }
+    }
+
+    func testExistingOrUnknownWindowsPreserveFocusAndHideBehavior() {
+        var config = APAppConfig(withValues: ["reopenWhenNoWindows": true])
+        // A minimized window still contributes to AXWindows and therefore has a nonzero count.
+        for count: Int? in [1, 2, nil] {
+            for hide in [false, true] {
+                config.hideWithShortcutWhenActive = hide
+                XCTAssertEqual(config.actionForRunningApp(isActive: false, windowCount: count), .activate)
+                XCTAssertEqual(config.actionForRunningApp(isActive: true, windowCount: count), hide ? .hide : .none)
+            }
+        }
+    }
+
     func testUnmodifiedSequenceKeysAreStillAccepted() {
         let editor = APSequenceViewController()
         let (view, observation) = editor.newShortcut(withKeyCode: KEY_A, modifierFlags: 0)

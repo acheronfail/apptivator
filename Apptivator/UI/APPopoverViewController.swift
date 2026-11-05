@@ -30,12 +30,14 @@ class APPopoverViewController: NSViewController {
     @IBOutlet weak var showOnScreenWithMouse: NSButton!
     @IBOutlet weak var hideWhenDeactivated: NSButton!
     @IBOutlet weak var launchIfNotRunning: NSButton!
+    @IBOutlet weak var reopenWhenNoWindows: NSButton!
     func getLocalConfigButtons() -> [NSButton] {
         return [
             hideWithShortcutWhenActive!,
             showOnScreenWithMouse!,
             hideWhenDeactivated!,
-            launchIfNotRunning!
+            launchIfNotRunning!,
+            reopenWhenNoWindows!
         ]
     }
 

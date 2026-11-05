@@ -31,6 +31,7 @@
                 <outlet property="hideWithShortcutWhenActive" destination="fm8-ma-Yip" id="FcN-ND-DVp"/>
                 <outlet property="launchAppAtLogin" destination="aRw-eS-jNy" id="0lJ-hd-Sd6"/>
                 <outlet property="launchIfNotRunning" destination="QZZ-PQ-w5a" id="Vpv-b8-TH6"/>
+                <outlet property="reopenWhenNoWindows" destination="reopen-button" id="reopen-outlet"/>
                 <outlet property="removeButton" destination="9Wu-r5-UQq" id="AfJ-dV-97c"/>
                 <outlet property="scrollView" destination="AVn-ZA-F5u" id="qgg-gp-l8v"/>
                 <outlet property="showOnScreenWithMouse" destination="bXg-rt-UMh" id="sYB-od-jf8"/>
@@ -173,14 +174,14 @@
                                 <color key="borderColor" name="gridColor" catalog="System" colorSpace="catalog"/>
                             </box>
                             <box fixedFrame="YES" boxType="secondary" borderType="bezel" title="Options for selected item(s):" translatesAutoresizingMaskIntoConstraints="NO" id="1pg-KJ-YJX">
-                                <rect key="frame" x="15" y="89" width="450" height="123"/>
+                                <rect key="frame" x="15" y="69" width="450" height="143"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <view key="contentView" id="OXh-IK-IbD">
-                                    <rect key="frame" x="3" y="3" width="444" height="105"/>
+                                    <rect key="frame" x="3" y="3" width="444" height="125"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <button identifier="hideWithShortcutWhenActive" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="fm8-ma-Yip">
-                                            <rect key="frame" x="8" y="80" width="252" height="18"/>
+                                            <rect key="frame" x="8" y="100" width="252" height="18"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <buttonCell key="cell" type="check" title="Hide when active and shortcut is fired" bezelStyle="regularSquare" imagePosition="left" enabled="NO" allowsMixedState="YES" inset="2" id="LqG-bN-Qs4" customClass="APMixedButtonCell" customModule="Apptivator" customModuleProvider="target">
                                                 <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
@@ -191,7 +192,7 @@
                                             </connections>
                                         </button>
                                         <button identifier="showOnScreenWithMouse" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="bXg-rt-UMh">
-                                            <rect key="frame" x="8" y="60" width="248" height="18"/>
+                                            <rect key="frame" x="8" y="80" width="248" height="18"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <buttonCell key="cell" type="check" title="Show windows on screen with mouse" bezelStyle="regularSquare" imagePosition="left" enabled="NO" identifier="showOnScreenWithMouse" allowsMixedState="YES" inset="2" id="6s4-a3-huF" customClass="APMixedButtonCell" customModule="Apptivator" customModuleProvider="target">
                                                 <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
@@ -202,7 +203,7 @@
                                             </connections>
                                         </button>
                                         <button identifier="hideWhenDeactivated" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="bJl-e3-U5r">
-                                            <rect key="frame" x="8" y="40" width="242" height="18"/>
+                                            <rect key="frame" x="8" y="60" width="242" height="18"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <buttonCell key="cell" type="check" title="Automatically hide when loses focus" bezelStyle="regularSquare" imagePosition="left" enabled="NO" allowsMixedState="YES" inset="2" id="tsm-Jq-Dpu" customClass="APMixedButtonCell" customModule="Apptivator" customModuleProvider="target">
                                                 <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
@@ -210,6 +211,17 @@
                                             </buttonCell>
                                             <connections>
                                                 <action selector="onLocalCheckboxChange:" target="goT-YD-soK" id="R7D-L4-XgS"/>
+                                            </connections>
+                                        </button>
+                                        <button identifier="reopenWhenNoWindows" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="reopen-button">
+                                            <rect key="frame" x="8" y="40" width="280" height="18"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                            <buttonCell key="cell" type="check" title="Reopen when no windows are open" bezelStyle="regularSquare" imagePosition="left" enabled="NO" allowsMixedState="YES" inset="2" id="reopen-cell" customClass="APMixedButtonCell" customModule="Apptivator" customModuleProvider="target">
+                                                <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                                <font key="font" metaFont="system"/>
+                                            </buttonCell>
+                                            <connections>
+                                                <action selector="onLocalCheckboxChange:" target="goT-YD-soK" id="reopen-action"/>
                                             </connections>
                                         </button>
                                         <button identifier="launchIfNotRunning" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="QZZ-PQ-w5a">
